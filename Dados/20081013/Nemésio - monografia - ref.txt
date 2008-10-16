@@ -35,3 +35,9 @@
 [35] A. NATRAJAN, A. NGUYEN-TUONG, M. HUMPHREY, and A. GRIMSHAW. The legion portal. Disponível em: http://legion.virginia.edu/papers/GCE01.pdf. Acesso em: Fevereiro 2008.
 [36] J. NOVOTNY, M. RUSSEL, and O. WEHRENS. Gridsphere: An advanced portal framework. Disponível em: http://www.gridsphere.org/gridsphere/wp-4/Documents/France/gridsphere.pdf. Acesso em: Novembro 2007.
 [37] OASIS. Oasis web service resource framework. Disponível em: http://www.oasisopen.org/home/index.php. Acesso em: Março 2008., 2006.
+[38] Marluce Rodrigues Pereira Patrícia K. Vargas. Computação em grade. Escola Regiona de Informática de Minas Gerais, 2007,UFLA-MG.
+[39] Marcos Pitanga. Computação em cluster-o estado da arte em computação. Rio de Janeiro: Editora Brasport, 2003.
+[40] SETI@home. Search for extraterrestrial intelligence. Disponível em: http://setiathome.berkeley.edu/. Acesso em: Fevereiro 2008.
+[41] B. Sotomayor. The globus toolkit programmers tutorial. Disponível em: http://gdp.globus.org/gt4-tutorial/. Acesso em: Fevereiro 2008.
+[42] OASIS Standard. Web services resource 1.2 (ws-resource). Organization for the Advancement of Structured Information Standards.
+[43] M. THOMAS, M. DAHAN, K. MUELLER, C. MOCK, S.and MILLS, and R. REGNO. Application portals: Practice and experience. Disponível em: http://tacc.utexas.edu/mthomas/pubs/GridPort_Apps_CPE.pdf. Acesso em: Fevereiro de 2008.
