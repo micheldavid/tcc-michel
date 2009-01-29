@@ -1,0 +1,1 @@
+The Grid: Computing Without Bounds, Scientific American, April, 2003. "By linking digital processors, storage systems and software on a global scale, grid technology is poised to transform computing from an individual and corporate activity into a general utility."
