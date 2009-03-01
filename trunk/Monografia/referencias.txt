@@ -20,3 +20,8 @@ Internet, Computational Chemistry Grid. https://www.gridchem.org/ acessado 23/02
 
 (Lattice QCD Portal, 2009)
 Internet, Lattice QCD Portal. http://lqcd.jlab.org/ acessado 23/02/2009
+
+(FOSTER, 2002)
+Ian Foster. “What is the Grid? A Three Point Checklist”, Grid Today, v. 1, n. 6, July 22 2002. Available at http://www.gridtoday.com/02/0722/100136.html.
+
+STOCKINGER, H., “Distributed database management systems and the data grid”, In: Eighteenth IEEE Symposium on Mass Storage Systems, (Hyatt Regency Islandia, San Diego, USA), April 17-20 2001.
