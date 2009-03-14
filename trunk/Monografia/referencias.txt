@@ -1,12 +1,6 @@
 (FOSTER, KESSELMAN, 1998)
 Ian Foster, Carl Kesselman. “Computational Grids”, In: The Grid: Blueprint for a New Computing Infrastructure (FOSTER, I., KESSELMAN, C., eds.), pp. 15–52, San Francisco, California, USA, Morgan Kaufmann, 1 ed., 1998.
 
-(OGF22, 2008)
-The 22nd Open Grid Forum - OGF22
-Hyatt Regency Cambridge
-Cambridge, MA USA
-February 25-28, 2008
-
 (GFD-I.11, 2002)
 M. Roehrig, Wolfgang Ziegler, Philipp Wieder. Grid Scheduling Dictionary WG (SD-WG). Memorando. Novembro de 2002.
 
