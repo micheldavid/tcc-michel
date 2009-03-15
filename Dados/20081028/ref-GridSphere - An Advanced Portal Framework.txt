@@ -1,0 +1,2 @@
+Jason Novotny, Michael Russell, Oliver Wehrens, "GridSphere: An Advanced Portal Framework," euromicro,pp.412-419, 30th EUROMICRO Conference (EUROMICRO'04), 2004.
+
