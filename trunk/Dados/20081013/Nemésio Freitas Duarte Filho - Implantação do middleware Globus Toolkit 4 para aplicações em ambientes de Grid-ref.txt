@@ -1,0 +1,43 @@
+[1] Condor project. Disponível em: http://www.cs.wisc.edu/condor/ Acesso em: Março 2008.
+[2] Debian. Disponível em: http://www.debian.org. Acesso em: Março 2008.
+[3] The easy grid project. Disponível em: http://easygrid.ic.uff.br/ Acesso em: Maio 2008.
+[4] Fedora core linux. Disponível em: http://fedoraproject.org/. Acesso em: Março 2008.
+[5] glite middleware. Disponível em: http://glite.web.cern.ch/glite/ Acesso em: Maio 2008.
+[6] Gridsphere portlet reference guide. Disponível em http://www.gridsphere.org/gridsphere/docs/ Acesso em: Fevereiro 2008.
+[7] Https. Disponível em: http://pt.wikipedia.org/wiki/HTTPS. Acesso em: Março 2008.
+[8] Ibm. Disponível em: http://www.ibm.com/br/. Acesso em: Março 2008.
+[9] Oracle. Disponível em: http://www.oracle.com/database/index.html. Acesso em: Março 2008.
+[10] Pbs. Disponível em: http://www.pbs.org/. Acesso em: Março 2008.
+[11] Perl. Disponível em: http://www.perl.org/. Acesso em: Março 2008.
+[12] Red hat linux. Disponível em:http://www.redhat.com/. Acesso em: Março 2008.
+[13] Sistema nacional de processamento de alto desempenho / ministério da ciência e tecnologia rede pública de centros de pad. Disponível em: http://www.lncc.br/sinapad/ Acesso em: Maio 2008.
+[14] Sun. Disponível em: http://br.sun.com/. Acesso em: Março 2008.
+[15] Sun grid engine. Disponível em:http://www.sun.com/software/gridware Acesso em: Março 2008.
+[16] Suse linux. Disponível em: http://www.novell.com/linux/. Acesso em: Março 2008.
+[17] T. G Alliance. Globus toolkit 4.0 execution management. Disponível em: http://www.globus.org/toolkit/docs/4.0/execution/. Acessado em: Novembro 2007.
+[18] T. G Alliance. Globus toolkit 4.0 ws gram. Disponível em: http://www.globus.org/toolkit/docs/4.0/execution/wsgram/. Acessado em: Novembro 2007.
+[19] T. G Alliance. Globus toolkit 4.0 ws gram documento pdf. Disponível em: http://www.globus.org/toolkit/docs/4.0/execution/wsgram/index.pdf. Acessado em: Novembro 2007.
+[20] T. G Alliance. Globus toolkitt 4.0. Disponível em: http://www.globus.org/toolkit/docs/4.0/. Acessado em: Novembro 2007.
+[21] V BERSTIS. Fundamentals of grid computing. Disponível em: http://www.redbooks.ibm.com/redpapers/pdfs/redp3613.pdf. Acesso em: Fevereiro 2008.
+[22] F. BOMBONATO. Computação em grid. uma introdução. Disponível em: http://www.geleira.org/pdf/grid_computing.pdf. Acesso em: Fevereiro 2008.
+[23] Morgan Kaufmann Borja Sotomayor, Lisa Childers. Globus Toolkit 4: Programming Java Services. First Edition, December 16, 2005.
+[24] E Cerami. Web services essentials. O Reilly, Vol. IV 2005.
+[25] M. DANTAS, J. ALLEMAND, and L PASSOS. An evaluation of globus and legion software environments. Disponível em: http://hpcs2003.ccs.usherbrooke.ca/papers/Dantas_01.pdf. Acesso em: Fevereiro 2008.
+[26] I. FOSTER and C. KESSELMAN. Globus: A metacomputing infrastructure toolkit. International Journal of Supercomputer Aplications 11, 2, 115-128. Disponível em: ftp://ftp.globus.org/pub/globus/papers/globus.pdf. Acesso em: Fevereiro 2008.
+[27] I. FOSTER, C. KESSELMAN, and S. TUECKE. The anatomy of the grid: Enabling scalable virtual organizations. Disponível em: http://www.globus.org/research/papers/anatomy.pdf. Acesso em: Fevereiro 2008.
+[28] Globus. Globus toolkit. Disponível em: http://www.globus.org/ Acesso em: Março 2008.
+[29] GPDK. Grid portal development kit. Disponível em: http://doesciencegrid.org/projects/GPDK/. Acesso em: Novembro 2007.
+[30] Legion. Legion faq. Disponível em: http://legion.virginia.edu/FAQ.html. Acesso em: Fevereiro 2008.
+[31] BAKER M., BUYYA R., and LAFORENZA D. Grids and grid technologies for widearea distributed computing. Software Practice and Experience., 2002.
+[32] Michael Miley. The grid: Bringing computing power to the masses. Stokie: Oracle Magazine, número 5, Vol. XVII, pag. 39-44, 2003.
+[33] R. D. S. Moreira. Certificados digitais. Disponível em: http://www.gta.ufrj.br/grad/00 1/rodrigo/fr9right.htm. Acesso em: Novembro 2007.
+[34] M. NASH. Oracle 10g: Infrastructure for grid computing. Disponível em:Disponível em: http://otn.oracle.com/tech/grid/collateral/GridTechWhitePaper_final.pdf. Acesso em: Fevereiro 2008.
+[35] A. NATRAJAN, A. NGUYEN-TUONG, M. HUMPHREY, and A. GRIMSHAW. The legion portal. Disponível em: http://legion.virginia.edu/papers/GCE01.pdf. Acesso em: Fevereiro 2008.
+[36] J. NOVOTNY, M. RUSSEL, and O. WEHRENS. Gridsphere: An advanced portal framework. Disponível em: http://www.gridsphere.org/gridsphere/wp-4/Documents/France/gridsphere.pdf. Acesso em: Novembro 2007.
+[37] OASIS. Oasis web service resource framework. Disponível em: http://www.oasisopen.org/home/index.php. Acesso em: Março 2008., 2006.
+[38] Marluce Rodrigues Pereira Patrícia K. Vargas. Computação em grade. Escola Regiona de Informática de Minas Gerais, 2007,UFLA-MG.
+[39] Marcos Pitanga. Computação em cluster-o estado da arte em computação. Rio de Janeiro: Editora Brasport, 2003.
+[40] SETI@home. Search for extraterrestrial intelligence. Disponível em: http://setiathome.berkeley.edu/. Acesso em: Fevereiro 2008.
+[41] B. Sotomayor. The globus toolkit programmers tutorial. Disponível em: http://gdp.globus.org/gt4-tutorial/. Acesso em: Fevereiro 2008.
+[42] OASIS Standard. Web services resource 1.2 (ws-resource). Organization for the Advancement of Structured Information Standards.
+[43] M. THOMAS, M. DAHAN, K. MUELLER, C. MOCK, S.and MILLS, and R. REGNO. Application portals: Practice and experience. Disponível em: http://tacc.utexas.edu/mthomas/pubs/GridPort_Apps_CPE.pdf. Acesso em: Fevereiro de 2008.
