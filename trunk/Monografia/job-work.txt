@@ -1,0 +1,4 @@
+JOB = tarefa
+work = atividade
+
+
