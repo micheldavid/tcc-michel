@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source `dirname $0`/exehda.env
+
+if [ "$1" == "-tty" ]; then
+
+   shift
+
+   outfile="/tmp/isam-app-output.$$"
+
+   outfileURL="file:${outfile}"
+
+   desc=$1
+
+   shift
+
+   java -cp ${EXEHDA_CLASSPATH} org.isam.perv.desktop.Launcher $desc -o $outfileURL -e $outfileURL
+
+   tail -f $outfile
+
+   rm -f $outfile
+
+else
+   java -cp ${EXEHDA_CLASSPATH} org.isam.perv.desktop.Launcher $*
+fi

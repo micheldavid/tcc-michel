@@ -1,0 +1,131 @@
+Lucas Alberto S. SAntos
+lucasa@gmail.com
+
+Protótipo Framework: Appman
+
+        
+ - EXECUTANDO O MIDDLEWARE EXEHDA
+
+Antes de executar uma aplicação usando o Appman, deve-se disparar o middleware Exehda, através desta sequência de passos:
+
+	1- Entar no diretorio do exehda-dev/bin e disparar o middleware EXEHDA:
+		"./exehda --profile  base"
+	Atenção o profile 'base' dispara o middleware EXEHDA como base de uma célula, para disparar o middleware como NODO de uma EXEHDA Base, deve ser usado o comando: "./exehda --profile nodo", após os ajustes necessários no arquivo de configuração "exehda-services.xml".
+
+Altere a configuração do serviço BDA da base EXEHDA para apontar para o diretório onde se encontra o arquivo .jar do framework Appman:
+
+        <SERVICE name="bda" loadPolicy="boot">
+               <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
+               <PROP name="docroot" value="PATH_PARA_O_DIRETORIO_DO_APPMAN_JAR"/>
+        </SERVICE>
+
+Os comandos acima executarão o Exehda com os serviços básicos necessários ao Appman.
+Todos os arquivos de sáida serão criados no diretório onde o Exehda foi disparado, ou seja, dentro do diretorio bin/.
+
+A execução do Exehda deve produzir uma saída no terminal com este conteúdo:
+-----------
+Bootstraping EXEHDA services [profile:teste]...
+Starting service logger...ok.
+Starting service worb...ok.
+Starting service cib...
+[05/07/04 15:37:24 DEBUG] at org.isam.exehda.services.worb.WorbImpl.exportService:entering for "cib"
+
+[05/07/04 15:37:25 DEBUG] at org.isam.exehda.services.worb.WorbImpl.exportService:leaving
+ok.
+Starting service bda...ok.
+Starting service executor...
+[05/07/04 15:37:25 DEBUG] at org.isam.exehda.services.worb.WorbImpl.exportService:entering for "executor"
+
+[05/07/04 15:37:25 DEBUG] at org.isam.exehda.services.worb.WorbImpl.exportService:leaving
+ok.
+Starting service gatekeeper...ok.
+EXEHDA is ready.
+-----------
+
+
+ - EXECUTANDO O FRAMEWORK APPMAN
+
+Após o Exehda ser disparado no localhost, é possível a execução do Appman.
+
+Para compilar o Appman, siga os passos:
+
+        1- No diretório raiz;
+        2- Execute o comando "ant clean";        
+        2- Execute o comando "ant build";        
+        *Em caso de erros na compilação, procure ajuda.
+        
+Para executar o Framework:
+        - Modifique o arquivo "gridnodes.properties" com os nomes das máquinas de sua rede local;
+        - Execute o comando "ant deploy" para criar o arquivo jar do framework;
+        - Copie os arquivos "lib/appman-devel.jar", "rcreate.isam" e "adapters.xml" para o      diretório "bin/": "cp lib/appman-dev.jar rcreate.isam adapters.xml bin/"
+        - Dispare o Framework Appman através do comando: "../exehda-dev/bin/isam-run rcreate.isam"
+        
+Toda a saída textual, ou gráfica, será realizada no terminal onde foi disparado o Exehda.
+
+
+ - DETALHES SOBRE O FRAMEWORK
+ 
+* O Framework Appman possui 2 front-ends:
+
+         1- A classe AppManConsole.class e
+         2- A classe DAGGraphGUI.class
+
+O primeiro frontend é somente texto, e o segundo é uma GUI gráfica que apresentando um seletor de arquivo de entrada GRID-ADL e o status da execução da aplicação. A interface GUI é a default do sistema.
+Para alterar a interface padrão, modifique o arquivo rcreate.isam:
+        "<main class="appman.DAGGraphGUI" />"
+
+A interface modo texto não possui um seletor de arquivos GRID-ADL, então este deve ser informado na linha de comando ao disparar a aplicação:
+        "../exehda-dev/bin/isam-run rcreate.isam -- /home/lucasa/dagtestes/lucas_testes_simples.dag"
+
+
+* Um arquivo chamado appman.log é gerado com todas o log da execução da aplicação.
+
+
+* Cada aplicação possui um diretório próprio para seus arquivos intermediários em cada máquina de submissão.
+
+* Para cada cluster de um grafo é criado um Submission Manager para gerenciá-lo.
+Este é o código para executar uma algoritmo de clusterização aleatório em um ApplicationManager: 
+
+			ApplicationDescription appdesc;
+			try
+			{
+				appdesc = SimpleParser.parseGRIDADL(args);
+			}...
+			
+			int nclusters = 2; // número de clusters
+			String[] clusters = new String[nclusters];
+			for(int i=0; i<nclusters; i++)
+			{				
+				clusters[i] = "cluster"+String.valueOf(i);
+			}
+			
+			Random rand  = new Random();
+			try
+			{		
+					appman = createApplicationManager("teste("+i+")");
+					GraphGenerator.clusteringAlgorithm(clusters, appdesc);
+
+                                        for(int j=0;j<nclusters;j++)
+					{
+						graph_name[j] = "grafo"+String.valueOf(rand.nextInt());												
+						appman.addApplicationDescriptionRemote(graph_name[j], clusters[j], appdesc);
+						appman.startAppGUIRemote(graph_name[j]);					
+					}
+					appman.startApplicationManagerRemote();
+                        }...
+  /////////////////////////
+ //Execucao de um Nodo  //
+/////////////////////////
+No diretorio raiz...
+./exehda/bin/isam-run appman-console.isam -- /home/SO/dalto/eclipse/workspace/appman7.10.05/exemplos/teste.dag
+
+  //////////////////////////////////
+ //Execucao da Inteface Grafica  //
+//////////////////////////////////
+No diretorio raiz...
+./exehda/bin/isam-run grappareader.isam
+
+
+
+
+

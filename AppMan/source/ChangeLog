@@ -1,0 +1,1188 @@
+2006-12-06 17:43  rbrosinha
+
+  * new code to allow task submission to PBS (see README_PBS_INTEGRATION.txt)
+  * logging is now handled by jdk 1.4 logging mechanism (replaced System.out)
+  * added application geneal (see exemplos/geneal/README.txt)
+  
+2006-01-19 17:08  kayser
+
+	* src/appman/ImproveDownload.java: Edited by VDN and PKVM to allow
+	  upload input files from local file system. We also tried to
+	  optimeze download. It is an working version (not stable)
+
+2006-01-19 17:06  kayser
+
+	* src/appman/ApplicationManager.java,
+	  src/appman/GridFileService.java,
+	  src/appman/GridFileServiceRemote.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java,
+	  src/appman/clustering/ClusteringPhase.java: Edited by VDN and
+	  PKVM to allow upload input files from local file system. We also
+	  tried to optimeze download. It is an working version (not stable)
+
+2006-01-13 18:14  dalto
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  kill_remote_exehda.sh, lib/appman-dev.jar,
+	  src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java,
+	  src/appman/GraphGenerator.java, src/appman/GridTask.java,
+	  src/appman/MyTask.java, src/appman/SubmissionManager.java:
+	  incluido alguns sychronizeds e retirado alguns prints
+
+2006-01-10 18:24  dalto
+
+	* lib/appman-dev.jar, src/appman/Graph.java,
+	  src/appman/SubmissionManager.java, src/appman/Task.java:
+
+2006-01-10 16:09  dalto
+
+	* compile.sh, exehda/bin/exehda-services.xml,
+	  exehda/bin/tasks-execution-appman.trace, exemplos/fatorial.dag,
+	  gridnodes.properties, lib/appman-dev.jar,
+	  src/appman/DataFile.java, src/appman/Graph.java,
+	  src/appman/MyTask.java:
+
+2006-01-06 13:59  dalto
+
+	* gridnodes.properties, lib/appman-dev.jar, src/appman/Graph.java,
+	  src/appman/SubmissionManager.java:
+
+2006-01-05 16:44  dalto
+
+	* exehda/bin/exehda-services.xml, exemplos/fatorial.dag,
+	  gridnodes.properties, kill_remote_exehda.sh, lib/appman-dev.jar,
+	  monitor_load.sh, obtem_resultados.sh, run_fatorial.sh,
+	  script_ssh.sh, src/appman/ApplicationManager.java,
+	  src/appman/GraphGenerator.java,
+	  src/appman/SubmissionManager.java, src/appman/Task.java,
+	  src/appman/clustering/ClusteringPhase.java,
+	  src/appman/parser/ApplicationDescription.java,
+	  src/appman/parser/SimpleParserDumpVisitor.java:
+
+2005-12-22 17:41  dalto
+
+	* README.txt, exehda/bin/tasks-execution-appman.trace,
+	  exemplos/fatorial.dag, exemplos/t10.dag, get_pid_exehda.sh,
+	  grappareader.isam, gridnodes.properties, kill_remote_exehda.sh,
+	  lib/appman-dev.jar, script_ssh.sh,
+	  src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/GeneralObjectActivator.java,
+	  src/appman/OutputXML.java, src/appman/clustering/DAG_DSC.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt,
+	  src/appman/ui/grappareader/Reader.java:
+
+2005-12-22 11:59  dalto
+
+	* exehda/bin/exehda-services.xml, lib/appman-dev.jar,
+	  src/appman/AppManConsole.java, src/appman/AppManUtil.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/GeneralObjectActivator.java,
+	  src/appman/GridSchedule.java, src/appman/Task.java,
+	  src/appman/TaskManager.java, src/appman/clustering/DAG_DSC.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt,
+	  src/appman/parser/SimpleParserDumpVisitor.java,
+	  src/appman/ui/grappareader/Reader.java,
+	  src/appman/ui/grappareader/ShowWindow.java:
+
+2005-12-02 15:44  lucc
+
+	* exehda/lib/devel-cc.jar, exehda/lib/devel-gw.jar,
+	  exehda/lib/exehda-core.jar, exehda/lib/isam-util.jar,
+	  exehda/lib/testing-avu.jar, exehda/lib/testing-bda.jar,
+	  exehda/lib/testing-cib.jar, exehda/lib/testing-ctxm.jar,
+	  exehda/lib/testing-ds.jar, exehda/lib/testing-logger.jar,
+	  exehda/lib/testing-oxm.jar, exehda/lib/testing-primos.jar,
+	  exehda/lib/testing-tips.jar, exehda/lib/testing-worb.jar:
+	  Modificadas propriedades de arquivos binários.
+
+2005-12-02 15:30  lucc
+
+	* exehda/lib/devel-cc.jar, exehda/lib/devel-gw.jar,
+	  exehda/lib/exehda-core.jar, exehda/lib/isam-util.jar,
+	  exehda/lib/testing-avu.jar, exehda/lib/testing-bda.jar,
+	  exehda/lib/testing-cib.jar, exehda/lib/testing-ctxm.jar,
+	  exehda/lib/testing-ds.jar, exehda/lib/testing-logger.jar,
+	  exehda/lib/testing-oxm.jar, exehda/lib/testing-primos.jar,
+	  exehda/lib/testing-tips.jar, exehda/lib/testing-worb.jar:
+	  corrigindo arquivo binario corrompido quando da migracao do CVS
+
+2005-11-21 16:10  bfcosta
+
+	* src/appman/OutputXML.java: Arquivo n&#65533;&#65533;o adicionado, mas
+	  necess&#65533;&#65533;rio para compilar o appman.
+
+2005-11-04 13:31  dalto
+
+	* LEIAME.txt, build.xml, dot, dot/dotneato,
+	  dot/dotneato/DIGRAFO.ps, dot/dotneato/Makefile,
+	  dot/dotneato/Makefile.am, dot/dotneato/Makefile.in,
+	  dot/dotneato/Makefile.old, dot/dotneato/XFIG_FORMAT3.2.txt,
+	  dot/dotneato/circo, dot/dotneato/circo.c, dot/dotneato/circo.o,
+	  dot/dotneato/dot, dot/dotneato/dot.1, dot/dotneato/dot.c,
+	  dot/dotneato/dot.o, dot/dotneato/dot.pdf,
+	  dot/dotneato/dotmemtest, dot/dotneato/dotmemtest.c,
+	  dot/dotneato/dotmemtest.o, dot/dotneato/dotneato-config,
+	  dot/dotneato/dotneato-config.1, dot/dotneato/dotneato-config.in,
+	  dot/dotneato/dotneato-config.pdf, dot/dotneato/dotneato.c,
+	  dot/dotneato/dotneato.h, dot/dotneato/dotneato.lo,
+	  dot/dotneato/fdp, dot/dotneato/fdp.c, dot/dotneato/fdp.o,
+	  dot/dotneato/fdpmemtest, dot/dotneato/fdpmemtest.c,
+	  dot/dotneato/fdpmemtest.o, dot/dotneato/libdotneato.la,
+	  dot/dotneato/libdotneato.pc, dot/dotneato/libdotneato.pc.in,
+	  dot/dotneato/neato, dot/dotneato/neato.c, dot/dotneato/neato.o,
+	  dot/dotneato/neatomemtest, dot/dotneato/neatomemtest.c,
+	  dot/dotneato/neatomemtest.o, dot/dotneato/twopi,
+	  dot/dotneato/twopi.c, dot/dotneato/twopi.o,
+	  dot/dotneato/twopimemtest, dot/dotneato/twopimemtest.c,
+	  dot/dotneato/twopimemtest.o, exehda/bin/exehda-services.xml,
+	  exehda/bin/exehda.env, lib/appman-dev.jar, run.sh,
+	  src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java,
+	  src/appman/DAGGraphGUI.java,
+	  src/appman/GeneralObjectActivator.java, src/appman/Graph.java,
+	  src/appman/SubmissionManager.java,
+	  src/appman/clustering/ClusteringPhase.java,
+	  src/appman/clustering/DAGEdge.java,
+	  src/appman/clustering/DAGNode.java,
+	  src/appman/clustering/DAG_DSC.java,
+	  src/appman/parser/ASTAssignment.java,
+	  src/appman/parser/ASTForeachNode.java,
+	  src/appman/parser/ASTRoot.java, src/appman/parser/ASTTask.java,
+	  src/appman/parser/ApplicationDescription.java,
+	  src/appman/parser/JJTSimpleParserState.java,
+	  src/appman/parser/Node.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt, src/appman/ui,
+	  src/appman/ui/grappareader,
+	  src/appman/ui/grappareader/Reader.java,
+	  src/appman/ui/grappareader/ShowWindow.java: Esta versao possui
+	  um novo diretorio "dot/dotneato" que possui o executavel do DOT,
+	  que eh usado para gerar o arquivo com as posicoes dos nodos do
+	  grafo. Foi adcionado o pacote ui.grappareader, que faz parte da
+	  interface grafica. No arquivo README.txt tem informacoes de como
+	  executar a inteface grafica. A interface grafica funciona
+	  indenpendente da execucao do appman. Os executaveis do DOT so
+	  serao usando quando a interface grafica for disparada.
+
+2005-11-04 13:29  lucc
+
+	* ., .cvsignore: initial check in.
+
+2005-09-09 13:03  dalto
+
+	* src/appman/clustering/ClusteringPhase.java: Mesma versao
+	  anterior so esqueci dar cvs add na classe nova
+	  ClusteringPhase.java
+
+2005-09-09 12:45  dalto
+
+	* lib/appman-dev.jar, src/appman/ApplicationManager.java,
+	  src/appman/DAGGraphGUI.java, src/appman/GraphGenerator.java:
+	  Novo Particionamento por n&#65533;&#65533;veis. Criado o m&#65533;&#65533;todo
+	  ClusteringPhaseAlgorithm na classe GraphGenerator.java. Este
+	  m&#65533;&#65533;todo eh chamado onde era chamado o m&#65533;&#65533;todo
+	  ClusteringAlgorithm do Lucas. Modificacoes com VDN.
+
+2005-09-06 19:23  dalto
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  lib/appman-dev.jar, src/appman/ApplicationManager.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt: Incluido medicoes de tempo
+	  do parser, do escalonador e tempo total de execucao. Sao
+	  impressos no arquivo /exehda/bin/parseOut.txt Chamadas de
+	  escrita nos arquivos SimpleParser.jjt e ApplicationManager.java
+	  comentados com VDN.
+
+2005-09-02 17:54  lucc
+
+	* exehda/lib/testing-worb.jar: Patched to early release of network
+	  connection resources, aiming to avoid SocketExcption due to too
+	  many files open.
+
+2005-09-02 17:52  lucc
+
+	* exehda/create-root.sh, exehda/exehda.schema: Moved to extra/
+
+2005-09-01 04:03  lucasa
+
+	* gridnodes.properties, src/appman/DAGGraphGUI.java,
+	  src/appman/Graph.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java, src/appman/Task.java,
+	  src/appman/TaskManager.java: Fixed - Tnstall web files Bug Code
+	  Improve - Limite the number of tasks that a Submission Manager
+	  can handle at same time.
+
+2005-08-30 15:35  kayser
+
+	* exehda/bin/exehda-services.xml, lib/appman-dev.jar,
+	  src/appman/Graph.java, src/appman/SubmissionManager.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt: PKVM - changed to limit the
+	  number of task a submission manager can take at the same time
+
+2005-08-29 21:42  kayser
+
+	* lib/appman-dev.jar: *** empty log message ***
+
+2005-08-29 21:31  kayser
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties: *** empty
+	  log message ***
+
+2005-08-29 21:25  kayser
+
+	* src/appman/Graph.java, src/appman/GridTask.java,
+	  src/appman/clustering/DAG_DSC.java,
+	  src/appman/parser/ApplicationDescription.java,
+	  src/appman/parser/AssignmentBody.java,
+	  src/appman/parser/Makefile, src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt,
+	  src/appman/parser/SimpleParserConstants.java,
+	  src/appman/parser/SimpleParserDumpVisitor.java,
+	  src/appman/parser/SimpleParserTokenManager.java: versao do
+	  Vinicius de 26/08/2005
+
+2005-08-29 19:49  kayser
+
+	* src/appman/AppManConsole.java: versao do vinicius
+
+2005-08-29 19:18  kayser
+
+	* src/appman/Task.java: *** empty log message ***
+
+2005-08-29 19:16  kayser
+
+	* src/appman/Task.java: Versao Vinicius - inclusao de outras
+	  medicoes de tempo
+
+2005-08-29 19:13  kayser
+
+	* src/appman/MyTask.java: versao Vinicius: inclusao de mais uma
+	  medicao de tempo
+
+2005-08-29 19:09  kayser
+
+	* src/appman/ApplicationManager.java: versao do Vinicius -
+	  modificacao dos tempos exibidos
+
+2005-08-29 18:16  lucc
+
+	* src/appman/AppManConsole.java: identa&#65533;&#65533;o
+
+2005-08-26 17:12  lucc
+
+	* exehda/extra, exehda/extra/create-root.sh,
+	  exehda/extra/exehda.schema: initial
+
+2005-08-26 03:58  lucasa
+
+	* lib/appman-dev.jar, src/appman/ApplicationManager.java,
+	  src/appman/MyTask.java, src/appman/Task.java: Vers&#65533;o est&#65533;vel do
+	  AppMan. Adicionado arquivo de sa&#65533;da com dados sobre a execu&#65533;&#65533;o
+	  das tarefas: tasks-execution-*.trace
+
+2005-08-26 01:24  lucasa
+
+	* rcreate.isam: *** empty log message ***
+
+2005-08-26 01:23  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  lib/appman-dev.jar, rcreate.isam,
+	  src/appman/ApplicationManager.java, src/appman/DAGGraphGUI.java,
+	  src/appman/MyTask.java, src/appman/SubmissionManager.java,
+	  src/appman/SubmissionManagerRemote.java, src/appman/Task.java:
+	  *** empty log message ***
+
+2005-08-19 15:06  lucc
+
+	* exehda/lib/exehda-core.jar, exehda/lib/testing-primos.jar:
+	  merging snapshot 20050819
+
+2005-08-16 22:16  lucc
+
+	* src/appman/AppManConsole.java: Adicionada chamada para
+	  exitApplication() ao final do m&#65533;todo main().
+
+2005-08-16 21:18  lucc
+
+	* lib/appman-dev.jar, src/appman/ForceDemo.java: Corrigido
+	  problema relacionado a finaliza&#65533;&#65533;o da execu&#65533;&#65533;o.
+	* src/appman/ApplicationManager.java, src/appman/DAGGraphGUI.java,
+	  src/appman/MyTask.java, src/appman/SubmissionManager.java:
+	  Redirecionadas chamdas ao EXEHDA para classe AppManUtil.
+	  Corrigido problema relacionado a finaliza&#65533;&#65533;o da execu&#65533;&#65533;o.
+
+2005-08-16 21:16  lucc
+
+	* src/appman/AppManConsole.java,
+	  src/appman/GeneralObjectActivator.java,
+	  src/appman/GridResourceMonitor.java,
+	  src/appman/GridSchedule.java, src/appman/GridTask.java:
+	  Redirecionadas chamdas ao EXEHDA para classe AppManUtil
+
+2005-08-16 21:14  lucc
+
+	* appman-console.isam, appman-gui.isam,
+	  src/appman/AppManUtil.java: Initial check in.
+
+2005-07-29 22:04  lucasa
+
+	* exehda/lib/testing-cib.jar, exehda/lib/testing-ds.jar,
+	  exehda/lib/testing-primos.jar, exemplos/fases.dag,
+	  gridnodes.properties, rcreate.isam,
+	  src/appman/GraphGenerator.java, src/appman/GridFileService.java,
+	  src/appman/GridFileServiceRemote.java,
+	  src/appman/GridRemoteHostsProperties.java,
+	  src/appman/GridSchedule.java, src/appman/GridTask.java,
+	  src/appman/MyTask.java, src/appman/SubmissionManager.java,
+	  src/appman/Task.java, src/appman/TaskManager.java: *** empty log
+	  message ***
+
+2005-07-29 16:32  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  exemplos/GenerateDagFileFases.py, exemplos/fases.dag,
+	  gridnodes.properties: *** empty log message ***
+
+2005-07-28 15:08  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-28 13:53  lucasa
+
+	* exehda/bin/exehda-services.xml, exehda/lib/devel-ae.jar,
+	  exehda/lib/devel-bda.jar, exehda/lib/devel-cib.jar,
+	  exehda/lib/devel-ctxm.jar, exehda/lib/devel-primos.jar,
+	  exehda/lib/devel-worb.jar,
+	  exehda/lib/libPrimosNativeMonitor.so.linux,
+	  exehda/lib/testing-bda.jar, exehda/lib/testing-cib.jar,
+	  exehda/lib/testing-ctxm.jar, exehda/lib/testing-ds.jar,
+	  exehda/lib/testing-primos.jar, exehda/lib/testing-worb.jar: ***
+	  empty log message ***
+
+2005-07-27 22:32  lucasa
+
+	* exehda/bin/exehda-services.xml, exehda/create-root.sh,
+	  exehda/exehda.schema, gridnodes.properties, lib/appman-dev.jar,
+	  run.sh, src/appman/ApplicationManager.java,
+	  src/appman/DAGGraphGUI.java, src/appman/GridFileService.java,
+	  src/appman/GridRemoteHostsFileProperties.java: *** empty log
+	  message ***
+
+2005-07-27 16:53  lucasa
+
+	* exehda/bin/cluster-fork-exehda, exehda/bin/cluster-kill-exehda,
+	  exehda/bin/exehda, exehda/bin/exehda-control,
+	  exehda/bin/exehda-services.xml, exehda/bin/exehda.env: *** empty
+	  log message ***
+
+2005-07-26 23:47  lucasa
+
+	* exehda/lib/devel-gw.jar, exehda/lib/exehda-core.jar,
+	  exehda/lib/isam-util.jar, exehda/lib/testing-avu.jar,
+	  exehda/lib/testing-logger.jar, exehda/lib/testing-oxm.jar,
+	  exehda/lib/testing-tips.jar, gridnodes.properties,
+	  lib/appman-dev.jar, src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/GridFileService.java, src/appman/GridSchedule.java,
+	  src/appman/GridTask.java, src/appman/GridTaskRemote.java,
+	  src/appman/MyTask.java, src/appman/SubmissionManager.java,
+	  src/appman/SubmissionManagerRemote.java, src/appman/Task.java,
+	  src/appman/TaskManager.java: *** empty log message ***
+
+2005-07-25 21:22  lucasa
+
+	* exehda/bin/exehda-services.xml, lib/appman-dev.jar,
+	  src/appman/DAGGraphGUI.java: *** empty log message ***
+
+2005-07-18 18:48  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  src/appman/GeneralObjectActivator.java, src/appman/MyTask.java:
+	  *** empty log message ***
+
+2005-07-15 20:32  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  src/appman/GeneralObjectActivator.java,
+	  src/appman/GridTask.java, src/appman/MyTask.java: *** empty log
+	  message ***
+
+2005-07-15 19:47  lucasa
+
+	* src/appman/GeneralObjectActivator.java, src/appman/MyTask.java:
+	  *** empty log message ***
+
+2005-07-15 19:21  lucasa
+
+	* src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java, src/appman/DAGGraphGUI.java,
+	  src/appman/GeneralObjectActivator.java,
+	  src/appman/GridTask.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java: Threads remotas ativadas pelo
+	  objeto ativador.
+
+2005-07-15 19:15  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  rcreate.isam, src/appman/parser/SimpleParser.jjt: *** empty log
+	  message ***
+
+2005-07-15 16:05  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-15 13:45  lucasa
+
+	* exehda/lib/devel-ae.jar, exehda/lib/devel-bda.jar,
+	  exehda/lib/devel-cib.jar, exehda/lib/devel-ctxm.jar,
+	  exehda/lib/devel-primos.jar, exehda/lib/devel-worb.jar,
+	  exehda/lib/exehda-core.jar, exehda/lib/isam-util.jar: *** empty
+	  log message ***
+
+2005-07-14 22:07  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 22:00  lucasa
+
+	* lib/appman-dev.jar, src/appman/Debug.java,
+	  src/appman/GridTask.java: *** empty log message ***
+
+2005-07-14 21:32  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 21:26  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 21:23  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 20:53  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 20:50  lucasa
+
+	* exehda/bin/exehda-services.xml, rcreate.isam: *** empty log
+	  message ***
+
+2005-07-14 20:42  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 20:33  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 20:25  lucasa
+
+	* lib/appman-dev.jar, src/appman/GridSchedule.java: *** empty log
+	  message ***
+
+2005-07-14 20:17  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 19:32  lucasa
+
+	* lib/appman-dev.jar: *** empty log message ***
+
+2005-07-14 18:06  lucasa
+
+	* gridnodes.properties, src/appman/GridSchedule.java: *** empty
+	  log message ***
+
+2005-07-14 17:28  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 17:24  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  lib/appman-dev.jar: *** empty log message ***
+
+2005-07-14 15:18  lucasa
+
+	* exehda/bin/exehda-services.xml, lib/appman-dev.jar,
+	  src/appman/GridSchedule.java: *** empty log message ***
+
+2005-07-14 15:05  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 14:31  lucasa
+
+	* lib/appman-dev.jar,
+	  src/appman/GridRemoteHostsFileProperties.java,
+	  src/appman/GridSchedule.java: *** empty log message ***
+
+2005-07-14 14:23  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 12:54  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-14 02:19  lucasa
+
+	* src/appman/GridSchedule.java: *** empty log message ***
+	* lib/appman-dev.jar, src/appman/ApplicationManager.java,
+	  src/appman/GridSchedule.java: *** empty log message ***
+
+2005-07-14 02:05  lucasa
+
+	* lib/appman-dev.jar, src/appman/GridSchedule.java: *** empty log
+	  message ***
+
+2005-07-14 01:59  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  lib/appman-dev.jar, rcreate.isam: *** empty log message ***
+
+2005-07-14 01:44  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  lib/appman-dev.jar, src/appman/GridSchedule.java: *** empty log
+	  message ***
+
+2005-07-13 16:39  lucasa
+
+	* exehda/bin/exehda-services.xml, exemplos/teste.dag: *** empty
+	  log message ***
+
+2005-07-13 16:33  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-13 16:27  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  lib/appman-dev.jar: *** empty log message ***
+
+2005-07-13 11:41  lucasa
+
+	* exehda/bin/exehda-services.xml, gridnodes.properties,
+	  src/appman/GridRemoteHostsProperties.java,
+	  src/appman/GridSchedule.java: *** empty log message ***
+
+2005-07-12 18:09  lucasa
+
+	* src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java,
+	  src/appman/DAGGraphGUI.java, src/appman/Graph.java,
+	  src/appman/GridFileService.java,
+	  src/appman/GridFileServiceRemote.java,
+	  src/appman/GridRemoteHostsProperties.java,
+	  src/appman/GridSchedule.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java,
+	  src/appman/SubmissionManagerRemote.java, src/appman/Task.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParser.jjt: *** empty log message ***
+
+2005-07-08 20:25  lucasa
+
+	* lib/appman-dev.jar, src/appman/GridRemoteHostsProperties.java:
+	  *** empty log message ***
+
+2005-07-08 19:22  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  exehda/bin/exehda-services.xml.grade-rj-rs: *** empty log
+	  message ***
+
+2005-07-08 17:26  lucasa
+
+	* exehda/bin/exehda-services.xml.grade-rj-rs: *** empty log
+	  message ***
+
+2005-07-08 17:14  lucasa
+
+	* exehda/bin/exehda-services.xml: *** empty log message ***
+
+2005-07-08 16:51  lucasa
+
+	* exehda/lib/devel-cib.jar: *** empty log message ***
+
+2005-07-08 16:29  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  exehda/bin/exehda-services.xml.grade-rj-rs: *** empty log
+	  message ***
+
+2005-07-08 16:23  lucasa
+
+	* exehda/bin/exehda-services.xml: :CVS:
+	  ----------------------------------------------------------------------
+
+2005-07-08 16:11  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  exehda/bin/exehda-services.xml.grade-rj-rs: Added:
+	  exehda-services.xml.grade-rj-rs
+
+2005-07-08 15:58  lucasa
+
+	* exehda/bin/exehda-services.xml.cluster: *** empty log message ***
+
+2005-07-08 15:48  lucasa
+
+	* lib/appman-dev.jar, src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java, src/appman/Graph.java,
+	  src/appman/GridSchedule.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java,
+	  src/appman/SubmissionManagerRemote.java, src/appman/Task.java:
+	  Altera&#65533;&#65533;es: - Transfer&#65533;ncia de arquivos atrav&#65533;s dos SM - Threads
+	  dos Submission Managers terminam ap&#65533;s fim da execu&#65533;&#65533;o da
+	  aplica&#65533;&#65533;o - C&#65533;digo comentado do novo escalonador em:
+	  src/appman/GridSchedule.java
+
+2005-07-07 23:05  lucasa
+
+	* exehda/bin/exehda-services.xml, lib/appman-dev.jar,
+	  rcreate.isam, src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java,
+	  src/appman/DAGGraphGUI.java, src/appman/Graph.java,
+	  src/appman/GridSchedule.java, src/appman/SubmissionManager.java:
+	  All erros fixed?
+
+2005-07-06 22:36  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  exemplos/lucas_testes_simples.dag, lib/appman-dev.jar,
+	  rcreate.isam, src/appman/SubmissionManager.java: Fix Submission
+	  Manager
+
+2005-07-06 00:21  lucasa
+
+	* exemplos/teste.dag, lib/appman-dev.jar, rcreate.isam,
+	  src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java, src/appman/DAGGraphGUI.java,
+	  src/appman/GridFileService.java,
+	  src/appman/GridFileServiceRemote.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java: *** empty log message ***
+
+2005-07-05 20:35  lucasa
+
+	* lib/appman-dev.jar, rcreate.isam, src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java, src/appman/Graph.java,
+	  src/appman/SubmissionManager.java: Modifica&#65533;&#65533;es no
+	  SubmissionManager, execu&#65533;&#65533;o de grafos.
+
+2005-07-01 20:32  lucasa
+
+	* build.xml, exehda/bin/exehda,
+	  exehda/bin/exehda-services.xml.moe, exehda/lib/devel-ae.jar,
+	  exehda/lib/devel-bda.jar, exehda/lib/devel-cib.jar,
+	  exehda/lib/devel-ctxm.jar, exehda/lib/devel-gw.jar,
+	  exehda/lib/devel-primos.jar, exehda/lib/devel-worb.jar,
+	  exehda/lib/exehda-core.jar, exehda/lib/testing-bda.jar,
+	  exehda/lib/testing-cib.jar, exehda/lib/testing-core.jar,
+	  exehda/lib/testing-primos.jar, exehda/lib/testing-worb.jar,
+	  lib/appman-dev.jar, lib/devel-core.jar, lib/devel-primos.jar,
+	  lib/exehda-core.jar, lib/isam-util.jar, run.sh,
+	  src/appman/AppManConsole.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java,
+	  src/appman/DAGGraphGUI.java, src/appman/DataFile.java,
+	  src/appman/GeneralObjectActivator.java, src/appman/Graph.java,
+	  src/appman/GridFileService.java, src/appman/GridSchedule.java,
+	  src/appman/GridTask.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java,
+	  src/appman/SubmissionManagerRemote.java, src/appman/Task.java:
+	  *** empty log message ***
+
+2005-06-28 23:22  lucasa
+
+	* exehda/bin/exehda-services.xml,
+	  exehda/bin/exehda-services.xml.cluster: *** empty log message ***
+
+2005-06-28 23:02  lucasa
+
+	* exehda/bin/cluster-fork-exehda, exehda/bin/exehda-services.xml,
+	  exehda/bin/exehda-services.xml.cluster: Nodo da base ativo
+
+2005-06-28 21:44  lucasa
+
+	* exehda/bin/exehda-services.xml.moe: Fixed Bda client error
+
+2005-06-28 21:24  lucasa
+
+	* exehda/bin/exehda-services.xml.moe: *** empty log message ***
+
+2005-06-28 21:01  lucasa
+
+	* exehda/bin/exehda-services.xml, exehda/bin/exehda.env: A exehda
+	  base est&#65533; funcionando.
+
+2005-06-28 20:14  lucasa
+
+	* exehda/bin/exehda-services.xml: Exehda base funcionando em
+	  moe.inf.ufrgs.br
+
+2005-06-28 20:07  lucasa
+
+	* exehda/bin/exehda-services.xml: Fix exehda-services.xml
+
+2005-06-28 19:14  lucasa
+
+	* exehda-dev/lib: *** empty log message ***
+
+2005-06-28 19:04  lucasa
+
+	* exehda, exehda/bin, exehda/bin/cluster-fork-exehda,
+	  exehda/bin/cluster-kill-exehda, exehda/bin/exehda,
+	  exehda/bin/exehda-control,
+	  exehda/bin/exehda-services.xml.example, exehda/bin/exehda.env,
+	  exehda/bin/isam-run, exehda/lib, exehda/lib/devel-cc.jar,
+	  exehda/lib/devel-ctxm.jar, exehda/lib/devel-gw.jar,
+	  exehda/lib/exehda-core.jar, exehda/lib/isam-util.jar,
+	  exehda/lib/testing-avu.jar, exehda/lib/testing-bda.jar,
+	  exehda/lib/testing-cib.jar, exehda/lib/testing-core.jar,
+	  exehda/lib/testing-logger.jar, exehda/lib/testing-oxm.jar,
+	  exehda/lib/testing-primos.jar, exehda/lib/testing-tips.jar,
+	  exehda/lib/testing-worb.jar, exehda/var, exehda/var/log,
+	  exehda/var/log/.cvsignore, exehda/var/log/.keep: Initial revision
+
+2005-06-28 18:22  lucasa
+
+	* exehda-dev/.cvsignore, exehda-dev/README,
+	  exehda-dev/bin/appman.log, exehda-dev/bin/exehda,
+	  exehda-dev/bin/exehda-dev.env,
+	  exehda-dev/bin/exehda-services.xml,
+	  exehda-dev/bin/hs_err_pid25323.log, exehda-dev/bin/isam-run,
+	  exehda-dev/lib/exehda-core.jar, exehda-dev/lib/isam-util.jar,
+	  lib/appman-dev.jar: *** empty log message ***
+
+2005-06-28 15:04  lucasa
+
+	* exemplos/pythia.dag: Add exemplos/pythia.dag
+
+2005-06-28 15:03  lucasa
+
+	* src/appman/parser/AssignmentBody.java: Bug no
+	  src/appman/parser/AssignmentBody.java
+
+2005-06-28 15:01  lucasa
+
+	* src/appman/parser/ShowWindow.java: Bug no ShowWindow.java
+
+2005-06-14 00:50  lucasa
+
+	* src/appman/parser/SimpleParser.java: Parsing ok!
+
+2005-06-13 19:57  lucasa
+
+	* lib/appman-dev.jar, lib/appman-devel.jar: *** empty log message
+	  ***
+
+2005-06-13 19:51  lucasa
+
+	* src/appman/parser/SimpleParser.java: add ReInit call before parse
+
+2005-06-13 19:41  lucasa
+
+	* src/appman/parser/SimpleParser.java: Adicionado this.ReInit() no
+	  construtor, para possibilitar o parse de mais de um arquivo
+
+2005-06-13 19:15  lucasa
+
+	* util, util/povray, util/povray/GeneratePovrayAppmanDagFile.py,
+	  util/povray/Parallel rendering using POVRAY on a computer
+	  farm.htm, util/povray/Parallel rendering using POVRAY on a
+	  computer farm_files, util/povray/Parallel rendering using POVRAY
+	  on a computer farm_files/antialias.gif, util/povray/Parallel
+	  rendering using POVRAY on a computer farm_files/chunks.gif,
+	  util/povray/Parallel rendering using POVRAY on a computer
+	  farm_files/overf.jpeg, util/povray/Parallel rendering using
+	  POVRAY on a computer farm_files/overfsmall.gif,
+	  util/povray/Parallel rendering using POVRAY on a computer
+	  farm_files/rendertime.gif, util/povray/Parallel rendering using
+	  POVRAY on a computer farm_files/rowchunks.gif,
+	  util/povray/appman, util/povray/appman/star.tar.gz,
+	  util/povray/povray-combineppm.c, util/povray/povray-makeset.c,
+	  util/povray/povs, util/povray/povs/overf.tar.gz,
+	  util/povray/povs/star.tgz, util/povray/povs/urbatree.tgz,
+	  util/prefuse-alpha, util/prefuse-alpha/build,
+	  util/prefuse-alpha/build.bat, util/prefuse-alpha/build.sh,
+	  util/prefuse-alpha/build.xml, util/prefuse-alpha/datasets,
+	  util/prefuse-alpha/datasets.zip,
+	  util/prefuse-alpha/datasets/biao.net,
+	  util/prefuse-alpha/datasets/biao_weighted.net,
+	  util/prefuse-alpha/datasets/smyth.net,
+	  util/prefuse-alpha/datasets/southern_women_data.txt,
+	  util/prefuse-alpha/datasets/zachary.net,
+	  util/prefuse-alpha/demos, util/prefuse-alpha/demos/edu,
+	  util/prefuse-alpha/demos/edu/berkeley,
+	  util/prefuse-alpha/demos/edu/berkeley/guir,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/BalloonGraphDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/DistortionDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/FisheyeMenuDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/ForceDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/GraphEditor.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/RadialGraphDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/TreeMapDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/ZoomingPanDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/external,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/external/DatabaseDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/external/FileSystemDemo.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/demos/package.html,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/samples,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/samples/AnimateGraph.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/samples/ShowGraph.java,
+	  util/prefuse-alpha/demos/edu/berkeley/guir/prefuse/samples/package.html,
+	  util/prefuse-alpha/etc, util/prefuse-alpha/etc/chitest.hdir,
+	  util/prefuse-alpha/etc/friendster.xml,
+	  util/prefuse-alpha/etc/terror.xml,
+	  util/prefuse-alpha/extensions,
+	  util/prefuse-alpha/extensions/edu,
+	  util/prefuse-alpha/extensions/edu/berkeley,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/AnchorUpdateControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/DragControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/FocusControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/NeighborHighlightControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/PanControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/SubtreeDragControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/ZoomControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/ZoomingPanControl.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/controls/package.html,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/distortion,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/distortion/BifocalDistortion.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/distortion/Distortion.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/distortion/FisheyeDistortion.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/distortion/package.html,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/AbstractForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/CircularWallForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/DragForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/EulerIntegrator.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/Force.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/ForceItem.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/ForcePanel.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/ForceSimulator.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/GravitationalForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/Integrator.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/NBodyForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/RungeKuttaIntegrator.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/Spring.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/SpringForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/WallForce.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/force/package.html,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/BalloonTreeLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/ForceDirectedLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/IndentedTreeLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/RadialTreeLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/RandomLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/SquarifiedTreeMapLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/TopDownTreeLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/VerticalTreeLayout.java,
+	  util/prefuse-alpha/extensions/edu/berkeley/guir/prefusex/layout/package.html,
+	  util/prefuse-alpha/lib, util/prefuse-alpha/lib/ant.jar,
+	  util/prefuse-alpha/license-apache-ant.txt,
+	  util/prefuse-alpha/license-prefuse.txt,
+	  util/prefuse-alpha/readme.txt, util/prefuse-alpha/src,
+	  util/prefuse-alpha/src/edu, util/prefuse-alpha/src/edu/berkeley,
+	  util/prefuse-alpha/src/edu/berkeley/guir,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/AggregateItem.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/Display.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/EdgeItem.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/FocusManager.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/ItemFactory.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/ItemRegistry.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/NodeItem.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/VisualItem.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/AbstractAction.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/Action.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/ActionMap.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/ActionSwitch.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/RepaintAction.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/animate,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/animate/ColorAnimator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/animate/FontAnimator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/animate/LocationAnimator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/animate/PolarLocationAnimator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/animate/SizeAnimator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/assignment,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/assignment/ColorFunction.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/assignment/FontFunction.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/assignment/Layout.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/assignment/SizeFunction.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/assignment/TreeLayout.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/Filter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/FisheyeGraphFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/FisheyeTreeFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/GarbageCollector.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/GraphEdgeFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/GraphFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/GraphNodeFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/TreeAggregateFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/TreeEdgeFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/TreeFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/filter/WindowedTreeFilter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/action/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/ActionList.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/Activity.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/ActivityManager.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/ActivityMap.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/Pacer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/SlowInSlowOutPacer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/ThereAndBackPacer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/activity/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/BreadthFirstGraphIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/BreadthFirstTreeIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/CompositeItemIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/DOIItemComparator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/DefaultItemComparator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/EdgeNodeComparator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/NodeIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/ReverseListIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/SingleElementIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/TreeEdgeIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/VisibleItemIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/WrapAroundIterator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/collections/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ActivityAdapter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ActivityEventMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ActivityListener.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ControlAdapter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ControlEventMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ControlListener.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/EventMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/FocusEvent.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/FocusEventMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/FocusListener.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/ItemRegistryListener.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/PrefuseEventLogger.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/RegistryEventMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/event/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/AbstractGraph.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/Aggregate.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/DefaultEdge.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/DefaultEntity.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/DefaultGraph.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/DefaultNode.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/DefaultTree.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/DefaultTreeNode.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/Edge.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/Entity.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/Graph.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/GraphLib.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/Node.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/Tree.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/TreeNode.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event/GraphEventAdapter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event/GraphEventListener.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event/GraphEventMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event/GraphLoaderListener.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event/GraphLoaderMulticaster.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/event/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/DatabaseLoader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/ExternalEntity.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/ExternalNode.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/ExternalTreeNode.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/FileSystemLoader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/GraphLoader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/external/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/AbstractGraphReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/AbstractGraphWriter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/AbstractTreeReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/GraphReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/GraphWriter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/HDirTreeReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/TabDelimitedTreeReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/TreeMLTreeReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/TreeReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/XMLGraphReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/XMLGraphWriter.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/XMLTreeReader.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/io/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/graph/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/overview.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/DefaultEdgeRenderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/DefaultNodeRenderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/DefaultRendererFactory.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/ImageFactory.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/MultiLineTextItemRenderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/Renderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/RendererFactory.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/ShapeRenderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/TextImageItemRenderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/TextItemRenderer.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/render/package.html,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/ArrayLib.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/BrowserLauncher.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/Clip.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/ColorLib.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/ColorMap.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/DefaultFocusSet.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/FocusSet.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/FontLib.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/GeometryLib.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/KeywordSearchFocusSet.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/StringAbbreviator.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/ToolTipManager.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/Trie.java,
+	  util/prefuse-alpha/src/edu/berkeley/guir/prefuse/util/package.html:
+	  Initial revision
+
+2005-06-13 19:10  lucasa
+
+	* exehda-dev/bin/appman.log, exehda-dev/bin/exehda-services.xml,
+	  exemplos/lucas_testes_simples.dag, gridnodes.properties: ***
+	  empty log message ***
+
+2005-05-19 02:56  lucasa
+
+	* run.sh: Gera o pacote para execu&#65533;&#65533;o.
+
+2005-05-19 02:51  lucasa
+
+	* src/appman/parser/examples,
+	  src/appman/parser/examples/apagar.txt,
+	  src/appman/parser/examples/bag.txt,
+	  src/appman/parser/examples/eq6.txt,
+	  src/appman/parser/examples/low.txt,
+	  src/appman/parser/examples/phase.txt,
+	  src/appman/parser/examples/sssClustering.txt: Exemples de DAGs
+
+2005-05-19 02:48  lucasa
+
+	* src/appman/clustering, src/appman/clustering/AbstractDAG.java,
+	  src/appman/clustering/DAGEdge.java,
+	  src/appman/clustering/DAGNode.java,
+	  src/appman/clustering/DAG_DSC.java: Clustering
+
+2005-05-19 02:42  lucasa
+
+	* exemplos/teste.dag, lib/grappa1_2.jar,
+	  src/appman/parser/Makefile, src/appman/parser/SimpleParser.jj,
+	  src/appman/parser/SimpleParser.jjt, src/appman/parser/lucas fix
+	  unixfilename assign.txt: Novos arquivos adicoionados ao pacote
+
+2005-05-19 01:09  lucasa
+
+	* LEIAME.txt, build.xml, exehda-dev/README,
+	  exehda-dev/bin/appman.log, exehda-dev/bin/exehda-services.xml,
+	  gridnodes.properties, src/appman/Graph.java,
+	  src/appman/GraphGenerator.java, src/appman/GridTask.java,
+	  src/appman/parser/ASTAssignment.java,
+	  src/appman/parser/ASTForeachNode.java,
+	  src/appman/parser/ApplicationDescription.java,
+	  src/appman/parser/ParseException.java,
+	  src/appman/parser/SimpleCharStream.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParserConstants.java,
+	  src/appman/parser/SimpleParserDumpVisitor.java,
+	  src/appman/parser/SimpleParserTokenManager.java,
+	  src/appman/parser/SimpleParserTreeConstants.java,
+	  src/appman/parser/SimpleParserVisitor.java,
+	  src/appman/parser/SymbolTable.java,
+	  src/appman/parser/TaskDescription.java,
+	  src/appman/parser/Token.java,
+	  src/appman/parser/TokenMgrError.java: Commit das alreta&#65533;&#65533;es
+	  realziadas pela Patr&#65533;cia e o Vin&#65533;cios da UFRJ: Novo c&#65533;digo de
+	  particionamento, com o uso do algoritmo DSC. Altera&#65533;&#65533;o do
+	  arquivo build.xml
+
+2005-02-04 17:13  lucasa
+
+	* LEIAME.txt: Teste
+
+2005-02-04 17:07  lucasa
+
+	* ., LEIAME.txt, adapters.xml, build.xml, exehda-dev,
+	  exehda-dev/.cvsignore, exehda-dev/README, exehda-dev/bin,
+	  exehda-dev/bin/101da15ae16@8f360c83:moe.inf.ufrgs.br,
+	  exehda-dev/bin/101da15ae16@8f360c83:moe.inf.ufrgs.br/initial.out,
+	  exehda-dev/bin/101da15ae16@8f360c83:moe.inf.ufrgs.br/ls1.out,
+	  exehda-dev/bin/101da15ae16@8f360c83:moe.inf.ufrgs.br/ls2.out,
+	  exehda-dev/bin/101da15ae16@8f360c83:moe.inf.ufrgs.br/star.tar.gz,
+	  exehda-dev/bin/appman.log, exehda-dev/bin/exehda,
+	  exehda-dev/bin/exehda-dev.env,
+	  exehda-dev/bin/exehda-services.xml,
+	  exehda-dev/bin/hs_err_pid25323.log, exehda-dev/bin/isam-run,
+	  exehda-dev/lib, exehda-dev/lib/.cvsignore,
+	  exehda-dev/lib/exehda-core.jar, exehda-dev/lib/isam-util.jar,
+	  exemplos, exemplos/GeneratePovrayAppmanDagFile.py,
+	  exemplos/lucas_testes_povray.dag,
+	  exemplos/lucas_testes_simples.dag, exemplos/star.tar.gz,
+	  gridnodes.properties, lib, lib/appman-devel.jar,
+	  lib/devel-core.jar, lib/devel-primos.jar, lib/exehda-core.jar,
+	  lib/isam-util.jar, lib/prefuse.jar, rcreate.isam, src,
+	  src/appman, src/appman/AppManConsole.java,
+	  src/appman/AppManConsoleRemote.java,
+	  src/appman/ApplicationManager.java,
+	  src/appman/ApplicationManagerRemote.java,
+	  src/appman/CollectorDemo2.java, src/appman/DAGGraphGUI.java,
+	  src/appman/DataFile.java, src/appman/Debug.java,
+	  src/appman/ForceDemo.java, src/appman/Graph.java,
+	  src/appman/GraphGenerator.java, src/appman/GraphNode.java,
+	  src/appman/GridFileService.java,
+	  src/appman/GridFileServiceRemote.java,
+	  src/appman/GridRemoteHostsFileProperties.java,
+	  src/appman/GridRemoteHostsProperties.java,
+	  src/appman/GridResourceMonitor.java,
+	  src/appman/GridSchedule.java, src/appman/GridTask.java,
+	  src/appman/GridTaskRemote.java, src/appman/MyTask.java,
+	  src/appman/SubmissionManager.java,
+	  src/appman/SubmissionManagerRemote.java, src/appman/Task.java,
+	  src/appman/TaskManager.java, src/appman/TaskManagerRemote.java,
+	  src/appman/parser, src/appman/parser/ASTAssignment.java,
+	  src/appman/parser/ASTForeachNode.java,
+	  src/appman/parser/ASTRoot.class, src/appman/parser/ASTRoot.java,
+	  src/appman/parser/ASTTask.java,
+	  src/appman/parser/ApplicationDescription.java,
+	  src/appman/parser/DAG.java,
+	  src/appman/parser/JJTSimpleParserState.java,
+	  src/appman/parser/Node.java,
+	  src/appman/parser/ParseException.java,
+	  src/appman/parser/SimpleCharStream.java,
+	  src/appman/parser/SimpleNode.java,
+	  src/appman/parser/SimpleParser.java,
+	  src/appman/parser/SimpleParserConstants.java,
+	  src/appman/parser/SimpleParserDumpVisitor.java,
+	  src/appman/parser/SimpleParserTokenManager.java,
+	  src/appman/parser/SimpleParserTreeConstants.java,
+	  src/appman/parser/SimpleParserVisitor.java,
+	  src/appman/parser/SymbolTable.java,
+	  src/appman/parser/TaskDescription.java,
+	  src/appman/parser/Token.java,
+	  src/appman/parser/TokenMgrError.java: Initial revision
+

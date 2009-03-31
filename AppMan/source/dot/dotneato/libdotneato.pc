@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib/graphviz
+includedir=${prefix}/include/graphviz
+                                                                                       
+Name: libdotneato
+Description: All graph layout engines in a single library
+Version: 2.2.1
+Libs: -L${libdir} -ldotneato
+Cflags: -I${includedir}

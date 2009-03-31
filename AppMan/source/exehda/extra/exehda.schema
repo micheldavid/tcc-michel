@@ -1,0 +1,180 @@
+# EXEHDA Resources Schema
+# $Id: exehda.schema 271 2006-11-29 01:39:33Z rbrosinha $
+#
+# Depends upon core.schema
+#
+
+#
+#      Schema for Representing EXEHDA Resources in an LDAP Directory 
+#
+
+# 1. Attribute Type Definitions
+#
+
+# 1.1 Generic Resource attributes
+#
+# Currently:
+#        xAttr
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.1.1
+    NAME 'xAttr'
+    DESC 'Generic EXEHDA Resource Attribute'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+# 1.2 Cell related attributes
+#
+# Currently:
+#        xCellNeighbor
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.2.1
+    NAME 'xNeighboorContactAddress'
+    DESC 'URL describing how reach the CIB on a given neighbor'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+# 1.3 Host related attributes
+#
+# Currently:
+#        xHostID
+#
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.3.1
+    NAME 'xHostID'
+    DESC 'Cell-wide id of the host'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+
+# 1.4 Service related attributes
+#
+# Currently:
+#        xContactAddress
+#
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.4.1
+    NAME 'xContactAddress'
+    DESC 'URL describing how reach the given service'
+    EQUALITY caseExactIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 
+    SINGLE-VALUE )
+
+# 1.5 User related attributes
+#
+# Currently: <none>
+#         xUserID
+#
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.5.1
+    NAME 'xUserID'
+    DESC 'Cell-wide id of the user'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+# 1.6 Application related attributes
+#
+# Currently:
+#         xAppID
+#         xAppOwner
+#         xAppLaunchDescriptor
+#         xAppWorker
+#         xAppCell
+#
+
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.6.1
+    NAME 'xAppID'
+    DESC 'System-wide id of the application'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.6.2
+    NAME 'xAppLaunchingDescriptor'
+    DESC 'Launching Descriptor'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.6.3
+    NAME 'xAppWorker'
+    DESC 'Worker node that joined the application execution'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.6.4
+    NAME 'xAppOwner'
+    DESC 'Application Owner'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12619.50.29900.3.6.5
+    NAME 'xAppCell'
+    DESC 'Other cells where the application is known to be executing'
+    EQUALITY caseIgnoreMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+
+# 2. Object Class Definitions
+#
+# The following object classes are defined in this document:
+#    
+#    exehdaResource
+#    exehdaCell
+#    exehdaHost
+#    exehdaService
+#    exehdaApplication
+#    exehdaUser
+#
+
+# OBJECTCLASS exehdaResource
+objectclass ( 1.3.6.1.4.1.12619.50.29900.3.7.1
+    NAME 'exehdaResource'
+    DESC 'Generic EXEHDA resource'
+    SUP  top
+    STRUCTURAL
+    MUST ( cn )
+    MAY ( xAttr ) )
+
+# OBJECTCLASS exehdaCell
+objectclass ( 1.3.6.1.4.1.12619.50.29900.3.7.2
+    NAME 'exehdaCell'
+    DESC 'EXEHDA Cell'
+    SUP  top
+    STRUCTURAL
+    MUST ( cn )
+    MAY ( xAttr ) )
+
+# OBJECTCLASS exehdaHost
+objectclass ( 1.3.6.1.4.1.12619.50.29900.3.7.3
+    NAME 'exehdaHost'
+    DESC 'EXEHDA Host'
+    SUP  top
+    STRUCTURAL
+    MUST ( xHostID )
+    MAY ( xAttr ) )
+
+# OBJECTCLASS exehdaService
+objectclass ( 1.3.6.1.4.1.12619.50.29900.3.7.4
+    NAME 'exehdaService'
+    DESC 'EXEHDA Service'
+    SUP  top
+    STRUCTURAL
+    MUST ( cn )
+    MAY ( xContactAddress $ xAttr ) )
+
+# OBJECTCLASS exehdaApplication
+objectclass ( 1.3.6.1.4.1.12619.50.29900.3.7.5
+    NAME 'exehdaApplication'
+    DESC 'EXEHDA Application'
+    SUP  top
+    STRUCTURAL
+    MUST ( xAppID ) 
+    MAY  ( xAppLaunchingDescriptor $ xAppWorker $ xAppOwner $ xAppCell $ xAttr ) )
+
+# OBJECTCLASS exehdaUser
+objectclass ( 1.3.6.1.4.1.12619.50.29900.3.7.6
+    NAME 'exehdaUser'
+    DESC 'EXEHDA User'
+    SUP  top
+    STRUCTURAL
+    MUST ( xUserID $ xAttr ) )
+

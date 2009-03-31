@@ -1,0 +1,13 @@
+    case var:
+      t = jj_consume_token(var);
+	  /*
+	   * lucas modification added 29/11/2004
+	   * This peace of code generate the correct file unix name from a VAR in the SymbolTable 
+	   */	  
+				Object obj = symbolTable.getVariable(""+t.image);
+				if ((obj == null) || (( (obj.getClass().getName()).equals("java.lang.String"))))
+				{
+					file = file + (String) obj;
+				}
+				System.out.println("[GRAND]\t PARSER filenameunix = "+ file);
+      break;

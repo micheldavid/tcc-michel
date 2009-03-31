@@ -1,0 +1,22 @@
+graph low-coupled
+
+java-geneal-init="/etc/alternatives/java -cp ./geneal-appman.jar GenealInitialTask"
+java-geneal-process="/etc/alternatives/java -cp ./geneal-appman.jar GenealProcessTask"
+java-geneal-final="/etc/alternatives/java -cp ./geneal-appman.jar GenealFinalTask"
+geneal-number-of-tasks=1
+geneal-input-sequence="TTTTCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCTAACCCTAACCCTAACCCTAACCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCTAACCCTAAACCCTAAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCAACCCCAACCCCAACCCCAACCCCAACCCCAACCCTAACCCCTAACCCTAACCCTAACCCTACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCCTAACCCCTAACCCTAACCCTAACCCTA"
+geneal-process-input=""
+geneal-process-output=""
+
+foreach task_id in 1..1 {
+ geneal-process-input = ${geneal-process-input} + ";geneal-database-segment-" + ${task_id} + ".txt"
+}
+
+task i -e "${java-geneal-init} ${geneal-number-of-tasks}" -i "http://localhost/~romulo/geneal/geneal-database.txt;http://localhost/~romulo/geneal/geneal-appman.jar" -o ${geneal-process-input}
+
+foreach task_id in 1..1 {
+ task ${task_id} -e "${java-geneal-process} ${task_id} ${geneal-input-sequence}" -i "geneal-database-segment-"${task_id}".txt;http://localhost/~romulo/geneal/geneal-appman.jar" -o "geneal-result-"${task_id}".txt"
+ geneal-process-output = ${geneal-process-output} + ";geneal-result-" + ${task_id} + ".txt"
+}
+
+task f -e "${java-geneal-final} ${geneal-number-of-tasks}" -i ${geneal-process-output}";http://localhost/~romulo/geneal/geneal-appman.jar" -o geneal-final-result.txt
