@@ -1,0 +1,56 @@
+#!/bin/bash
+
+source `dirname $0`/exehda.env
+
+#
+# Print a help message describing the options supported by this program
+#
+function printHelp() 
+{
+     echo 'EXEHDA Cluster Launcher ($Revision: 271 $ $Date: 2006-11-28 23:39:33 -0200 (ter, 28 nov 2006) $)'
+     echo "usage: ${0##*/} [-h] [-p <profile> node1 node2 ... nodeN]"
+     echo "     -p <profile>   Launch exehda on cluster nodes using \"--profile <profile>.<hostname>\""
+     echo "     -h             Show this help screen"
+     echo " "
+}
+
+function forkExehda()
+{
+    node=$1
+    profile=$2
+
+    EXEHDA_HOME=`readlink -f $EXEHDA_HOME`
+ 
+    echo "Starting EXEHDA on node $node..."
+    ssh $node "$EXEHDA_HOME/bin/exehda" -q -d -l "$EXEHDA_HOME/var/log/exehda.log.$node" -pid "$EXEHDA_HOME/var/run/exehda.pid.$node" -nc --profile $profile.$node
+}
+
+
+#while [ true ] ; do
+    
+    OPT=$1
+    case $OPT in
+	-p)
+	    EXEHDA_PROFILE=$2
+	    shift
+	    shift
+	    ;;
+	-h)
+	    printHelp
+	    exit 2
+	    ;;
+ 	--*)
+ 	    break
+ 	    ;;
+ 	*)
+	    echo "Unknown option: $OPT"
+ 	    printHelp
+ 	    exit 2
+    esac
+
+#done
+
+for n in $*; do
+    forkExehda $n "$EXEHDA_PROFILE" & 
+    sleep 1
+done

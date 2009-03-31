@@ -1,0 +1,739 @@
+/*
+ * GRAND - kayser@cos.ufrj.br (c) 2004
+ * SimpleParser.jjt - parser for input description file using jjtree
+ * 2004/03/09; 2004/04/28; 2004/07/02; 2004/08/04
+ */
+options {
+ // for jjtree
+  MULTI=true;
+  VISITOR=true;
+  NODE_DEFAULT_VOID=true;
+ // for javacc
+  LOOKAHEAD = 2;   // should be 1 - changed due to filename
+  ERROR_REPORTING = true;
+  IGNORE_CASE = true;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = true; // set to true if lookahead > 1
+}
+
+PARSER_BEGIN(SimpleParser)
+
+package appman.parser;
+
+import java.io.*;
+import java.util.*;
+import appman.clustering.*;
+import appman.*;
+
+public class SimpleParser {
+
+  // To take care of variables values
+  static int MAX_NUMBER_OF_VARIABLES = 500;
+  static SymbolTable  symbolTable;
+  
+  // To store application definition
+  static public ApplicationDescription appDescription;
+  //static public ClusteringPhase cp; 
+   
+  //VDN
+  static public DAGGraphGUI ddgui;
+  static public transient FileWriter parserOut;
+  
+  public static void setDAGGraphGUI( DAGGraphGUI ddg){
+  		ddgui = ddg;
+  } 
+
+  public static void main(String args[]) throws ParseException {
+  		parseGRIDADL(args);
+   }
+
+  public static ApplicationDescription parseGRIDADL(String args[]) throws ParseException {
+  
+	//VDN:2/9/5  
+	long timeInitParse=0;
+	long timeFinishParse=0;
+	long timeInitInferDAG=0;
+	long timeFinishInferDAG=0;	
+	timeInitParse = System.currentTimeMillis();
+  
+    System.out.println("[GRAND] Starting parsing description file...");
+    String filename = "teste.txt";
+    if (args.length >= 1) {
+        filename = args[0];
+    }
+    // SimpleParser parser = new SimpleParser(System.in);
+    SimpleParser parser = null;
+    try {
+        FileReader filer = new FileReader(filename);
+        if(!jj_initialized_once) { // first static parse
+            parser = new SimpleParser((Reader)filer);
+        } else {
+          SimpleParser.ReInit(filer);
+        }
+
+    } catch (Exception e) {
+       System.out.println("[GRAND]\tParsing: Error opening description file");
+       System.exit(1);
+    }
+
+    symbolTable = new SymbolTable(MAX_NUMBER_OF_VARIABLES);
+    appDescription = new ApplicationDescription();
+
+    SimpleNode rootNode =  parser.Input();
+
+/*
+    System.out.println("[GRAND] start GRAPH DUMP.");
+    rootNode.dump("  ");
+    System.out.println("[GRAND] GRAPH DUMP done.");
+*/
+
+/**/
+    SimpleParserVisitor v = new SimpleParserDumpVisitor(appDescription,symbolTable);
+    ASTRoot n = (ASTRoot) rootNode;
+    n.jjtAccept(v, null);
+    ///System.out.println("Done visiting.");
+/**/
+	
+	timeInitInferDAG = System.currentTimeMillis();
+    DAG_DSC dag = appDescription.inferDAG();
+    timeFinishInferDAG = System.currentTimeMillis();
+    
+    
+    //VDN:1/11/05
+    //cp = new ClusteringPhase(dag);
+    //cp.clustering();
+    
+    System.out.println("[GRAND] Parsing finished with success.");
+    
+    // vnd 2005/03/18: included here call to GRAPHVIZ - generates visualization graph
+    //dag.dumpGraphiz();
+    
+
+/*
+    System.out.println("Testing DUMP:");
+    dag.dump();
+*/
+
+    // DAGClustering d = new DAGClustering(dag);
+    // int cluster[][] = d.doClusteringDSC();
+
+
+    
+    // vnd 2005/03/11
+    //DAGSimpleClustering d = new DAGSimpleClustering(dag);
+    //int cluster[][] = d.DoClustering();
+    //ApplicationManager ap = new ApplicationManager( dag, cluster );
+    //ap.submit();   
+    
+    
+    //VDN:2/9/05  
+    timeFinishParse = System.currentTimeMillis();
+    try{
+   		parserOut = new FileWriter("parseOut.txt");
+   		parserOut.write("Parser Time(ms): "+(timeFinishParse-timeInitParse)+"\n");
+   		parserOut.write("InferDAG Time(ms): "+(timeFinishInferDAG-timeInitInferDAG+"\n"));
+   		parserOut.close();
+    
+    }catch( IOException e){
+   		System.out.println("[Simple Parser] :"+e);
+    }
+    
+    
+     return appDescription; 
+  }
+
+}
+
+
+PARSER_END(SimpleParser)
+
+/************
+ * delimiters
+ */
+SKIP :
+{
+    " "
+  | "\t"
+  | "\n"
+  | "\r"
+}
+
+
+/************
+ * Comments 
+ */
+
+MORE :
+{
+  "#" : IN_SINGLE_LINE_COMMENT
+}
+
+<IN_SINGLE_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" > : DEFAULT
+}
+
+<IN_SINGLE_LINE_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+/************
+ * lexical tokens definition
+ */
+
+TOKEN : /*Reserved words*/
+{
+    < GRAPH: "graph" >
+  | < INDEP: "independent">
+  | < LOW: "low-coupled">
+  | < HIGH: "high-coupled">
+  | < TASK: "task">
+  | < EXECUTABLE: "-e">
+  | < INPUT: "-i">
+  | < OUTPUT: "-o">
+  | < CAPACITY: "-c">
+  | < DONE: "done">
+  | < FOREACH: "foreach">
+  | < IN: "in">
+  | < TRANSIENT: "transient">
+  | < LISTDELIMITER: ";">
+}
+
+TOKEN :
+{
+//    < constant: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9","_","-"] )* >
+    < constant: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9","_","-",":","/",".","~"] )* >
+//    < constant: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+//  | < special_char:  ["_","-",":","/",".","~","%","@","&"]   >
+  | < plain_constant: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  | < number: ["0"-"9"] ( ["0"-"9"] )* >
+  | < var: "${" ( ["a"-"z","A"-"Z","0"-"9","_","-"] )+ "}">
+  | < character: ["a"-"z","A"-"Z"] >
+//  | < string: "\"" ( ["a"-"z","A"-"Z","0"-"9","_","-","."] )* "\"">
+  | < string: "\"" ( ~["\"","\n","\r"] )* "\"">
+}
+
+/************
+ * grammar - entry point
+ */
+SimpleNode Input()  #Root :
+{}  
+{
+  [ graphDefinition() ] 
+  setOfTaskDefinition()
+  [ transientFileDefinition() ] 
+  <EOF>
+  {
+      // appDescription.inferDAG(); => moved to higher level
+      return jjtThis;
+  }
+}
+
+void setOfTaskDefinition() :
+{}
+{
+  ( taskDefinition() | loop() | assignment() ) +  
+}
+
+/************
+ * 
+ */
+void graphDefinition() :
+{}
+{
+  <GRAPH>  ( <INDEP> 
+             {
+               appDescription.putGraphType(0);
+               System.out.println("[GRAND]\tgraph=independent"); 
+             } 
+            |<LOW>   
+             {
+               appDescription.putGraphType(1);
+               System.out.println("[GRAND]\tgraph=low-coupled"); 
+             }
+            |<HIGH>  
+             {
+               appDescription.putGraphType(2);             
+               System.out.println("[GRAND]\tgraph=high-coupled"); } 
+             )
+}
+
+/************
+ * 
+ */
+void taskDefinition() #Task :
+{
+  Token t;
+  String taskName="";
+  String executable;
+  String file;  
+  Vector inputfile=null;
+  Vector outputfile=null;
+  int compCost=-1; // negative number means user did not specified a value
+}
+{
+  <TASK>
+      [ 
+      (( t=<constant> |  t=<number> ) 
+        {
+          taskName = ""+t.image;
+       }
+      | t=<var> 
+        {
+          taskName = ""+t.image;
+        }
+
+      )
+      ]
+      {
+      ///System.out.println("[_____]\t("+taskName+") ");
+      }
+      <EXECUTABLE> executable=filename()
+        {
+          ///System.out.println("[GRAND]\t("+taskName+") task program="+executable);
+        }
+      [
+      <INPUT> file=filename() 
+        {
+          ///System.out.println("[GRAND]\t("+taskName+") input="+file);
+          inputfile = new Vector(1,1);
+          inputfile.addElement(file);
+        }
+       ( <LISTDELIMITER> file=filename() 
+        {
+          ///System.out.println("[GRAND]\t("+taskName+") input="+file);
+          inputfile.addElement(file);
+        }
+       ) *
+      ]
+      [
+      <OUTPUT> file=filename() 
+        {
+          ///System.out.println("[GRAND]\t("+taskName+") output="+file);
+          outputfile = new Vector(1,1);
+          outputfile.addElement(file);
+        }
+       ( <LISTDELIMITER> file=filename() 
+        {
+          ///System.out.println("[GRAND]\t("+taskName+") output="+file);
+          outputfile.addElement(file);
+        }
+       ) *
+      ]
+      [ <CAPACITY> t=<number> 
+        {
+          ///System.out.println("[GRAND]\t("+taskName+") computational power="+t.image);
+          compCost = Integer.parseInt(t.image);
+         }
+      ]
+      [ <DONE> ]
+      {
+          /*moved to SPDumpVisitor:
+          appDescription.addTask(taskName,executable,inputfile,outputfile,compCost);
+          */
+   	  jjtThis.setTaskName(taskName);
+   	  jjtThis.setExecutable(executable);
+          jjtThis.setInput(inputfile);
+          jjtThis.setOutput(outputfile);
+          jjtThis.setCompCost(compCost);
+      }
+}
+
+String filename() :
+{
+  String file;
+}
+{
+   file=filenameUnix()
+     {
+       return(file);
+     } 
+}
+
+String filenameUnix() :
+{
+  Token t;
+  Token t2;
+  Token t3;
+  String file="";
+}
+{
+   ( (t=<constant> | t=<IN> | t=<number>)
+         { 
+          file=file+""+t.image;
+         }
+   | ( (t=<string> 
+           { 
+            // pkvm 2005/07/18: changed to exclude " from string
+            String s = ((String)t.image);
+            file=file+""+s.substring(1,(s.length()-1));
+           }        
+       | t=<var>
+           { 
+            file=file+""+t.image;
+           }        
+       )
+     )+
+   ) 
+         {
+           ///System.out.println("FILENAME - final: "+file);
+           return(file);
+
+         } 
+/******
+   ( (t=<constant> | t=<IN> | t=<number> )
+         { 
+          file=file+""+t.image;
+         }
+   | t=<var> 
+         { 
+          file=file+""+t.image;
+         }
+   ) 
+   (  ( t2="/"  | t2="." | t2=":" | t2="\\") 
+         {
+          file=file+""+t2.image;
+         }
+     ( (t3=<constant> | t3=<IN> | t3=<number> ) 
+         {
+          file=file+""+t3.image;
+         }
+       | t3=<var>
+         {
+          file=file+""+t3.image;
+          System.out.println("FILENAME - var in: "+file);
+         }
+     )
+   ) *
+         {
+         System.out.println("FILENAME - final: "+file);
+           return(file);
+
+         } 
+********/         
+/*
+   ( (t=<constant> | t=<IN> | t=<number> )
+         { 
+          file.setAsConstant();
+          file.addValue(AssignmentBody.CONSTANT,""+t.image);
+         }
+   | t=<var> 
+         { 
+          file.setAsVariable();
+          file.addValue(AssignmentBody.VARIABLE,""+t.image);
+         }
+   )
+   ( ( t2="/"  | t2="." ) 
+         {
+          file.setAsOperation();
+          file.addValue(AssignmentBody.OPERATION,"+");
+          file.addValue(AssignmentBody.CONSTANT,""+t2.image);
+         }
+     ( (t=<constant> | t=<IN> | t=<number> ) 
+         {
+          file.addValue(AssignmentBody.OPERATION,"+");
+          file.addValue(AssignmentBody.CONSTANT,""+t.image);
+         }
+       | t=<var>)
+         {
+          file.addValue(AssignmentBody.OPERATION,"+");
+          file.addValue(AssignmentBody.VARIABLE,""+t.image);
+         }
+   ) *
+         {
+           return(file);
+         } 
+*/
+}
+
+
+/*-----------
+ * 
+ */
+SimpleNode loop() #ForeachNode:
+{
+  Token t_var;
+  Vector rangeElements;
+}
+{
+   <FOREACH> t_var=<constant> 
+   {
+      jjtThis.setVariableName(t_var.image);
+   }
+   <IN> rangeElements=range() 
+  {
+     int numberOfIterations = rangeElements.size();
+     jjtThis.setNumberOfIterations(numberOfIterations);
+
+     jjtThis.setRangeElements(rangeElements);
+  }
+   "{"
+     setOfTaskDefinition() 
+   "}" 
+   {
+      // jjtThis is the node currently being built
+      return jjtThis;
+/*
+    System.out.println("Visiting...");
+    SimpleParserVisitor v = new SimpleParserDumpVisitor(appDescription);
+    ASTRoot n = (ASTRoot) rootNode;
+    n.jjtAccept(v, null);
+    System.out.println("Done.");
+*/
+   }
+}
+
+Vector range() :
+{
+Token t_begin;
+Token t_end;
+Vector listElements;
+}
+{
+    t_begin =<number> ".." t_end=<number>
+    {
+       int n_begin = Integer.parseInt(t_begin.image);
+       int n_end = Integer.parseInt(t_end.image);
+       int numberOfIterations = n_end - n_begin + 1;
+       if (numberOfIterations < 0) {
+          System.out.println("[GRAND]\tERROR - aborting parsing");
+          System.out.println("  invalid range in foreach command: "+n_begin+".."+n_end);
+          System.out.println("  range should be a valid increasing integer interval");
+          /*TODO - incluir na msg de erro o nro da linha */
+       }
+       System.out.println("RANGE iterations:"+numberOfIterations);
+
+       listElements = new Vector();
+       for (int i = n_begin; i<=n_end; i++) {
+          listElements.addElement(""+i);
+       }
+       return  listElements;     
+    }
+    | listElements=list()
+    {
+       return listElements;
+    }
+}
+
+/*-----------
+ * 
+ */
+void assignment() #Assignment :
+{
+  Token t_var;
+  AssignmentBody value; 
+}
+{
+   t_var=<constant> 
+   {
+      symbolTable.putVariable(""+t_var.image,"");
+      jjtThis.setVariableName(""+t_var.image);
+   }
+   "="  value=assignmentBody()
+   {
+     // changed: instead of including in the symbolTable, 
+     // includes in the Assignment node
+     //  symbolTable.putVariable(""+t_var.image,value);
+     jjtThis.setAssignmentBody(value);
+   }
+}
+
+/**
+ * returns for most cases a String object
+ * returns Vector when receives a list
+ */
+AssignmentBody assignmentBody() :
+{
+   Token t;
+   Token t_op;
+   Vector l;
+   AssignmentBody value;
+}
+{
+    {
+       value = new AssignmentBody();
+    }
+    (
+    // first and second possibilities: variable or number
+    ( t=<var> 
+    {
+       value.setAsVariable();
+       value.addValue(AssignmentBody.VARIABLE,""+t.image);
+    }
+    | t=<number> 
+    {
+       value.setAsConstant();
+       value.addValue(AssignmentBody.CONSTANT,""+t.image);
+    }
+    )
+    ( (
+        ( t_op="/" 
+        | t_op="*"
+        | t_op="^" )
+        {
+          value.setAsOperation();
+          value.addValue(AssignmentBody.OPERATION,""+t_op.image);
+        }
+        ( t=<var> 
+        {
+          value.addValue(AssignmentBody.VARIABLE,""+t.image);
+        }
+        | t=<number> ) 
+        {
+          value.addValue(AssignmentBody.CONSTANT,""+t.image);
+        }
+      ) | (
+        ( t_op="+" 
+        | t_op="-" )
+        {
+          value.setAsOperation();
+          value.addValue(AssignmentBody.OPERATION,""+t_op.image);
+        }
+        ( t=<string> 
+        {
+            // pkvm 2005/07/20: changed to exclude " from string
+            String s = ((String)t.image);
+            s=s.substring(1,(s.length()-1));
+            value.addValue(AssignmentBody.STRING,""+s);
+        }
+        | t=<var> 
+        {
+          value.addValue(AssignmentBody.VARIABLE,""+t.image);
+        }
+        | t=<number> 
+        {
+          value.addValue(AssignmentBody.CONSTANT,""+t.image);
+        }
+        )
+        ) )*
+       {
+          return value;
+       }
+    // third possibility: string
+    | t=<string>
+    {
+       value.setAsString();
+       // pkvm 2005/07/20: changed to exclude " from string
+       String s2 = ((String)t.image);
+       s2=s2.substring(1,(s2.length()-1));
+       value.addValue(AssignmentBody.STRING,""+s2);
+    }
+       (
+         ( t_op="+" 
+         | t_op= "-" )
+       {
+          value.setAsOperation();
+          value.addValue(AssignmentBody.OPERATION,""+t_op.image);
+       }
+         ( t=<string> 
+       {
+            // pkvm 2005/07/20: changed to exclude " from string
+            String s = ((String)t.image);
+            s=s.substring(1,(s.length()-1));
+          value.addValue(AssignmentBody.STRING,""+s);
+       }
+         | t=<var> 
+       {
+          value.addValue(AssignmentBody.VARIABLE,""+t.image);
+       }
+         | t=<number> )
+       {
+          value.addValue(AssignmentBody.CONSTANT,""+t.image);
+       }
+       )*
+      {
+          return value;
+      }
+    // fourth possibility: list => none operation allowed...
+    | l= list()
+    {
+       value.setAsList();
+       value.addValue(AssignmentBody.LIST,""+l);
+       return value;
+    }
+    )
+}
+
+void operator() :
+{}
+{
+   ( <constant> | <var> | <number> )
+}
+
+void mathOperator() :
+{}
+{
+   ( <var> | <number> )
+}
+
+Vector list() :
+{
+  Vector listContent=null;
+  Token t;
+}
+{
+   "["
+   ( t=<constant> 
+   {
+      listContent=new Vector(10);
+      listContent.addElement(""+t.image);
+   }
+     | t=<number> 
+   {
+      listContent=new Vector(10);
+      listContent.addElement(""+t.image);
+   }
+     | t=<string>
+   {
+      listContent=new Vector(10);
+      listContent.addElement(""+t.image);
+   }
+   )
+   (
+   "," ( t=<constant> 
+         {
+            listContent.addElement(""+t.image);
+         } 
+         | t=<number> 
+         {
+            listContent.addElement(""+t.image);
+         } 
+         | t=<string>
+         {
+            listContent.addElement(""+t.image);
+         } 
+       )   
+   )*
+   "]"
+   {
+      return listContent;
+   }
+}
+
+
+/************
+ * 
+ */
+void transientFileDefinition() :
+{
+  String file;
+}
+{
+   <TRANSIENT> 
+     {
+       System.out.print("[GRAND]\tTransient files:");
+     } 
+   ( file=filename() 
+     {
+       System.out.print(" "+file);
+     } 
+   )+
+     {
+       System.out.println(" ");
+     } 
+}

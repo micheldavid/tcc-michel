@@ -1,0 +1,169 @@
+<EXEHDA>
+
+  <PROFILE name="base">
+
+    <PROP name="localhost.id" value="78"/>
+    <PROP name="localhost.cell" value="BASE"/>
+
+    <SERVICE name="logger" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+       <PROP name="logLevel" value="5000"/>
+    </SERVICE>
+
+    <SERVICE name="worb" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+    </SERVICE>
+
+    <SERVICE name="cib" loadPolicy="boot">
+       <PROP name="contactAddress" value="worb://localhost/cib" /> 
+       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
+       <PROP name="neighborhood" value="worb:tcp://indiana:1980/cib"/>
+       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
+       <PROP name="backEnd.ldap.server" value="indiana"/>
+       <PROP name="backEnd.ldap.rootDn" value="dc=exehda"/>
+       <PROP name="backEnd.ldap.user" value="cn=admin,dc=exehda"/>
+       <PROP name="backEnd.ldap.passwd" value="secreta"/>
+    </SERVICE>
+
+    <SERVICE name="bda" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
+       <PROP name="docroot" value="/home/lucasa/trabalhos_mestrado/projetos/appman/appman-dev/bin"/>
+    </SERVICE>
+
+    <SERVICE name="avu" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
+       <PROP name="docroot" value="/path/to/avu/docroot"/>
+    </SERVICE>
+
+   <SERVICE name="executor" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
+    </SERVICE>
+
+   <SERVICE name="objectseed" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+       <PROP name="schedHeuristic" value=""/>
+    </SERVICE>
+
+    <SERVICE name="collector" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
+    </SERVICE>
+    
+    <SERVICE name="gatekeeper" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+       <PROP name="port" value="29901"/>
+    </SERVICE>
+
+    <SERVICE name="oxmanager" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerCell"/>
+    </SERVICE>	
+
+    <SERVICE name="discoverer" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
+       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
+    </SERVICE>
+
+
+  </PROFILE>
+
+
+  
+  <PROFILE name="nodo">
+
+    <PROP name="host.id" value="1"/>
+    
+    <SERVICE name="logger" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+       <PROP name="logLevel" value="5000"/>
+    </SERVICE>
+
+    <SERVICE name="worb" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+       <PROP name="port" value="1990"/>
+    </SERVICE>
+
+    <SERVICE name="cib" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
+       <PROP name="contactAddress" value="worb:tcp://moe.inf.ufrgs.br/cib"/>
+    </SERVICE>
+
+    <SERVICE name="bda" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+    </SERVICE>
+
+    <SERVICE name="avu" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
+       <PROP name="docroot" value="/home/lucc/Projects/ISAM/FakeAvu"/>
+    </SERVICE>
+
+    <SERVICE name="executor" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.ExecutorImpl"/>
+    </SERVICE>
+
+    <SERVICE name="gatekeeper" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+       <PROP name="port" value="29901"/>
+    </SERVICE>
+
+    <SERVICE name="objectseed" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.primos.ObjectSeedImpl"/>
+    </SERVICE>
+    
+    <SERVICE name="collector" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
+    </SERVICE>
+
+  </PROFILE>
+
+
+  <PROFILE name="expgrid-nodo">
+
+    <SERVICE name="logger" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+       <PROP name="logLevel" value="5000"/>
+    </SERVICE>
+
+    <SERVICE name="worb" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+    </SERVICE>
+
+    <SERVICE name="cib" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
+       <PROP name="contactAddress" value="//gppd.inf.ufrgs.br/cib" />
+    </SERVICE>
+
+    <SERVICE name="bda" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+       <PROP name="bdaHost" value="gppd.inf.ufrgs.br" />
+    </SERVICE>
+
+    <SERVICE name="avu" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImplClient"/>
+       <PROP name="avuHost" value="gppd.inf.ufrgs.br" />
+    </SERVICE>
+
+    <SERVICE name="executor" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.primos.ExecutorImpl"/>
+    </SERVICE>
+
+    <SERVICE name="gatekeeper" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+       <PROP name="port" value="29901"/>
+    </SERVICE>
+
+    <SERVICE name="objectseed" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.primos.ObjectSeedImpl"/>
+    </SERVICE>
+
+    <SERVICE name="discoverer" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.perdida.LookupComponent"/>
+       <PROP name="localhost" value="indiana.inf.ufrgs.br"/>
+       <PROP name="multicastAddress" value="228.5.6.7"/>
+       <PROP name="multicastPort" value="6789"/>
+    </SERVICE>
+
+  </PROFILE>
+
+
+</EXEHDA>
+

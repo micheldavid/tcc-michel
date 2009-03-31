@@ -1,0 +1,105 @@
+#!/bin/bash
+
+source `dirname $0`/exehda.env
+
+#
+# Print a help message describing the options supported by this program
+#
+function printHelp() 
+{
+     echo 'EXEHDA Remote Control ($Revision: 271 $ $Date: 2006-11-28 23:39:33 -0200 (ter, 28 nov 2006) $)'
+     echo "usage: ${0##*/} [-pid <pidfile>] [-h] <command>"
+     echo "     -pid <pidfile> Read process id from file <pidfile>"
+     echo "                    (Default pidfile: \"$EXEHDA_PID_FILE\")"
+     echo "     -h             Show this help screen"
+     echo " "
+     echo "   Where <command> would be:"
+     echo "     stop           Kills the correponding middleware instance."
+     echo "     dump-threads   Dump stack of existing threads"
+     echo " "
+}
+
+
+
+#
+# Stop EXEHDA
+#
+function stopExehda() 
+{
+    exehda_pid=$1
+    echo "Stopping EXEHDA ($exehda_pid)..."
+    kill $exehda_pid
+
+    rm -f $EXEHDA_PID_FILE
+}
+
+#
+# Dump JVM thread stack
+#
+
+function dumpThreads()
+{
+    exehda_pid=$1
+    echo "Dumping threads ($exehda_pid)..."
+
+    kill -s SIGQUIT $exehda_pid
+}
+
+
+##################################################################################
+#
+# MAIN
+#
+
+
+# parse options
+while [ true ] ; do
+    
+    OPT=$1
+    case $OPT in
+	-pid)
+	    EXEHDA_PID_FILE=$2
+	    shift
+	    shift
+	    ;;
+	-h)
+	    printHelp
+	    exit 2
+	    ;;
+ 	-*)
+	    echo "Unknown option: $OPT"
+ 	    printHelp
+ 	    exit 2
+	    ;;
+ 	*)
+ 	    break
+ 	    ;;
+    esac
+
+done
+
+# get target pid
+if [ -r "$EXEHDA_PID_FILE" ]; then 
+    EXEHDA_PID=`cat $EXEHDA_PID_FILE`
+else
+    echo "Error: file \"$EXEHDA_PID_FILE\" not not readable."
+    exit 4
+fi
+
+
+# execute selected comand
+CMD=$1
+
+case $CMD in
+    stop)
+	stopExehda $EXEHDA_PID
+	;;
+    dump-threads)
+	dumpThreads $EXEHDA_PID
+	;;
+    *)
+	echo "Unknown comand: $CMD"
+	printHelp
+	exit 3
+	;;
+esac

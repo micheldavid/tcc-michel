@@ -1,0 +1,14 @@
+#
+# Chimera application: Sloan Sky Survey
+# basic DAG for cluster identification workflow
+#
+graph low-coupled
+
+PHASE1 = [BF, BG, BJ, BK, BN, BO, V, W, Z, BA, BD, BE, 
+          BH, BI, BJ, BM, BP, BQ, T, U, X, Y, BB, BC]
+foreach ${TASK} in  ${PHASE1} {
+  task ${TASK} ${TASK}.sub -i ${TASK}.in -o ${TASK}.out
+  OUTPUT = ${OUTPUT} + ${TASK}+ ".out "
+  }
+task final final.sub -i ${PHASE1} -o data.out
+transient ${PHASE1}
