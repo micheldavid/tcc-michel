@@ -1,0 +1,5 @@
+graph low-coupled
+task A A.sub -i data.in -o a.out
+task B B.sub -i a.out -o b.out
+task C C.sub -i a.out -o c.out
+task D D.sub -i b.out;c.out -o data.out

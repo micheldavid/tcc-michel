@@ -1,0 +1,8 @@
+graph low-coupled
+OUTPUT = ""
+foreach ${TASK} in 1..5 {
+  task ${TASK} ${TASK}.sub -i ${TASK}.in -o ${TASK}.out
+  OUTPUT = ${OUTPUT} + ${TASK}+ ".out "
+  }
+task 6 6.sub -i ${OUTPUT} -o data.out
+transient ${OUTPUT}

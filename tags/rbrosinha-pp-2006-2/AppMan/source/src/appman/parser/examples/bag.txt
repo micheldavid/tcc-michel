@@ -1,0 +1,9 @@
+#
+# bag-of-task example
+#
+graph independent
+# using foreach command
+foreach ${TASK} in 1..6 {
+# six independent tasks are created
+  task ${TASK} ${TASK}.sub -i ${TASK}.in -o ${TASK}.out
+}

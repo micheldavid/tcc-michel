@@ -1,0 +1,243 @@
+<EXEHDA>
+
+  <!-- ============================================ -->
+  <!-- BASE  localhost/giga01 (146.134.30.1) -->
+  <!-- ============================================ -->
+  <PROFILE name="lncc.localhost">
+    
+    <PROP name="localhost.id"   value="0"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+
+    <SERVICE name="logger" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+       <PROP name="logLevel" value="4000"/>
+    </SERVICE>
+
+    <SERVICE name="worb" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+    </SERVICE>
+
+    <SERVICE name="cib" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
+       <!-- para conectar as celulas labia e gradep utilizar a definicao de vizinhanca abaixo -->
+       <!-- <PROP name="neighborhood" value="worb:tcp://labia.cos.ufrj.br:1980/cib;worb:tcp://143.54.85.17:1980/cib"/> --> 
+       <PROP name="neighborhood" value=""/>
+       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
+       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
+       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
+       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
+       <PROP name="backEnd.ldap.passwd" value="senha"/>
+
+    </SERVICE>
+
+    <!-- para usar uma bda local, habilitar o servico abaixo, e desabilitar o seguinte -->
+    <SERVICE name="bda" loadPolicy="none">
+       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
+       <PROP name="docroot" value="/home/SO/dalto/eclipse/workspace/appman19.12.05/bin"/>
+    </SERVICE>
+    <!-- para usar a bda do gradep, habilitar o servico abaixo, e desabilitar o anterior -->
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <PROP name="bdaHost" value="143.54.85.17" />
+    </SERVICE>
+
+    <SERVICE name="avu" loadPolicy="none">
+       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
+       <PROP name="docroot" value="/path/to/avu/docroot"/>
+    </SERVICE>
+
+   <SERVICE name="executor" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
+    </SERVICE>
+
+   <SERVICE name="objectseed" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    </SERVICE>
+
+    <SERVICE name="collector" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
+    </SERVICE>
+
+    <SERVICE name="gatekeeper" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+       <PROP name="port" value="29901"/>
+    </SERVICE>
+
+    <SERVICE name="oxmanager" loadPolicy="boot">
+       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
+    </SERVICE>
+
+    <SERVICE name="discoverer" loadPolicy="demand">
+       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
+       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
+    </SERVICE>
+
+  </PROFILE>
+
+  <!-- ============================================ -->
+  <!-- NODOS: grade01-grade07   -->
+  <!-- ============================================ -->
+
+  <PROFILE name="lncc.grade01">
+    <PROP name="localhost.id" value="1"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.101"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+  <PROFILE name="lncc.grade02">
+    <PROP name="localhost.id" value="2"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.102"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+  <PROFILE name="lncc.grade03">
+    <PROP name="localhost.id" value="3"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.103"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+  <PROFILE name="lncc.grade04">
+    <PROP name="localhost.id" value="4"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.104"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+  <PROFILE name="lncc.grade05">
+    <PROP name="localhost.id" value="5"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.105"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+  <PROFILE name="lncc.grade06">
+    <PROP name="localhost.id" value="6"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.106"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+  <PROFILE name="lncc.grade07">
+    <PROP name="localhost.id" value="7"/>
+    <PROP name="localhost.cell" value="CELL-LNCC"/>
+    <PROP name="localhost.inetaddr" value="146.134.30.107"/>
+
+    <SERVICE name="logger" loadPolicy="boot" impl="org.isam.exehda.services.logging.BasicLogger"/>
+    <SERVICE name="worb" loadPolicy="boot" impl="org.isam.exehda.services.worb.WorbImpl"/>
+    <SERVICE name="cib" loadPolicy="boot" impl="org.isam.exehda.services.cib.CibImplClient">
+       <PROP name="contactAddress" value="worb:tcp://146.134.30.1:1980/cib"/>
+    </SERVICE>
+    <SERVICE name="bda" loadPolicy="boot" impl="org.isam.exehda.services.bda.BdaImplClient">
+       <!-- direcionada para gradep -->
+       <PROP name="bdaHost" value="143.54.85.17" />
+       <!-- direcionada para base local -->
+       <!-- <PROP name="bdaHost" value="146.134.30.1" /> -->
+    </SERVICE>
+    <SERVICE name="executor" loadPolicy="boot" impl="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+    <SERVICE name="oxmanager" loadPolicy="boot" impl="org.isam.exehda.services.oxm.OXManagerNode"/>
+    <SERVICE name="gatekeeper" loadPolicy="boot" impl="org.isam.exehda.services.GatekeeperService"/>
+    <SERVICE name="objectseed" loadPolicy="boot" impl="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+    <SERVICE name="collector" loadPolicy="demand" impl="org.isam.exehda.services.primos.CollectorImplNode"/>
+  </PROFILE>
+
+</EXEHDA>
+

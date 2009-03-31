@@ -1,0 +1,4 @@
+graph low-coupled
+TESTE = "D"
+task C C.sub -i a.out -o c.out
+task ${TESTE} D.sub -i b.out;c.out -o data.out

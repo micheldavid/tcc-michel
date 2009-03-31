@@ -1,0 +1,44 @@
+#!/bin/bash
+
+source `dirname $0`/exehda.env
+
+#
+# Print a help message describing the options supported by this program
+#
+function printHelp() 
+{
+     echo 'EXEHDA Cluster Killer ($Revision: 271 $ $Date: 2006-11-28 23:39:33 -0200 (ter, 28 nov 2006) $)'
+     echo "usage: ${0##*/} [-h] node1 node2 ... nodeN"
+     echo "     -h             Show this help screen"
+     echo " "
+}
+
+function killExehda()
+{
+    echo "Stopping EXEHDA on node $node..."
+    node=$1
+    profile=$2
+
+    EXEHDA_HOME=`readlink -f $EXEHDA_HOME`
+ 
+    ssh $node "$EXEHDA_HOME/bin/exehda-control" -pid "$EXEHDA_HOME/var/run/exehda.pid.$node stop"
+}
+
+
+#while [ true ] ; do
+    
+    OPT=$1
+    case $OPT in
+	-h)
+	    printHelp
+	    exit 2
+	    ;;
+ 	*)
+ 	    ;;
+    esac
+
+#done
+
+for n in $*; do
+    killExehda $n   
+done

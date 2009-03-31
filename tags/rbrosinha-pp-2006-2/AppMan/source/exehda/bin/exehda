@@ -1,0 +1,164 @@
+#!/bin/bash
+
+source `dirname $0`/exehda.env
+
+#
+# Print a help message describing the options supported by this program
+#
+function printHelp() 
+{
+     echo 'EXEHDA Launcher ($Revision: 271 $ $Date: 2006-11-28 23:39:33 -0200 (ter, 28 nov 2006) $)'
+     echo "usage: ${0##*/} OPTS ARGS..."
+     echo " "
+     echo "  Where OPTS would be:"
+     echo "     -d             Turn debug on. (enable logging of stdout and stderr)"
+     echo "     -q             Be quiet (supress console output)"
+     echo "     -nc            Don't use colors"
+     echo "     -sm            Enable Security Manager"
+     echo "     -l <logfile>   Redirect logging to <logfile>"
+     echo "                    (Default logfile: \"$EXEHDA_LOG\")"
+     echo "     -pid <pidfile> Record  process id in file <pidfile>"
+     echo "                    (Default pidfile: \"$EXEHDA_PID_FILE\")"
+     echo "     -h             Show this help screen"
+     echo " "
+     echo "   Where ARGS... would be:"
+     echo "     --profile <p>  Bootstrap the middleware using profile <p>"
+     echo " "
+}
+
+
+#
+# Launch EXEHDA
+#
+function startExehda() 
+{
+    $JVM $JVMOPTS -cp "${EXEHDA_CLASSPATH}" $EXEHDA_CONFIG org.isam.exehda.Exehda $* &
+
+    exehda_pid=$!
+
+    trap "kill $exehda_pid; exit 0" SIGINT
+ 
+
+    if [ -n "$EXEHDA_PID_FILE" ]; then
+	echo $exehda_pid > $EXEHDA_PID_FILE
+    fi
+
+    wait $exehda_pid
+}
+
+#
+# Filters input highlighting important information in the log produced by exehda 
+#
+function sedhl 
+{
+       # if not running in an interactive terminal or colors explicitly disabled
+    if [ "`tty`" == "" ] || [ "$NO_COLOR" == "true" ]; then
+	cat -
+    else 
+	HL_MARK="\o33\[1;34m"
+	HL_MARK2="\o33\[1;33m"
+	HL_MARK3="\o33\[1;36m"
+	HL_BLD="\o33\[1;39m"
+	HL_NONE="\o33\[1;00m"
+	HL_OK="\o33\[1;32m"
+	HL_WARN="\o33\[1;31m"
+
+	SEDHL_EXP="s/^\(\*\*\*\*\)\([^\[]*\)\(.*\)/$HL_MARK\1$HL_NONE $HL_BLD\2$HL_NONE $HL_MARK2\3$HL_NONE/;\
+                   s/^\(>>>>\)/$HL_MARK2\1 $HL_NONE/;\
+                   s/^\(\[[^]]*\]\)/$HL_MARK3\1$HL_NONE/;\
+                   s/\(Warning:\)/$HL_WARN\1$HL_NONE/;\
+                   s/\(EXEHDA initialization failed!.*\)/$HL_WARN\1$HL_NONE/;\
+                   s/\(EXEHDA is ready\.\)/$HL_OK\1$HL_NONE/;"
+
+	sed -e "$SEDHL_EXP"
+    fi
+}
+
+##################################################################################
+#
+# MAIN
+#
+
+DEBUG_ENABLED="false"
+SILENT_CONSOLE="false"
+NO_COLOR="false"
+
+while [ true ] ; do
+    
+    OPT=$1
+    case $OPT in
+	-d)
+	    DEBUG_ENABLED="true"
+	    shift
+	    ;;
+	-q)
+	    SILENT_CONSOLE="true"
+	    shift
+	    ;;
+	-nc)
+	    NO_COLOR="true"
+	    shift
+	    ;;
+	-sm)
+	    JVMOPTS="$JVMOPTS $JVMSECOPTS"
+	    shift
+	    ;;
+	-l)
+	    EXEHDA_LOG=$2
+	    shift
+	    shift
+	    ;;
+	-pid)
+	    EXEHDA_PID_FILE=$2
+	    shift
+	    shift
+	    ;;
+	-h)
+	    printHelp
+	    exit 2
+	    ;;
+ 	--*)
+ 	    break
+ 	    ;;
+ 	*)
+	    echo "Unknown option: $OPT"
+ 	    printHelp
+ 	    exit 2
+    esac
+done
+
+#
+# XXX: ignoring SIGQUIT in order to JVM thread stack trace to work
+#
+trap "" SIGQUIT
+
+
+if [ "$DEBUG_ENABLED" == "false" ]; then
+
+    if [ "$SILENT_CONSOLE" == "false" ]; then
+	startExehda $* 2>&1 | sedhl 
+    else
+	startExehda $* 2>/dev/null 1>/dev/null 
+    fi
+
+else
+    rm -f "$EXEHDA_LOG"
+    touch "$EXEHDA_LOG"
+
+    if [ "$SILENT_CONSOLE" == "false" ]; then
+	echo "*** Debugging enabled. Output will be logged to $EXEHDA_LOG";
+	echo ""
+
+	startExehda $*  2>$EXEHDA_LOG 1>&2 &
+
+	EXEHDA_PID=$!
+
+	trap "kill $EXEHDA_PID; exit 0" SIGINT
+ 
+	tail -f "$EXEHDA_LOG" | sedhl
+
+    else
+	startExehda $*  2>$EXEHDA_LOG 1>&2
+    fi
+
+fi
