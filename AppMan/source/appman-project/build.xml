@@ -1,0 +1,86 @@
+
+<project name="Appman" default="main" basedir=".">
+
+	<description>
+      APPMAN CVS Development tree
+   </description>
+
+	<property name="pkg.name" value="appman" />
+
+	<property name="cvs.root" value="saloon.inf.ufrgs.br:/cvsroot/appman" />
+
+	<property name="rootdir" location="." />
+
+	<property name="exehdadir" location="exehda" />
+
+	<property name="srcdir" location="src" />
+
+	<property name="builddir" location="build" />
+
+	<property name="bindir" location="bin" />
+
+	<property name="libdir" location="lib" />
+
+	<property name="distdir" location="${libdir}" />
+
+	<property name="distfile" location="${distdir}/${pkg.name}.jar" />
+
+	<property name="enable.debug" value="on" />
+
+	<property name="classpath" value="${exehdadir}/lib/isam-util.jar:${libdir}/exehda-core.jar:${libdir}/prefuse.jar:${exehdadir}/lib/devel-core.jar:${exehdadir}/lib/devel-primos.jar:${libdir}/grappa1_2.jar" />
+
+
+	<!-- =================================================================== -->
+
+	<!-- Main targets                                                        -->
+
+	<!-- =================================================================== -->
+
+	<target name="build" depends="init" description="Incremental build">
+		<antcall target="build-appman" />
+	</target>
+
+	<target name="clean" description="Clean out the output directories">
+		<delete dir="${builddir}" />
+		<delete file="${rootdir}/${pkg.name}-dev.jar" />
+	</target>
+
+	<target name="all" depends="clean,build" description="clean,build">
+	</target>
+
+	<target name="main" depends="deploy" description="deploy">
+	</target>
+
+	<target name="init">
+		<mkdir dir="${srcdir}" />
+		<mkdir dir="${builddir}" />
+		<mkdir dir="${distdir}" />
+	</target>
+
+	<target name="deploy" depends="init" description="Move the .class files to the execution directory">
+		<copy todir="${builddir}">
+			<fileset dir="${bindir}" />
+			<fileset file="${rootdir}/gridnodes.properties" />
+		</copy>
+		
+		<rmic classname="appman.AppManConsole" base="${builddir}" classpath="${classpath}" />
+		<rmic classname="appman.ApplicationManager" base="${builddir}" classpath="${classpath}" />
+		<rmic classname="appman.SubmissionManager" base="${builddir}" classpath="${classpath}" />
+		<rmic classname="appman.GridTask" base="${builddir}" classpath="${classpath}" />
+
+		<unjar src="${libdir}/prefuse.jar" dest="${builddir}" />
+		<unjar src="${libdir}/grappa1_2.jar" dest="${builddir}" />
+
+		<jar basedir="${builddir}" excludes="**/${pkg.name}-dev.jar,**/rcreate.isam,**/adapters.xml" destfile="${rootdir}/${pkg.name}-dev.jar" />
+
+		<delete dir="${builddir}" />
+		
+		<scp file="${rootdir}/${pkg.name}-dev.jar" todir="lab24h@appman1:~/appman/lib" password="Computacao2008"/>
+		<scp file="${rootdir}/${pkg.name}-dev.jar" todir="lab24h@appman2:~/appman/lib" password="Computacao2008"/>
+		<scp file="${rootdir}/${pkg.name}-dev.jar" todir="lab24h@appman3:~/appman/lib" password="Computacao2008"/>
+		<scp file="${rootdir}/${pkg.name}-dev.jar" todir="lab24h@appman4:~/appman/lib" password="Computacao2008"/>
+
+	</target>
+
+
+</project>

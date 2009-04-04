@@ -6,9 +6,6 @@
 
 package appman.parser;
 
-
-import java.util.*;
-
 /** 
  * edited from jjtree class: store assignment info 
  */
@@ -31,7 +28,8 @@ public class ASTAssignment extends SimpleNode {
 
 
   /** Accept the visitor. **/
-  public Object jjtAccept(SimpleParserVisitor visitor, Object data) {
+  @Override
+public Object jjtAccept(SimpleParserVisitor visitor, Object data) {
     return visitor.visit(this, data);
   }
 

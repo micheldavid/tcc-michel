@@ -6,12 +6,9 @@
 
 package appman.parser;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-import appman.Debug;
 import appman.clustering.*;
 
   /**
@@ -50,7 +47,7 @@ import appman.clustering.*;
        		System.out.println("[APP.DESC] :"+e);
        }
        */
-       Debug.log(this + "\t[GRAND]\tApplicationDescription created");
+       System.out.println("[GRAND]\tApplicationDescription created");
     }
     
     /**
@@ -120,7 +117,7 @@ import appman.clustering.*;
     public DAG_DSC inferDAG() {
        applicationDAG = new DAG_DSC(numberOfTasks);
        
-       Debug.log(this + "\t[GRAND]\tStarting to build DAG...");
+       System.out.println("[GRAND]\tStarting to build DAG...");
 
        Enumeration e = listOfTasks.elements();
        while (e.hasMoreElements()) {
@@ -146,7 +143,7 @@ import appman.clustering.*;
                 TaskDescription t_aux = (TaskDescription)aux.nextElement();
                 if (!(t_aux.equals(t))){
                    if (t_aux.hasOutputFile(outfile)) {
-                  	 Debug.log(this + "\t[GRAND]\tedge "+t_aux.getTaskName()+"->"+t.getTaskName());
+                      System.out.println("[GRAND]\tedge "+t_aux.getTaskName()+"->"+t.getTaskName());
                       applicationDAG.insertEdges(t.getTaskName(), t_aux.getTaskName());
                       found = true;
                    }
@@ -162,7 +159,7 @@ import appman.clustering.*;
        // http://www.informatics.susx.ac.uk/courses/dats/notes/html/node133.html#7452
        // LinkedList -- ArrayList edges = new ArrayList(); -- TreeSet 
        
-       Debug.log(this + "\t[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
+       System.out.println("[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
        
        //VDN: 15/07/05//////////////// estava no SimpleParser.java
   		//applicationDAG.dump();

@@ -15,7 +15,6 @@ public interface SubmissionManagerRemote extends java.rmi.Remote
 	public Graph getGraphRemote(String graphId) throws java.rmi.RemoteException;
 	public void addGraphRemote(Graph g) throws java.rmi.RemoteException;
 	public float getTaskStateRemote(String taskId,String graphId) throws java.rmi.RemoteException;
-	//public GridFileServiceRemote getTaskGridFileServiceRemote(String taskId,String graphId) throws java.rmi.RemoteException;
 	public String getMyObjectRemoteContactAddress() throws java.rmi.RemoteException;
 	public void setMyObjectRemoteContactAddress(String contact) throws java.rmi.RemoteException;
 	public byte[] downloadFileFromGridTask(String taskId, String filepath) throws java.rmi.RemoteException;
@@ -24,5 +23,4 @@ public interface SubmissionManagerRemote extends java.rmi.Remote
 	public void PrintInfoRemote() throws RemoteException;
 	public void setDieRemote() throws RemoteException;
 	public long getDownloadTimeOfTasksManagers( ) throws RemoteException;
-	public long calculateDownloadTimeNow() throws RemoteException;
 }

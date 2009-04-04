@@ -9,8 +9,6 @@ package appman.parser;
 
 import java.util.*;
 
-import appman.Debug;
-
 public class  AssignmentBody {
    // possible variable types
    public static final int STRING   = 0;
@@ -97,7 +95,7 @@ public class  AssignmentBody {
               firstOp = this.calculate(firstOp, secondOp, operator, symbolTable);
               evaluatedValue = firstOp.value;
 	    }
-            Debug.log(this + "\tAssigment: "+evaluatedValue);
+            System.out.println("\tAssigment: "+evaluatedValue);
             return evaluatedValue;
       }
 

@@ -2,6 +2,8 @@ package appman;
 
 import java.io.Serializable;
 
+import appman.task.Task;
+
 /*
  * DataFile.java - Copyright lucasa
  * 
@@ -75,4 +77,23 @@ public class DataFile implements Serializable {
 		return exist;
 	}
 
+    @Override
+	public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+	public boolean equals(Object o) {
+        if ( o != null && o.getClass().equals(getClass())) {
+            DataFile other = (DataFile) o;
+
+                //
+                // FIX ME: need to validate this checks, are them enough?
+                //
+            return name.equals(other.name)
+//                && fromtask.equals(other.fromtask)
+                && datafileId.equals(other.datafileId);
+        }
+        return false;
+    }
 }

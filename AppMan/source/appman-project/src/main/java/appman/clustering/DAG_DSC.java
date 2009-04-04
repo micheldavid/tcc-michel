@@ -6,17 +6,8 @@
 
 package appman.clustering;
 
-import appman.ApplicationManager;
-import appman.Debug;
 import appman.OutputXML;
-import appman.parser.*;
-
 import appman.clustering.DAGNode;
-import java.rmi.Naming;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.io.*;
 
@@ -41,9 +32,9 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	private Hashtable hashIndex;
 	/**
 	 * This structure is something like that: <br>
-	 * |DAGNode1| -> |String1| -> |String2| -> |String3| <br>
-	 * |DAGNode2| -> |String4| <br>
-	 * |DAGNode3| -> |String5| -> |String6| ->... <br>
+	 * |DAGNode1| -> |DAGEdge1| -> |DAGEdge2| -> |DAGEdge3| <br>
+	 * |DAGNode2| -> |DAGEdge4| <br>
+	 * |DAGNode3| -> |DAGEdge5| -> |DAGEdge6| ->... <br>
 	 * ......... -> .......... <br>
 	 *  
 	 */
@@ -85,6 +76,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	 * @param weight
 	 *            node's weight
 	 */
+	@Override
 	public DAGNode putNodeName(String name, double weight) {
 
 		DAGNode dn = new DAGNode();
@@ -102,7 +94,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		
 		this.dagNodes.add(dn);
 		
-		hashIndex.put(name, new Integer(((List)dagNodes).indexOf(dn)) );
+		hashIndex.put(name, new Integer((dagNodes).indexOf(dn)) );
 		
 		
 		//dagColors[dagNodes.size()-1] = RED;
@@ -116,11 +108,12 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	 * @param name
 	 *            identifier of the node
 	 */
+	@Override
 	public DAGNode putNodeName(String name) {
 
         // 1 is the default value
 		DAGNode dn = this.putNodeName(name,1);
-		hashIndex.put(name, new Integer(((List)dagNodes).indexOf(dn)) );
+		hashIndex.put(name, new Integer((dagNodes).indexOf(dn)) );
 		return dn;
 	}
 
@@ -134,6 +127,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	 * @param weight
 	 *            edge's weight
 	 */
+	@Override
 	public void insertEdges(String name, String incoming, double weight) {
 
 		DAGNode dn_in;
@@ -170,6 +164,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	 * @param incoming
 	 *            destination of the edge
 	 */
+	@Override
 	public void insertEdges(String name, String incoming) {
 /*
 		DAGNode dn;
@@ -226,7 +221,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		DAGNode dn = null;
 
 		for (int i = 0; i < dagNodes.size(); i++) {
-			if (((String) ((DAGNode) dagNodes.get(i)).nodeName).compareTo(name) == 0) {
+			if ((((DAGNode) dagNodes.get(i)).nodeName).compareTo(name) == 0) {
 				dn = ((DAGNode) dagNodes.get(i));
 				return dn;
 			}
@@ -266,7 +261,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		
 		int index = -1;
 		for (int i = 0; i < dagNodes.size(); i++) {
-			if (((String) ((DAGNode) dagNodes.get(i)).nodeName).compareTo(name) == 0) {
+			if ((((DAGNode) dagNodes.get(i)).nodeName).compareTo(name) == 0) {
 				index = i;
 				return index;
 			}
@@ -302,6 +297,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	/**
 	 * @returns number of nodes
 	 */
+	@Override
 	public int getNumberOfNodes() {
 
 		return dagNodes.size();
@@ -345,7 +341,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		edgesWeight = dn.predecessors;
 
 		for (int i = 0; i < edgesWeight.size(); i++) {
-			if (((String) ((DAGEdge) edgesWeight.get(i)).nodeName)
+			if ((((DAGEdge) edgesWeight.get(i)).nodeName)
 					.compareTo(B) == 0) {
 				weight = ((DAGEdge) edgesWeight.get(i)).weight;
 			}
@@ -368,7 +364,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		edgesWeight = dn.predecessors;
 
 		for (int i = 0; i < edgesWeight.size(); i++) {
-			if (((String) ((DAGEdge) edgesWeight.get(i)).nodeName)
+			if ((((DAGEdge) edgesWeight.get(i)).nodeName)
 					.compareTo(getNodeByIndex(B).nodeName) == 0) {
 				weight = ((DAGEdge) edgesWeight.get(i)).weight;
 			}
@@ -475,7 +471,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 			}
 		}
 
-		Debug.log(this + "\tRemoveu: " + nodeName);
+		System.out.println("Removeu: " + nodeName);
 
 		dagNodes.remove(getIndexByName(nodeName));
 
@@ -503,6 +499,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	/**
 	 *  
 	 */
+	@Override
 	public boolean isEmpty() {
 
 		if ((this.dagNodes == null) || (this.dagNodes.size() == 0)) {
@@ -522,22 +519,21 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		String adj;
 		List list;
 
-		Debug.log(this + "\t[GRAND]\tDAG dump:");
+		System.out.println("[GRAND]\tDAG dump:");
 
 		if (dagNodes != null) {
-			String s = "";
 			for (int i = 0; i < dagNodes.size(); i++) {
 				node = ((DAGNode) dagNodes.get(i)).nodeName;
-				s+="   " + node + " (incoming list): ";
+				System.out.print("   " + node + " (incoming list): ");
 //				list = ((DAGNode) dagNodes.get(i)).edges;
 				list = ((DAGNode) dagNodes.get(i)).predecessorsName;
 				if (list != null) {
 					for (int j = 0; j < list.size(); j++) {
 						adj = (String) list.get(j);
-						s +=" " + adj;
+						System.out.print(" " + adj);
 					}
 				}
-				Debug.log(this + "\t"+ s);
+				System.out.println("");
 			}
 		}
 
@@ -607,15 +603,15 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 			out = new BufferedWriter(new FileWriter(filename));
 			//System.out.println("TEsteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!");
 		} catch (IOException e) {
-			Debug.log(this + "\t[GRAND]\tError creating file "+filename, e);
-			Debug.log(this + "\t[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filename);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
 			System.exit(0);
 		}
 		//System.out.println("[GRAND]\tFile "+filename+"successfuly created");
 		try {
 			out.write("digraph G {\n");
-		} catch (IOException e) {
-			Debug.log(this + "\t[GRAND]\tError in first writing to file "+filename, e);
+		} catch (IOException e) { 
+			System.out.println("[GRAND]\tError in first writing to file "+filename);
 		}
 
 		
@@ -630,7 +626,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 				try {
 					out.write("subgraph cluster"+i+"{"+"\n");
 				} catch(Exception e){ 
-					Debug.log(this + "\t[GRAND]\tError writing to file "+filename, e);
+					System.out.println("[GRAND]\tError writing to file "+filename);
 				}						
 				//System.out.print("\n[VINDN]:PASSOU2  node: \n");
 				for(int j=0; j < ((Vector)cluster.get(i)).size(); j++){
@@ -640,7 +636,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 							//System.out.print("\n[VINDN]:PASSOU  node: "+node+"\n");
 							out.write(node+" [color="+"red"+", style=filled];"+"\n");
 						} catch(Exception e){ 
-							Debug.log(this + "\t[GRAND]\tError writing to file "+filename, e);
+							System.out.println("[GRAND]\tError writing to file "+filename);
 						}						
 						
 				}
@@ -648,7 +644,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 				try {
 					out.write("}\n");
 				} catch(Exception e){ 
-					Debug.log(this + "\t[GRAND]\tError writing to file "+filename, e);
+					System.out.println("[GRAND]\tError writing to file "+filename);
 				}						
 				
 			}
@@ -663,25 +659,22 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 				list = ((DAGNode) dagNodes.get(i)).predecessors;
 				if (list != null) {
 					for (int j = 0; j < list.size(); j++) {
-						Debug.log(this + "\t====> "+list.get(j));
+						System.out.println("====> "+list.get(j));
 						//adj = (String) list.get(j); => 2005/05/06: estava assim, talvez a linha de baixo introduza um erro
 						adj = ((DAGEdge) list.get(j)).nodeName;
 						try{
 							out.write(adj+"->"+node+"\n");
-						} catch (Exception e) { 
-							Debug.log(this + "\terro escrita", e);
-						}
+						}catch(Exception e){ System.out.println("erro escrita");}
 					}
 				}
+				System.out.println("");
 			}
 		}
 
 		try {				
 			out.write("}");
 			out.close();
-		} catch (IOException e) {
-			Debug.log(this + "\t[GRAND]\tError in last writing or closing file "+filename, e);
-		}
+		} catch (IOException e) {System.out.println("[GRAND]\tError in last writing or closing file "+filename);}
 		
 		
 		//Executar o DOT para gerar o arquivo com as coordenadas para a leitura do GRAPPA
@@ -800,6 +793,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	/**
 	 * from Iterator interface; Returns true if the iteration has more elements.
 	 */
+	@Override
 	public boolean hasNext() {
 		if ((iteratorIndex >= 0) && (iteratorIndex < nodesCopy.size())) {
 			return true;
@@ -811,6 +805,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	/**
 	 * from Iterator interface; Returns the next element in the iteration.
 	 */
+	@Override
 	public Object next() {
 		Object element = nodesCopy.get(iteratorIndex);
 		iteratorIndex++;
@@ -822,6 +817,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	 * element returned by the iterator (optional operation). This method can be
 	 * called only once per call to next.
 	 */
+	@Override
 	public void remove() {
 		this.nodesCopy.remove(iteratorIndex - 1);
 	}
@@ -837,6 +833,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 	/**
 	 * from Cloneable interface
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 
 		Object myclone = super.clone();

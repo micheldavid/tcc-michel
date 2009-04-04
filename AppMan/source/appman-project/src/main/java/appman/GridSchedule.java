@@ -6,14 +6,11 @@
  */
 package appman;
 
-import java.util.Random;
 import java.util.Vector;
 
 // import org.isam.exehda.Exehda;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
-import org.isam.exehda.ResourceName;
-import org.isam.exehda.services.CellInformationBase;
 import org.isam.exehda.services.Executor.SchedulingHeuristic;
 //import org.isam.exehda.services.Executor.VetoedOperationException;
 
@@ -95,7 +92,7 @@ public class GridSchedule implements SchedulingHeuristic
             Debug.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts, true);
 
             if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
-                    // O laco abaixo é necessario pois o nodo selecionado em um passo
+                    // O laco abaixo � necessario pois o nodo selecionado em um passo
                     // anterior pode estar indisponivel/down, situacao na qual ele deve
                     // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
                     // evitado
@@ -108,7 +105,7 @@ public class GridSchedule implements SchedulingHeuristic
                 }
             }
             else if ( HINT_FINAL_RESULTS_NODE.equals(hint) ) {
-                    // O laco abaixo é necessario pois o nodo selecionado em um passo
+                    // O laco abaixo � necessario pois o nodo selecionado em um passo
                     // anterior pode estar indisponivel/down, situacao na qual ele deve
                     // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
                     // evitado
@@ -140,7 +137,7 @@ public class GridSchedule implements SchedulingHeuristic
 //                Debug.debug("GridSchedule target Host scheduled: " + resources[i].getSimpleName(), true);
 //                hostid = HostId.parseId("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
             	
-                    // O laco abaixo é necessario pois o nodo selecionado em um passo
+                    // O laco abaixo � necessario pois o nodo selecionado em um passo
                     // anterior pode estar indisponivel/down, situacao na qual ele deve
                     // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
                     // evitado

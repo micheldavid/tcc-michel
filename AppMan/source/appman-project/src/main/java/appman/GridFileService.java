@@ -97,7 +97,9 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 				throw new Exception("Error on creating File: " + filepath);
 			}
 		} catch (Exception e) {
-			Debug.log("Error uploading File [" + filepath + "]: " + e.getMessage(), e);
+			System.out.println("Error uploading File [" + filepath + "]: "
+					+ e.getMessage());
+			e.printStackTrace();
 			throw new RemoteException("Error uploading File: " + e.getMessage());
 		}
 	}
@@ -124,8 +126,10 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			input.read(buffer, 0, buffer.length);
 			input.close();
 		} catch (Exception e) {
-			Debug.log(this+"\tError downloading File: " + e.getMessage(), e);
-			throw new RemoteException("Error downloading File: " + e.getMessage());
+			System.out.println("Error downloading File: " + e.getMessage());
+			e.printStackTrace();
+			throw new RemoteException("Error downloading File: "
+					+ e.getMessage());
 		}
 
 		return buffer;
@@ -150,7 +154,8 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			else
 				throw new Exception("Error File [" + filepath + "] not exists!");
 		} catch (Exception e) {
-			Debug.log(this+"\tError downloading File: " + e.getMessage(), e);
+			System.out.println("Error downloading File: " + e.getMessage());
+			e.printStackTrace();
 			throw new RemoteException("Error downloading File: "
 					+ e.getMessage());
 		}
@@ -284,7 +289,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 
 			Debug.debug("GridTask Files installation completed.", true);
 		} catch (Exception e) {
-			Debug.log(this+"\t[GridFileService]:", e);
+			System.out.println("[GridFileService]:");
 			throw new RemoteException(e.toString());
 		}
 	}
@@ -318,6 +323,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 		/**
 		 * Stream the data.
 		 */
+		@Override
 		public void run() {
 			try {
 				int nextChar;

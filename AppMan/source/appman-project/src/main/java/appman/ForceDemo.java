@@ -33,6 +33,7 @@ import edu.berkeley.guir.prefuse.graph.Graph;
 //import edu.berkeley.guir.prefuse.graph.io.XMLGraphReader;
 import edu.berkeley.guir.prefuse.render.DefaultEdgeRenderer;
 import edu.berkeley.guir.prefuse.render.DefaultRendererFactory;
+import edu.berkeley.guir.prefuse.render.ShapeRenderer;
 import edu.berkeley.guir.prefuse.render.TextItemRenderer;
 import edu.berkeley.guir.prefusex.controls.DragControl;
 import edu.berkeley.guir.prefusex.controls.NeighborHighlightControl;
@@ -107,13 +108,15 @@ public class ForceDemo extends Display
         //c.add(fpanel, BorderLayout.EAST);
         
         frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+            @Override
+			public void windowClosing(WindowEvent e) {
                 frame.dispose();
             }
         });
         
         frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
+            @Override
+			public void componentResized(ComponentEvent e) {
                 Dimension d = frame.getSize();
                 Dimension p = fpanel.getSize();
                 Insets in = frame.getInsets();
@@ -139,7 +142,7 @@ public class ForceDemo extends Display
     {
         TextItemRenderer    nodeRenderer = new TextItemRenderer();
         //nodeRenderer.setRenderType(TextItemRenderer.RENDER_TYPE_FILL);
-		nodeRenderer.setRenderType(TextItemRenderer.RENDER_TYPE_DRAW_AND_FILL);
+		nodeRenderer.setRenderType(ShapeRenderer.RENDER_TYPE_DRAW_AND_FILL);
         nodeRenderer.setRoundedCorner(15,15);
         nodeRenderer.setTextAttributeName(m_textField);
         //DefaultNodeRenderer nRenderer = new DefaultNodeRenderer();
@@ -197,7 +200,8 @@ public class ForceDemo extends Display
         private Color pastelOrange = new Color(255,200,125);
         private Color lightGray = new Color(220,220,255);
         
-        public Paint getColor(VisualItem item)
+        @Override
+		public Paint getColor(VisualItem item)
         {
             if ( item instanceof EdgeItem )
             {
@@ -211,7 +215,8 @@ public class ForceDemo extends Display
                 return Color.BLACK;
             }
         } //
-        public Paint getFillColor(VisualItem item)
+        @Override
+		public Paint getFillColor(VisualItem item)
         {
             if ( item.isHighlighted() )
            	{
@@ -260,19 +265,22 @@ public class ForceDemo extends Display
      */
     public class MouseOverControl extends ControlAdapter
     {    
-        public void itemEntered(VisualItem item, MouseEvent e)
+        @Override
+		public void itemEntered(VisualItem item, MouseEvent e)
         {
             ((Display)e.getSource()).setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             item.setFixed(true);
         } //
         
-        public void itemExited(VisualItem item, MouseEvent e)
+        @Override
+		public void itemExited(VisualItem item, MouseEvent e)
         {
             ((Display)e.getSource()).setCursor(Cursor.getDefaultCursor());
             item.setFixed(false);
         } //
         
-        public void itemReleased(VisualItem item, MouseEvent e)
+        @Override
+		public void itemReleased(VisualItem item, MouseEvent e)
         {
             item.setFixed(false);
         } //

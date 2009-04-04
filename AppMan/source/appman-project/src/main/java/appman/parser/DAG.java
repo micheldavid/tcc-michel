@@ -8,8 +8,6 @@ package appman.parser;
 import java.io.Serializable;
 import java.util.*;
 
-import appman.Debug;
-
   /**
    *
    */
@@ -24,7 +22,7 @@ import appman.Debug;
           nodes.add(null);
        }
        nodesName = new Vector(numberOfNodes);
-       Debug.log(this + "\t[GRAND]\tNew DAG");
+       System.out.println("[GRAND]\tNew DAG");
     }
 
     /**

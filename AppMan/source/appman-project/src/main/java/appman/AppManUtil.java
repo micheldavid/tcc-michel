@@ -11,6 +11,8 @@ import org.isam.exehda.services.Collector;
 import org.isam.exehda.services.CellInformationBase;
 
 import java.awt.Window;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 
@@ -110,9 +112,23 @@ public class AppManUtil
             final Runnable a = action;
             
             (new Thread() {
-                public void run() {
+                @Override
+				public void run() {
                     getExecutor().runAction(aid, a);
                 }
                 }).start();
         }
+
+	public static String getTime() { // VDN
+		Calendar cal = new GregorianCalendar();
+		String date = new String();
+		date = cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH)
+				+ "/" + cal.get(Calendar.YEAR);
+	
+		String time = new String();
+		time = cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":"
+				+ cal.get(Calendar.SECOND);
+	
+		return date + " " + time;
+	}
 }

@@ -7,8 +7,6 @@ import java.net.*;
 import javax.swing.*;
 
 import att.grappa.*;
-import java_cup.runtime.*;
-import java.util.*;
 
 public class ShowWindow
 	implements GrappaConstants, Serializable
@@ -84,7 +82,7 @@ public class ShowWindow
 
 	graph = program.getGraph();
 
-	System.err.println("The graph contains " + graph.countOfElements(Grappa.NODE|Grappa.EDGE|Grappa.SUBGRAPH) + " elements.");
+	System.err.println("The graph contains " + graph.countOfElements(GrappaConstants.NODE|GrappaConstants.EDGE|GrappaConstants.SUBGRAPH) + " elements.");
 
 	graph.setEditable(true);
 	//graph.setMenuable(true);
@@ -137,7 +135,8 @@ public class ShowWindow
 	    setLocation(100,100);
 
 	    addWindowListener(new WindowAdapter() {
-		    public void windowClosing(WindowEvent wev) {
+		    @Override
+			public void windowClosing(WindowEvent wev) {
 			Window w = wev.getWindow();
 			w.setVisible(false);
 			w.dispose();

@@ -20,11 +20,12 @@ import edu.berkeley.guir.prefuse.graph.Graph;
 import edu.berkeley.guir.prefuse.graph.GraphLib;
 import edu.berkeley.guir.prefuse.graph.Node;
 
-import appman.clustering.ClusteringPhase;
 import appman.clustering.DAG_DSC;
 import appman.parser.ApplicationDescription;
-import appman.parser.DAG;
 import appman.parser.TaskDescription;
+import appman.task.MyTask;
+import appman.task.Task;
+import appman.task.TaskType;
 
 /**
  * @author lucasa
@@ -110,12 +111,12 @@ public class GraphGenerator extends GraphLib
 			taskid+= 1;
 						
 			// create the file dependencies between the child and the father
-			Task from = (Task)((GraphNode)child).getNodeData();		
+			Task from = (Task)(child).getNodeData();		
 			DataFile datafile = new DataFile( "./file["+from.getTaskId()+"].txt", String.valueOf(fileid), from);
 			datafiles.addElement(datafile); // add this new datafile to the list
-			from.addDataFileToOutputList(datafile);
-			Task to = (Task)((GraphNode)node).getNodeData();						
-			to.addDataFileToInputList(datafile);
+			from.getFiles().addDataFileToOutputList(datafile);
+			Task to = (Task)(node).getNodeData();						
+			to.getFiles().addDataFileToInputList(datafile);
 			fileid+= 1;
 			
 			// create a inverse edge, to the files go from the child to the center of the graph
@@ -130,14 +131,14 @@ public class GraphGenerator extends GraphLib
 				{
 					if(rand.nextFloat() < depend)
 					{
-						from = (Task)((GraphNode)all[k]).getNodeData();						
+						from = (Task)(all[k]).getNodeData();						
 						datafile = new DataFile( "./file["+from.getTaskId()+"].txt", String.valueOf(fileid), from);
 						datafiles.addElement(datafile); // add this new datafile to the list
-						from.addDataFileToOutputList(datafile);
+						from.getFiles().addDataFileToOutputList(datafile);
 						
-						to = (Task)((GraphNode)child).getNodeData();						
-						to.addDataFileToInputList(datafile);
-						g.addEdge(new DefaultEdge((Node)all[k], child, true));
+						to = (Task)(child).getNodeData();						
+						to.getFiles().addDataFileToInputList(datafile);
+						g.addEdge(new DefaultEdge(all[k], child, true));
 						fileid+= 1; // increment to create new datafile id
 					}
 				}			
@@ -196,7 +197,7 @@ public class GraphGenerator extends GraphLib
 			public static Vector getTaskList(Graph g)
 			{
 					Vector list = new Vector();
-					GraphNode[] nodes = (GraphNode[])convertGraphNodesIteratorToNodesArray(g.getNodes());
+					GraphNode[] nodes = convertGraphNodesIteratorToNodesArray(g.getNodes());
 					for(int i=0;i<nodes.length;i++)
 					{
 						list.addElement(nodes[i].getNodeData());
@@ -279,10 +280,10 @@ public class GraphGenerator extends GraphLib
 										Task tto = (Task)to.getNodeData();
 										 DataFile datafile = new DataFile(filename, filename, tfrom);										 
 										 datafiles.addElement(datafile); // add this new datafile to the list
-										 tto.addDataFileToInputList(datafile);
+										 tto.getFiles().addDataFileToInputList(datafile);
 										 //Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] input dependency from: " + tfrom.getTaskId() +" -> to: " + tto.getTaskId()); VDN:4/1/6
 										 
-										 DataFile[] from_out = tfrom.getOutputFiles();
+										 DataFile[] from_out = tfrom.getFiles().getOutputFiles();
 										 boolean already_inserted = false;
 										 for(int i=0; i < from_out.length; i++)
 										 {
@@ -293,7 +294,7 @@ public class GraphGenerator extends GraphLib
 										 }
 										 if(! already_inserted)
 										 {
-											tfrom.addDataFileToOutputList(datafile);
+											tfrom.getFiles().addDataFileToOutputList(datafile);
 											//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] output dependency from: " + tfrom.getTaskId() +" -> to: " + tto.getTaskId());VDN: 4/1/6
 										 }
 
@@ -311,7 +312,7 @@ public class GraphGenerator extends GraphLib
 								DataFile datafile = new DataFile(filename, filename, null);
 								datafile.setDataFileExist(true);										 
 								datafiles.addElement(datafile); // add this new datafile to the list
-								tto.addDataFileToInputList(datafile);
+								tto.getFiles().addDataFileToInputList(datafile);
 								//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] input dependency from Application Inputs to Task ["+tto.getTaskId()+"]", true); VDN: 2006/01/13
 							 }
 
@@ -353,12 +354,12 @@ public class GraphGenerator extends GraphLib
 						String to_name = t.getTaskName();
 						GraphNode to = (GraphNode)gnodes.elementAt(gnodes_names.indexOf(to_name));
 						Task task = (Task)to.getNodeData();
-						task.setTaskType(Task.TASK_TYPE_FINAL);
+						task.setTaskType(TaskType.TASK_TYPE_FINAL);
 						//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph SET Task["+task.getTaskId()+"] TYPE FINAL", true);  VDN 2006/01/13
 						DataFile datafile = new DataFile(filename, filename, task);
 						datafile.setDataFileExist(false);
 						datafiles.addElement(datafile); // add this new datafile to the list						
-						task.addDataFileToOutputList(datafile);					 	
+						task.getFiles().addDataFileToOutputList(datafile);					 	
 					 	//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] output dependency from Application Outputs to Task ["+task.getTaskId()+"]", true); VDN 2006/01/13
 					  }
 
@@ -399,11 +400,11 @@ public class GraphGenerator extends GraphLib
 				
 				for(int i=0; i < cluster.size(); i++)//i equivale ao nivel
 				{
-					String s = "Level "+i+" ";
+					System.out.print("Level "+i+" ");
 					for(int j=0; j < ((Vector)cluster.get(i)).size(); j++)//j equivale as tarefas q estao no nivel i
 					{
 						taskName = ((String)((Vector)cluster.get(i)).get(j)); //nome da tarefa
-						s += (((Vector)(cluster.get(i))).get(j) + " " );
+						System.out.print(((Vector)(cluster.get(i))).get(j) + " " );
 						for(int k=0; k < tasks.length; k++)//tenho q buscar o nome da tarefa. arggg!!
 						{
 							
@@ -411,14 +412,14 @@ public class GraphGenerator extends GraphLib
 							{
 								String id = new String(clusterId[i]);
 								tasks[k].setClusterId( id );
-								s += "\n 1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id+"\n";
+								System.out.print("\n 1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id+"\n");
 								break;
 							}
 						}
 					}
-					Debug.log(GraphGenerator.class.toString()+"\t"+s);
+					System.out.print("\n");
 				}
-Debug.log(GraphGenerator.class.toString()+"\tSAIU!\n");
+				System.out.print("SAIU!\n");
 				
 			}
 			
