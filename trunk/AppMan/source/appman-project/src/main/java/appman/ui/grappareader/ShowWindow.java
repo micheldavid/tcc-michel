@@ -7,8 +7,6 @@ import java.net.*;
 import javax.swing.*;
 
 import att.grappa.*;
-import java_cup.runtime.*;
-import java.util.*;
 
 /**
  * Displays the graphical user interface.
@@ -117,8 +115,8 @@ public class ShowWindow
 
 	graph = program.getGraph();
 
-	System.err.println("The graph contains " + graph.countOfElements(Grappa.NODE|Grappa.EDGE|Grappa.SUBGRAPH) + " elements.");
-	numberNodes = graph.countOfElements(Grappa.NODE);//VDN
+	System.err.println("The graph contains " + graph.countOfElements(GrappaConstants.NODE|GrappaConstants.EDGE|GrappaConstants.SUBGRAPH) + " elements.");
+	numberNodes = graph.countOfElements(GrappaConstants.NODE);//VDN
 	
 	
 	graph.setEditable(true);
@@ -173,7 +171,8 @@ public class ShowWindow
 	    setLocation(100,100);
 
 	    addWindowListener(new WindowAdapter() {
-		    public void windowClosing(WindowEvent wev) {
+		    @Override
+			public void windowClosing(WindowEvent wev) {
 			Window w = wev.getWindow();
 			w.setVisible(false);
 			w.dispose();

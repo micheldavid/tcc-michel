@@ -5,8 +5,6 @@
  */
 
 package appman.clustering;
-import appman.clustering.*;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -33,6 +31,7 @@ public abstract class AbstractDAG implements Iterator, Cloneable, Serializable {
 	
 	//
 	// from Clonable interface
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}

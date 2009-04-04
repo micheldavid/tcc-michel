@@ -6,7 +6,7 @@ package appman;
 
 import java.io.InputStream;
 
-import appman.parser.SimpleParser;
+import appman.task.Task;
 
 /**
  * @author lucasa@gmail.com
@@ -107,9 +107,9 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
             }			
 		} catch (Exception e)
 		{
-			Debug.log(this + "\t[AppMan]\tError in run of GridTask thread, while waiting to run task", e); //VDN 2006/01/13
-			//System.out.println("[AppMan]\tError in run of GridTask thread, while waiting to run task"); //VDN 2006/01/13
-			//e.printStackTrace();
+			Debug.debug("[AppMan]\tError in run of GridTask thread, while waiting to run task"); //VDN 2006/01/13
+			System.out.println("[AppMan]\tError in run of GridTask thread, while waiting to run task"); //VDN 2006/01/13
+			e.printStackTrace();
 			errorbuffer.append(e.getMessage());			
 			sucess = false;
 			setDie();			
@@ -147,6 +147,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		}
 	}
 	
+	@Override
 	public void finalize()
 	{
 		try

@@ -1,87 +1,93 @@
 /*
  * Created on 25/11/2004
+ *
+ * To change the template for this generated file go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * @author lucasa
- * @author rbrosinha (200611)
+ *
+ * To change the template for this generated type comment go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class Debug {
+public class Debug
+{
+	private static boolean print = true;
+	
+	public static void debug(Object str, boolean b)
+	{
+		if(b == true)
+		{
+			System.out.println(str.toString());
+		}
 
-	private static PrintWriter pw;
-
-	private static final Logger logger = Logger.getLogger("appman.Debug");
-
-	public static void close() {
-		if (pw != null) {
-			pw.flush();
-			pw.close();
+		String filepath = "appman.log";
+		File file = new File(filepath);
+		try
+		{
+				if( !file.exists() )
+				{
+					file.createNewFile();
+				}
+				OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(file, true));
+				output.write("\n"+str.toString());
+				output.flush();
+				output.close();
+		} catch (Exception e)
+		{
+			System.out.println("Debug Error on debug to File ["+filepath+"]: " + e.getMessage());
 		}
 	}
-
-	public static void debug(Object str) {
-		log(String.valueOf(str));
+	public static void debug(Object str)
+	{		
+		Debug.debug(str, print);
 	}
-
-	public static void debug(Object str, boolean b) {
-		log(String.valueOf(str));
-	}
-
-	public static void debugToFile(Object str, String filepath, boolean b) {
-	}
-
-	public static void init(String filepath) throws IOException {
-
-		Handler fh = new FileHandler(filepath);
-		fh.setFormatter(new SimpleFormatter());
-		Logger rootLogger = Logger.getLogger("");
-		rootLogger.setUseParentHandlers(false);
-		Handler[] handlers = rootLogger.getHandlers();
-		for (int i = 0; i < handlers.length; i++) {
-			rootLogger.removeHandler(handlers[i]);
+	public static void newDebugFile(String str, String filepath)
+	{
+		File file = new File(filepath);
+		try
+		{
+				if( file.exists() )
+				{
+					file.delete();
+				}
+				file.createNewFile();
+				
+				OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(file, true));
+				output.write(str);
+				output.flush();
+				output.close();
+		} catch (Exception e)
+		{
+			System.out.println("Debug Error on create new debug File ["+filepath+"]: " + e.getMessage());
 		}
-		rootLogger.addHandler(fh);
-
-		//    
-		// try {
-		// if (pw != null) {
-		// pw.flush();
-		// pw.close();
-		// }
-		// pw = new PrintWriter(new FileWriter(new File(filepath)), true);
-		// eventCounter = 0;
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 	}
-
-	public static void log(String message) {
-		// if (pw == null) {
-		// Debug.init("default.log");
-		// }
-		// pw.println(String.valueOf(eventCounter++) + "\t" + message);
-		logger.log(Level.INFO, message);
-	}
-
-	public static void log(String message, Throwable throwable) {
-		// if (pw == null) {
-		// Debug.init("default.log");
-		// }
-		// pw.println(String.valueOf(eventCounter++) + "\t" + message);
-		// throwable.printStackTrace(pw);
-		logger.log(Level.SEVERE, message, throwable);
-	}
-
-	public static void newDebugFile(String str, String filepath) {
-	}
-
+	public static void debugToFile(Object str, String filepath, boolean b)
+	{		
+				File file = new File(filepath);
+				try
+				{
+						if( !file.exists() )
+						{
+							file.createNewFile();
+						}
+						OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(file, true));
+						output.write(str.toString());
+						output.flush();
+						output.close();
+						if(b == true)
+						{
+							System.out.println(str.toString());
+						}
+				} catch (Exception e)
+				{
+					System.out.println("Debug Error on debug to File ["+filepath+"]: " + e.getMessage());
+				}
+	}	
 }

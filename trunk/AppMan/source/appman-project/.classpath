@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="appman/GridTaskDrmaa.java|appman/rmswrapper/|appman/parser/examples/" kind="src" path="src/main/java"/>
+	<classpathentry kind="lib" path="lib/exehda-core.jar"/>
+	<classpathentry kind="lib" path="lib/grappa1_2.jar"/>
+	<classpathentry kind="lib" path="lib/prefuse.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

@@ -7,13 +7,10 @@
 package appman;
 
 import java.io.FileWriter;
-import java.io.RandomAccessFile;
 import java.util.Vector;
 
 // import org.isam.exehda.Exehda;
 import org.isam.exehda.ObjectId;
-import org.isam.exehda.services.OXManager;
-import org.isam.exehda.services.Worb;
 import org.isam.exehda.services.ObjectSeed.Activator;
 import org.isam.exehda.services.ObjectSeed.MarshaledOX;
 import org.isam.exehda.services.OXManager.OXHandle;
@@ -67,28 +64,28 @@ public class GeneralObjectActivator implements Activator {
 			adress = AppManUtil.getWorb().exportService(obj, oclass[i],
 					objectClass + oxID.toString() + i);
 			contactAddress.addElement(adress);
-			Debug.log(this+"\t[VDN]Export Object:" + adress + "\n");
+			System.out.println("[VDN]Export Object:" + adress + "\n");
 		}
 
 		// update the ox meta-attribute 'contact'
 		OXHandle oxh = AppManUtil.getOXManager().createHandle(oxID);
-		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxID + ": "
-				+ obj, true);
+// 		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxID + ": "
+// 				+ obj, true);
 		for (int i = 0; i < interfaceClass.length; i++) {
-			Debug.log(this+"\tVINDN: ADRESS" + contactAddress.elementAt(i)
+			System.out.println("VINDN: ADRESS" + contactAddress.elementAt(i)
 					+ "interface class:" + interfaceClass[i]);
 			oxh.setAttribute(ATT_WORB_CONTACT + interfaceClass[i],
 					contactAddress.elementAt(i));
-			Debug.debug(
-					"GeneralObjectActivator getRemoteObjectReference setAttribute: "
-							+ ATT_WORB_CONTACT
-							+ interfaceClass[i]
-							+ " - "
-							+ oxh.getAttribute(ATT_WORB_CONTACT
-									+ interfaceClass[i]), true);
+// 			Debug.debug(
+// 					"GeneralObjectActivator getRemoteObjectReference setAttribute: "
+// 							+ ATT_WORB_CONTACT
+// 							+ interfaceClass[i]
+// 							+ " - "
+// 							+ oxh.getAttribute(ATT_WORB_CONTACT
+// 									+ interfaceClass[i]), true);
 		}
-		Debug.debug("GeneralObjectActivator Object starting remote: " + obj
-				+ "objectClass", true);
+// 		Debug.debug("GeneralObjectActivator Object starting remote: " + obj
+// 				+ "objectClass", true);
 		//if is runnable, create a new thread and make it run
 		if ((obj instanceof Runnable) && (run)) {
 			thr = new Thread((Runnable) obj);
@@ -118,15 +115,15 @@ public class GeneralObjectActivator implements Activator {
 
 	public static Object getRemoteObjectReference(ObjectId oxhandle,
 			Class chandle, String remote_interface) {
-		Debug.debug("GeneralObjectActivator getRemoteObjectReference: "
-				+ remote_interface, true);
+// 		Debug.debug("GeneralObjectActivator getRemoteObjectReference: "
+// 				+ remote_interface, true);
 		//obtain master contact from oxm
 		OXHandle oxh = AppManUtil.getOXManager().createHandle(oxhandle);
-		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxhandle,
-				true);
-		Debug.debug(
-				"GeneralObjectActivator getRemoteObjectReference getAttribute: "
-						+ ATT_WORB_CONTACT + remote_interface, true);
+// 		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxhandle,
+// 				true);
+// 		Debug.debug(
+// 				"GeneralObjectActivator getRemoteObjectReference getAttribute: "
+// 						+ ATT_WORB_CONTACT + remote_interface, true);
 		String contact = (String) oxh.getAttribute(ATT_WORB_CONTACT
 				+ remote_interface);
 
@@ -172,25 +169,25 @@ public class GeneralObjectActivator implements Activator {
 		  *  }
 		  */
 
-		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
-				+ contact, true);
+// 		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
+// 				+ contact, true);
 		//System.out.println("Contato ?????????????????????????? "+contact);
 
 		//get master from worb
 		Object object = AppManUtil.getWorb().lookupService(contact, chandle);
-		Debug.debug(
-				"GeneralObjectActivator getRemoteObjectReference lookupService REMOTE object: "
-						+ object, true);
+// 		Debug.debug(
+// 				"GeneralObjectActivator getRemoteObjectReference lookupService REMOTE object: "
+// 						+ object, true);
 		return object;
 	}
 
 	public static Object getRemoteObjectReference(String contact, Class chandle) {
-		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
-				+ contact, true);
+// 		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
+// 				+ contact, true);
 		Object object = AppManUtil.getWorb().lookupService(contact, chandle);
-		Debug.debug(
-				"GeneralObjectActivator getRemoteObjectReference lookupService REMOTE object: "
-						+ object, true);
+// 		Debug.debug(
+// 				"GeneralObjectActivator getRemoteObjectReference lookupService REMOTE object: "
+// 						+ object, true);
 		return object;
 	}
 

@@ -42,8 +42,9 @@ public class OutputXML{
 		try {
 			manifest = new BufferedWriter(new FileWriter(filenameManifest));
 		} catch (IOException e) {
-			Debug.log(this+"\t[GRAND]\tError creating file "+filenameManifest);
-			Debug.log(this+"\t[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameManifest);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -54,8 +55,9 @@ public class OutputXML{
 		try {
 			tasks = new BufferedWriter(new FileWriter(filenameTasks));
 		} catch (IOException e) {
-			Debug.log(this+"\t[GRAND]\tError creating file "+filenameTasks);
-			Debug.log(this+"\t[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameTasks);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -66,8 +68,9 @@ public class OutputXML{
 		try {
 			edges = new BufferedWriter(new FileWriter(filenameEdges));
 		} catch (IOException e) {
-			Debug.log(this+"\t[GRAND]\tError creating file "+filenameEdges);
-			Debug.log(this+"\t[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameEdges);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -78,8 +81,9 @@ public class OutputXML{
 		try {
 			clusters = new BufferedWriter(new FileWriter(filenameClusters));
 		} catch (IOException e) {
-			Debug.log(this+"\t[GRAND]\tError creating file "+filenameClusters);
-			Debug.log(this+"\t[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameClusters);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -98,7 +102,7 @@ public class OutputXML{
 			manifest.write("</m:Manifest>\n");
 			
 		} catch (IOException e) { 
-			Debug.log(this+"\t[GRAND]\tError in first writing to file "+filenameManifest, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameManifest);
 		}
 		
 	}
@@ -132,8 +136,8 @@ public class OutputXML{
 			
 			appName = node.getExecutable(); 
 
-			// BUG: o código abaixo falha para comandos composts ou quando existe 
-                        // manipulação de diretórios (ver aplicação povray)
+			// BUG: o c�digo abaixo falha para comandos composts ou quando existe 
+                        // manipula��o de diret�rios (ver aplica��o povray)
 
 			// pegar o nome sem caminho
 			int barra = appName.lastIndexOf('/')+1;
@@ -161,7 +165,7 @@ public class OutputXML{
 				tasks.write("\t\t\t\t<jsdl-posix:Executable>"+executable+"</jsdl-posix:Executable>\n");
 				tasks.write("\t\t\t\t<jsdl-posix:Argument>"+argument+"</jsdl-posix:Argument>\n");
 			} catch (IOException e) { 
-				Debug.log(this+"\t[GRAND]\tError in first writing to file "+filenameTasks, e);
+				System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 			}
 			
 			//FALTA VARRER O VETOR DE ENTRADAS E SAIDAS!!!!!!!!
@@ -186,7 +190,7 @@ public class OutputXML{
 				tasks.write("\t</jsdl:JobDescription>\n");
 				//fim varredura
 			} catch (IOException e) { 
-				Debug.log(this+"\t[GRAND]\tError in first writing to file "+filenameTasks, e);
+				System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 			}
 			
 		}
@@ -203,7 +207,7 @@ public class OutputXML{
 	public void writeEdges(){
 		
 		DAG_DSC dag = SimpleParser.appDescription.getDAG();
-		List nodesList = (List)dag.getDAGcopy();
+		List nodesList = dag.getDAGcopy();
 		DAGNode dn;
 		DAGEdge de;
 		Vector pred;
@@ -230,7 +234,7 @@ public class OutputXML{
 			
 			edges.write("</ge:DAGDefinition>");
 		} catch (IOException e) { 
-			Debug.log(this+"\t[GRAND]\tError in first writing to file "+filenameEdges, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameEdges);
 		}
 		
 	}
@@ -307,7 +311,7 @@ public class OutputXML{
 			manifest.close();
 			
 		} catch (IOException e) { 
-			Debug.log(this+"\t[GRAND]\tError in closing to file "+filenameManifest, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameManifest);
 		}
 		
 	}
@@ -317,7 +321,7 @@ public class OutputXML{
 			tasks.close();
 			
 		} catch (IOException e) { 
-			Debug.log(this+"\t[GRAND]\tError in closing to file "+filenameTasks, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameTasks);
 		}
 		
 	}
@@ -327,7 +331,7 @@ public class OutputXML{
 			edges.close();
 			
 		} catch (IOException e) { 
-			Debug.log(this+"\t[GRAND]\tError in closing to file "+filenameEdges, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameEdges);
 		}
 		
 	}
@@ -337,7 +341,7 @@ public class OutputXML{
 			clusters.close();
 			
 		} catch (IOException e) { 
-			Debug.log(this+"\t[GRAND]\tError in closing to file "+filenameClusters, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameClusters);
 		}
 		
 	}

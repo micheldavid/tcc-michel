@@ -20,16 +20,13 @@ package appman;
 
 import java.awt.Frame;
 import java.awt.Panel;
-import java.awt.Button;
-import java.awt.BorderLayout;
 import java.awt.Checkbox;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.GridBagConstraints;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 import java.util.Hashtable;
 
 import org.isam.exehda.Exehda;
@@ -111,10 +108,12 @@ public class CollectorDemo2
 
     public void update( long timeStamp, MonitoringData[] data )
         {
-    	Debug.log(this+"\t(Time stamp: "+timeStamp);
+            System.out.println("\nTime stamp: "+timeStamp);
             for (int i=0; i<data.length; i++) {
                 if ( data[i] != null ) {
-                	Debug.log(this+"\t"+data[i].getSensor().getSimpleName()+" \t= "+data[i].getString());
+                    System.out.print(data[i].getSensor().getSimpleName());
+                    System.out.print(" \t= ");
+                    System.out.println(data[i].getString());
                 }
             }
         }

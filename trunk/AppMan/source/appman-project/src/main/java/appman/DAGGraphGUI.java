@@ -8,10 +8,6 @@ package appman;
 
 import org.isam.exehda.ObjectId;
 
-import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.Vector;
@@ -19,8 +15,6 @@ import java.util.Vector;
 // import org.isam.exehda.Exehda;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ApplicationId;
-import org.isam.exehda.services.Executor;
-
 import appman.clustering.ClusteringPhase;
 import appman.parser.ApplicationDescription;
 import appman.parser.SimpleParser;
@@ -59,7 +53,8 @@ public class DAGGraphGUI extends javax.swing.JFrame
         
         
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+            @Override
+			public void windowClosing(java.awt.event.WindowEvent evt) {
             	exitForm(evt);
             	//AppManUtil.exitApplication();
             }
@@ -165,8 +160,8 @@ public class DAGGraphGUI extends javax.swing.JFrame
                                         appman.addApplicationDescriptionRemote(graph_name[j], clusters[j], appdesc);
                                         appman.startAppGUIRemote(graph_name[j]);					
                                     }
-                                    appman.startApplicationManagerRemote();
-                                    while(appman.getApplicationStateRemote() != ApplicationManager.ApplicationManager_FINAL)
+                                    appman.startApplicationManager();
+                                    while(appman.getApplicationState() != ApplicationManager.ApplicationManager_FINAL)
                                     {
                                         Thread.sleep(5000);						
                                     }
@@ -220,13 +215,15 @@ public class DAGGraphGUI extends javax.swing.JFrame
     
     private static class DagFileFilter extends javax.swing.filechooser.FileFilter {
         
-        public boolean accept(java.io.File file) {
+        @Override
+		public boolean accept(java.io.File file) {
             if (file == null)
                 return false;
             return file.isDirectory() || file.getName().toLowerCase().endsWith(".dag");
         }
         
-        public String getDescription() {
+        @Override
+		public String getDescription() {
             return "Dag Script files (*.dag)";
         }
         

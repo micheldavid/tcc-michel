@@ -3,36 +3,18 @@
  */
 package appman.ui.grappareader;
 
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
-import java.rmi.Naming;
-import java.util.StringTokenizer;
-
 import org.isam.exehda.Exehda;
-import org.isam.exehda.services.Executor;
-import org.isam.exehda.services.OXManager;
 import org.isam.exehda.services.Worb;
-import org.isam.exehda.services.OXManager.OXHandle;
-import org.omg.CORBA.ExceptionList;
-
-import appman.ApplicationManager;
 import appman.ApplicationManagerRemote;
-import appman.GeneralObjectActivator;
-import appman.GridFileServiceRemote;
-import appman.GridTaskRemote;
 import appman.clustering.*;
 import appman.parser.ApplicationDescription;
-import appman.parser.SimpleParser;
-
-import com.sun.org.omg.CORBA.ExceptionDescription;
 
 /**
  * This class obtain DAG information and generates a coordinate file to allow
@@ -149,7 +131,7 @@ public class Reader implements Serializable {
 			Worb worb = (Worb) Exehda.getService(Worb.SERVICE_NAME);
 			appman = (ApplicationManagerRemote) worb.lookupService(
 					contact_address, ApplicationManagerRemote.class);
-			System.out.print("[APPMAN-VDN]: " + appman);
+			System.out.print("[APPMAN-GRAPPAREADER]: " + appman);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -177,11 +159,11 @@ public class Reader implements Serializable {
 				for (int i = 0; i < nNodes; i++) {
 					window
 							.changeColorNode(dag_dsc.getNameByIndex(i),
-									colorToString(((DAGNode) dag_dsc
+									colorToString((dag_dsc
 											.getNodeByIndex(i)).status));
 					//System.out.print("NODE: "+names[i]+"
 					// COLOR:"+colorToString(colors[i])+"\n\n");
-					if (((DAGNode) dag_dsc.getNodeByIndex(i)).status != 2) {
+					if ((dag_dsc.getNodeByIndex(i)).status != 2) {
 						end = false;
 					} else {
 						numberOfFinished++;

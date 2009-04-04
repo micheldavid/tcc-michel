@@ -48,6 +48,7 @@ public class DAGNode implements Cloneable, Serializable{
 	/**
 	 *  
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		DAGNode copy = new DAGNode();
 		copy.nodeName = new String(this.nodeName);

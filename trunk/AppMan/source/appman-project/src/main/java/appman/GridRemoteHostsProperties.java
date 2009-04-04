@@ -31,7 +31,7 @@ public class GridRemoteHostsProperties
 		queue = new Vector();
 		
 		for (int i = 0; i < hosts.size(); i++) {
-			queue.add((String)hosts.get(i));
+			queue.add(hosts.get(i));
 		}
 		
 		
@@ -83,7 +83,8 @@ public class GridRemoteHostsProperties
 			targetHost = HostId.parseId(host);
 		} catch (Exception e)
 		{
-			Debug.log(e.getMessage(), e);
+			System.out.println(e);
+			e.printStackTrace();
 			System.exit(0);
 		}
 				
@@ -98,7 +99,7 @@ public class GridRemoteHostsProperties
 	 * Window - Preferences - Java - Code Style - Code Templates
 	 */
 	
-	public HostId getRoundRobinHost()
+	public synchronized HostId getRoundRobinHost()
 	{
 		HostId targetHost = null;
 		String first = (String)queue.get(0);
@@ -108,7 +109,8 @@ public class GridRemoteHostsProperties
 			String host =  "hostid:"+first;
 			targetHost = HostId.parseId(host);
 		} catch (Exception e) {
-			Debug.log(this + "\t"+e.getMessage(), e);
+			System.out.println(e);
+			e.printStackTrace();
 			System.exit(0);
 
 		}
@@ -129,29 +131,34 @@ public class GridRemoteHostsProperties
 		if (roundNumber>resources.length) {
 			roundNumber=0;
 		}
-		String first = (String)resources[roundNumber].getSimpleName();
+		String first = resources[roundNumber].getSimpleName();
 		roundNumber++;
 		try {
 			String host =  "hostid:"+first;
 			targetHost = HostId.parseId(host);
 		} catch (Exception e) {
-			Debug.log(e.getMessage(), e);
+			System.out.println(e);
+			e.printStackTrace();
 			System.exit(0);
+
 		}
 		
 		return targetHost;
 		
 	}
 
-	public HostId getRoundRobinComputeHost()
+	public synchronized HostId getRoundRobinComputeHost()
 	{
-		//if (queueAllMachines==null) {
+            // FIX ME: periodicamente deve zerar a lista e atualizar a partir da
+            // CIB. **Importante** n�o deve zerar sempre ou o RR da forma como est�
+            // implementado abaixo n�o vai funcionar!.
+		if (queueAllMachines==null) {
 			queueAllMachines = new Vector();
 			getHostFromCib();
-		//}
+		}
 		HostId targetHost = null;
 		String first = (String)queueAllMachines.get(0);
-		Debug.log(this + "\tgetRoundRobin first "+first);
+		System.out.println("getRoundRobin first "+first);
 		queueAllMachines.remove(0);
 		queueAllMachines.add(first);
 
@@ -159,8 +166,10 @@ public class GridRemoteHostsProperties
 			//System.out.println("getRoundRobin host "+host);
 			targetHost = HostId.parseId("hostid:"+first+"."+HostId.getLocalHost().getCell().getName());
 		} catch (Exception e) {
-			Debug.log(this + "\t"+ e.getMessage(), e);
+			System.out.println(e);
+			e.printStackTrace();
 			System.exit(0);
+
 		}
 		
 		return targetHost;
@@ -175,7 +184,7 @@ public class GridRemoteHostsProperties
     
     for(int i=0;i<resources.length; i++)
     {
-    	queueAllMachines.add((String)resources[i].getSimpleName());
+    	queueAllMachines.add(resources[i].getSimpleName());
     	//queueAllMachines.add("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
         Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName(), true);
     }

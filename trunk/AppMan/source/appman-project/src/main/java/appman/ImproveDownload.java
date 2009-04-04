@@ -7,7 +7,6 @@
 package appman;
 
 import java.util.Hashtable;
-import java.util.Vector;
 
 /**
  * @author dalto

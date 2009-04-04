@@ -54,7 +54,8 @@ public class Token {
   /**
    * Returns the image.
    */
-  public String toString()
+  @Override
+public String toString()
   {
      return image;
   }

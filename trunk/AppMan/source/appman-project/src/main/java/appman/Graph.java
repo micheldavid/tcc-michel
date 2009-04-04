@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import appman.parser.ApplicationDescription;
-import appman.parser.SimpleParser;
+import appman.task.Task;
+import appman.task.TaskState;
 
 public class Graph implements Serializable
 {
@@ -26,6 +27,8 @@ public class Graph implements Serializable
 	
 	// info from the parser module
 	private ApplicationDescription appDescription;
+
+    private int indexDSC;
 	
 	
 	
@@ -142,111 +145,28 @@ public class Graph implements Serializable
 		
 			Debug.debug("Graph default graph structure created");
 		}
-		
-	/*
-	* A partir dos dados da lista de tarefas, atualize o conteudo dos nodos do grafo
-	* Esta fun??o deve ser chamada quando o conte?do da lista de tarefas e de datafiles forem alterados
-	*/	
 
-	public int StateToIntColor( String state ){
-		
-		int color=-1;
-		
-		if( state.compareTo("TASK_DEPENDENT") == 0 ){
-			color = 3;//red
-		}
-		else if( state.compareTo("TASK_READY") == 0 ){
-			color = 1;//yellow
-		}
-		else if( state.compareTo("TASK_EXECUTING") == 0 ){
-			color = 0;//green
-		}
-		else if( state.compareTo("TASK_FINAL") == 0 ){
-			color = 2;//blue
-		}
-		
-		return color;
-			 
-	}
-		
-	
-
-		
-	int indexDSC;
-	public void updateGraphNodesInternalData()
-	{
-		edu.berkeley.guir.prefuse.graph.Graph g = this.getGraph();
-		GraphNode[] n = GraphGenerator.convertGraphNodesIteratorToNodesArray(g.getNodes());		
-		// para cada n? do grafo
-		for(int i =0; i < n.length; i++)
-		{
-			Task x = (Task)n[i].getNodeData(); // retorna a tarefa do n? [i]
-			Task xlist = this.getTask(x.getTaskId());
-			if( xlist != null)
-			{
-				n[i].setNodeData(xlist); // atualiza a tarefa do node [i] do grafo, usando os dados da lista de tarefas			
-				n[i].setAttribute("status", xlist.getTaskStateString()); // atualiza os atributos do n?, o status
-				n[i].setAttribute("label", "Name: " + xlist.getTaskId() + ", SubMan: " +xlist.getMySubManagerId()+" , INput: " + xlist.getInputFiles().length + ", OUTput: " + xlist.getOutputFiles().length + ", STATUS: " + xlist.getTaskStateString());
-				Debug.log(this+"\tName: "+xlist.getTaskId()+"  Status:"+xlist.getTaskStateString()+" DAG_DSC "+ appDescription); 
-				//inserir aqui chamadas para atualizacao dos nodos. "xlist.getTaskId()" eh o nome da tarefa 
-
-
-				appDescription = appman.parser.SimpleParser.appDescription;
-				//quando a tarefa nao tem nome nao consigo achar na minha estrutura e retorno -1
-				//no caso do xlist.getTaskId() do Lucas, retorna vazio e nao consigo achar o indice na minha estrutura
-				indexDSC = appDescription.applicationDAG.getIndexByName(xlist.getTaskId());
-				System.out.println("\n\nGET_TASK_ID: "+xlist.getTaskId()+"  GET_NAME: "+xlist.getName()+ "indexDSC: "+indexDSC+"\n\n");
-				//indexDSC = appDescription.applicationDAG.getIndexByName(xlist.getName());
-				//System.out.println("STATE VDN:"+xlist.getTaskStateString());
-				appDescription.applicationDAG.changeColor(indexDSC, StateToIntColor(xlist.getTaskStateString()));
-				//System.out.println("[GRAPH UPDATE] "+"indexDSC:"+indexDSC);
-				
-				/*/
-				if(  ((String)xlist.getTaskStateString()).compareTo("TASK_FINAL") == 0 ){ 
-					appDescription.incrementFinishedTasks();
-					
-				}
-				*/
-
-			}
-		}
-	}
-	
-		/*
-		* A partir do conteudo dos nodos do grafo, atualize os dados da lista de tarefas		
-		*/	
-/*		public void updateInternalDataFromGraphNodes()
-		{
-			//edu.berkeley.guir.prefuse.graph.Graph g = this.getGraph();
-			//GraphNode[] n = GraphGenerator.convertGraphNodesIteratorToNodesArray(g.getNodes());
-			
-			Vector tasks = getAllTaskList();
-			synchronized(taskList)
-			{			
-				taskList.removeAllElements();
-				// para cada n? do grafo								
-				for(int i =0; i < tasks.size(); i++)
-				{
-						Task xall = (Task)tasks.get(i);				
-						if(xall.getMySubManagerId().equals(this.getSubmissionManagerId()))
-						{
-							taskList.add(xall);
-						}			
-				}
-			}
-		}
-	*/
 	public Vector getTaskList()
 	{
-		return taskList;
+            // BUG: must return a copy, otherwise external modifications to vector will corrupt the graph
+		return (Vector) taskList.clone();
 	}
-	
-	public void setTaskList(Vector list)
-	{
-		taskList = list;
-	}
+
+//         /**
+//          * @deprecated Replaced by method <code>copy(Graph)</code>
+//          */
+// 	public void setTaskList(Vector list)
+// 	{
+// 		taskList = list;
+// 	}
 		
-	public Task getTask(String taskId)
+        /**
+         * Describe <code>getTask</code> method here.
+         *
+         * @param taskId a <code>String</code> value
+         * @return a <code>Task</code> value
+         */
+    public Task getTask(String taskId)
 	{
 		for(int i=0; i<taskList.size();i++)
 		{
@@ -278,11 +198,15 @@ public class Graph implements Serializable
 			for(int i=0;i<taskList.size();i++)
 			{
 				Task t = (Task)taskList.elementAt(i); 
-				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getTaskState()==Task.TASK_DEPENDENT )
+				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT )
 				{
-					t.setTaskState(Task.TASK_READY);
+					t.setState(TaskState.getInstance(TaskState.TASK_READY));
+					Debug.debug("Task setting state: " + t.getState().getName());
 					readyTasks.add(t);
 				}
+                else if ( t.getState().getCode()==TaskState.TASK_READY ) {
+                    readyTasks.add(t);
+                }
 			}
 			//Debug.debug("Task READY: " + readyTasks);	
 			return readyTasks;
@@ -298,22 +222,25 @@ public class Graph implements Serializable
 	public Vector getReadyTaskList(int maxNumberOfTasks)
 	{		
 			Vector readyTasks = new Vector();
-			int numberOfInsertedTasks=0;
 			for(int i=0;i<taskList.size();i++)
 			{
 				Task t = (Task)taskList.elementAt(i); 
-				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getTaskState()==Task.TASK_DEPENDENT )
+				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT )
 				{
-					t.setTaskState(Task.TASK_READY);
+					t.setState(TaskState.getInstance(TaskState.TASK_READY));
+					Debug.debug("Task setting state: " + t.getState().getName());
 					readyTasks.add(t);
-					numberOfInsertedTasks++;
 				}
+                else if ( t.getState().getCode()==TaskState.TASK_READY ) {
+                    readyTasks.add(t);
+                }
+                
 				// check if reached limit of tasks to be included
-				if (maxNumberOfTasks == numberOfInsertedTasks) { 
+				if (readyTasks.size() >= maxNumberOfTasks ) { 
 					break;
 				}
 			}
-			//Debug.debug("Task READY: " + readyTasks);	
+			Debug.debug("Task READY: " + readyTasks);	
 			return readyTasks;
 	}	
 	
@@ -327,7 +254,7 @@ public class Graph implements Serializable
 			for(int i=0;i<all.size();i++)
 			{
 				Task t = (Task)all.elementAt(i); 
-				if( ! isAllTaskInputsAvailable(t.getTaskId()) && t.getTaskState()==Task.TASK_DEPENDENT)
+				if( ! isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT)
 				{					
 					notreadyTasks.add(t);
 				}
@@ -352,7 +279,7 @@ public class Graph implements Serializable
 								if(d.getFromTask() != null)
 								{
 									// se o arquivo est? dispon?vel em uma tarefa de outro grafo
-									if(d.getFromTask().getTaskState() == Task.TASK_FOREIGN_FINAL)
+									if(d.getFromTask().getState().getCode() == TaskState.TASK_FOREIGN_FINAL)
 										return true;
 									else
 									return false;
@@ -376,7 +303,7 @@ public class Graph implements Serializable
 	private boolean isAllTaskInputsAvailable(String taskid)
 	{
 		Task task = getTask(taskid);
-		DataFile[] inputs = task.getInputFiles();
+		DataFile[] inputs = task.getFiles().getInputFiles();
 		
 		for(int i=0;i < inputs.length;i++)
 		{			
@@ -402,7 +329,7 @@ public class Graph implements Serializable
 		
 		for(int i=0;i<tasks.size();i++)
 		{
-			if( ((Task)tasks.elementAt(i)).getMySubManagerId().compareTo(mysubmanId) == 0)
+			if( ((Task)tasks.elementAt(i)).getSubmissionManagerId().compareTo(mysubmanId) == 0)
 			{
 				mytasks.add(tasks.elementAt(i));
 			}
@@ -437,9 +364,9 @@ public class Graph implements Serializable
 		
 		for(int i=0;i<tasks.size();i++)
 		{
-			if( ((Task)tasks.elementAt(i)).getMySubManagerId().compareTo(mysubmanId) == 0)
+			if( ((Task)tasks.elementAt(i)).getSubmissionManagerId().compareTo(mysubmanId) == 0)
 			{
-				((Task)tasks.elementAt(i)).setTaskSubmissionManagerId(subid);
+				((Task)tasks.elementAt(i)).setSubmissionManagerId(subid);
 			}			
 		}
 		
@@ -453,26 +380,30 @@ public class Graph implements Serializable
 		float n = 0;
 		for(int i=0; i<taskList.size(); i++)
 		{
-			if( ((Task)taskList.elementAt(i)).getTaskState() == Task.TASK_FINAL )
+			if( ((Task)taskList.elementAt(i)).getState().getCode() == TaskState.TASK_FINAL )
 			{
 				n+= 1;
 			}		
 		}
 		if(taskList.size() > 0)
-			return (float)(n / taskList.size());
+			return (n / taskList.size());
 		else
 			return 1;	
 	}
 	
 	public Vector getDataFileList()
 	{
-			return datafileList;
+            // BUG: must return a copy, otherwise external modifications to vector will corrupt the graph
+        return (Vector) datafileList.clone();
 	}
-	
-	public void setDataFileList(Vector list)
-	{
-			datafileList = list;
-	}
+
+//         /**
+//          * @deprecated Replaced by method <code>copy(Graph)</code>
+//          */	
+// 	public void setDataFileList(Vector list)
+// 	{
+// 			datafileList = list;
+// 	}
 	
 	/**
 	 * @return string
@@ -519,7 +450,103 @@ public class Graph implements Serializable
 
 	public void setGraph(edu.berkeley.guir.prefuse.graph.Graph graph)
 	{
-		this.graph = (edu.berkeley.guir.prefuse.graph.Graph)graph;
+		this.graph = graph;
 	}
 
+
+        ////////////////////////////////////////////////////////
+        // refactoring
+        ///////////////////////////////////////////////////////
+    
+        /**
+         * Updates this graph state by copying the given graph, but before that do same
+         * sanity checks to see if the copy is allowed (eg. both structures must describe
+         * the same graph.
+         *
+         * <p>Assertions (invariants):
+         * <ul>
+         *   <li>both graphs must have the very same ids
+         *   <li>tasks do not desapear! the number of tasks is fixed upon graph creation.
+         *   <li>file dependencies do not desapear! the number of file dependencies is fixed upon graph creation.
+         *   <li>execution percent done status increases monotonically
+         * </ul>
+         *
+         * @param g a <code>Graph</code> value
+         */
+    public synchronized void  copy(Graph g)
+        {
+                // santity checks for verifing copy is allowed
+            if ( g == null )
+                throw new IllegalArgumentException("source graph must be non-null");
+            if ( ! graphId.equals(g.graphId) )
+                throw new IllegalArgumentException("source graph do not describe the same logical graph (id differs)");
+            if ( taskList.size() != g.taskList.size() )
+                throw new IllegalArgumentException("possibly corrupted data structure (task lists sizes differs)");
+            if ( datafileList.size() != datafileList.size() )
+                throw new IllegalArgumentException("possibly corrupted data structure (data file lists sizes differs)");
+            
+                // XXX: final (expensive) sanity check: execution status must increase monotonically
+            if ( getStatePercentCompleted() > g.getStatePercentCompleted())
+                throw new IllegalArgumentException("possibly corrupted data structure (execution status not increasing monotonically)");
+
+            
+                // copy task list state
+            this.taskList = (Vector) g.taskList.clone();
+            
+                // copy data files state
+            this.datafileList = (Vector) g.datafileList.clone();
+
+                // update peer prefuse structures
+            updateGraphNodesInternalData();
+        }
+    
+        /**
+         * Updates the peer prefuse representation of this graph.
+         *
+         */
+    private final void updateGraphNodesInternalData()
+	{
+		edu.berkeley.guir.prefuse.graph.Graph g = this.getGraph();
+		GraphNode[] n = GraphGenerator.convertGraphNodesIteratorToNodesArray(g.getNodes());
+        
+            // for each node in the graph
+		for(int i =0; i < n.length; i++)
+		{
+			Task x = (Task)n[i].getNodeData(); // retorna a tarefa do n? [i]
+			Task xlist = this.getTask(x.getTaskId());
+			if( xlist != null)
+			{
+                    // atualiza a tarefa do node [i] do grafo, usando os dados da lista de tarefas 
+				n[i].setNodeData(xlist);
+                    // atualiza os atributos do n?, o status
+				n[i].setAttribute("status", xlist.getState().getName()); 
+				n[i].setAttribute("label",
+                                  "Name: " + xlist.getTaskId()
+                                  + ", SubMan: " +xlist.getSubmissionManagerId()
+                                  +" , INput: " + xlist.getFiles().getInputFiles().length
+                                  + ", OUTput: " + xlist.getFiles().getOutputFiles().length
+                                  + ", STATUS: " + xlist.getState().getName());
+                
+				System.out.println("\n\n\n\n"
+                                   +"Name: "+xlist.getTaskId()
+                                   +"  Status:"+xlist.getState().getName()
+                                   +" DAG_DSC "+ appDescription);
+                
+                    // inserir aqui chamadas para atualizacao dos
+                    // nodos. "xlist.getTaskId()" eh o nome da tarefa
+				appDescription = appman.parser.SimpleParser.appDescription;
+                
+                    // quando a tarefa nao tem nome nao consigo achar na minha estrutura
+                    // e retorno -1;
+				    // no caso do xlist.getTaskId() do Lucas, retorna vazio e nao consigo
+				    // achar o indice na minha estrutura
+				indexDSC = appDescription.applicationDAG.getIndexByName(xlist.getTaskId());
+				System.out.println("\n\n"+
+                                   "GET_TASK_ID: "+xlist.getTaskId()
+                                   +"  GET_NAME: "+xlist.getName()
+                                   + "indexDSC: "+indexDSC+"\n\n");
+				appDescription.applicationDAG.changeColor(indexDSC,xlist.getState().getColor());
+			}
+		}
+	}
 }

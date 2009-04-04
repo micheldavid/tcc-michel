@@ -47,7 +47,7 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
     try {
         FileReader filer = new FileReader(filename);
         if(!jj_initialized_once) { // first static parse
-            parser = new SimpleParser((Reader)filer);
+            parser = new SimpleParser(filer);
         } else {
           SimpleParser.ReInit(filer);
         }
@@ -60,7 +60,7 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
     symbolTable = new SymbolTable(MAX_NUMBER_OF_VARIABLES);
     appDescription = new ApplicationDescription();
 
-    SimpleNode rootNode =  parser.Input();
+    SimpleNode rootNode =  SimpleParser.Input();
 
 /*
     System.out.println("[GRAND] start GRAPH DUMP.");
@@ -110,11 +110,10 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
     //VDN:2/9/05  
     timeFinishParse = System.currentTimeMillis();
     try{
-                parserOut = new FileWriter("parseOut.txt");
-                parserOut.write("Parser Time(ms): "+(timeFinishParse-timeInitParse)+"\n");
-                parserOut.write("InferDAG Time(ms): "+(timeFinishInferDAG-timeInitInferDAG+"\n"));
-                parserOut.close();
-
+        parserOut = new FileWriter("parseOut.txt");
+		parserOut.write((timeFinishParse - timeInitParse) + "\t");
+		parserOut.write((timeFinishInferDAG - timeInitInferDAG + "\t"));
+        parserOut.close();
     }catch( IOException e){
                 System.out.println("[Simple Parser] :"+e);
     }
@@ -371,7 +370,7 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
         if (jj_2_24(2)) {
           t = jj_consume_token(string);
             // pkvm 2005/07/18: changed to exclude " from string
-            String s = ((String)t.image);
+            String s = (t.image);
             file=file+""+s.substring(1,(s.length()-1));
         } else if (jj_2_25(2)) {
           t = jj_consume_token(var);
@@ -594,7 +593,7 @@ Vector listElements;
           if (jj_2_41(2)) {
             t = jj_consume_token(string);
             // pkvm 2005/07/20: changed to exclude " from string
-            String s = ((String)t.image);
+            String s = (t.image);
             s=s.substring(1,(s.length()-1));
             value.addValue(AssignmentBody.STRING,""+s);
           } else if (jj_2_42(2)) {
@@ -617,7 +616,7 @@ Vector listElements;
       t = jj_consume_token(string);
        value.setAsString();
        // pkvm 2005/07/20: changed to exclude " from string
-       String s2 = ((String)t.image);
+       String s2 = (t.image);
        s2=s2.substring(1,(s2.length()-1));
        value.addValue(AssignmentBody.STRING,""+s2);
       label_6:
@@ -640,7 +639,7 @@ Vector listElements;
         if (jj_2_49(2)) {
           t = jj_consume_token(string);
             // pkvm 2005/07/20: changed to exclude " from string
-            String s = ((String)t.image);
+            String s = (t.image);
             s=s.substring(1,(s.length()-1));
           value.addValue(AssignmentBody.STRING,""+s);
         } else if (jj_2_50(2)) {
@@ -1792,7 +1791,7 @@ Vector listElements;
 
   static public void ReInit(java.io.InputStream stream) {
     jj_input_stream.ReInit(stream, 1, 1);
-    token_source.ReInit(jj_input_stream);
+    SimpleParserTokenManager.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jjtree.reset();
@@ -1820,7 +1819,7 @@ Vector listElements;
 
   static public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
-    token_source.ReInit(jj_input_stream);
+    SimpleParserTokenManager.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jjtree.reset();
@@ -1858,7 +1857,7 @@ Vector listElements;
   static final private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
-    else token = token.next = token_source.getNextToken();
+    else token = token.next = SimpleParserTokenManager.getNextToken();
     jj_ntk = -1;
     if (token.kind == kind) {
       jj_gen++;
@@ -1885,7 +1884,7 @@ Vector listElements;
     if (jj_scanpos == jj_lastpos) {
       jj_la--;
       if (jj_scanpos.next == null) {
-        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+        jj_lastpos = jj_scanpos = jj_scanpos.next = SimpleParserTokenManager.getNextToken();
       } else {
         jj_lastpos = jj_scanpos = jj_scanpos.next;
       }
@@ -1904,7 +1903,7 @@ Vector listElements;
 
   static final public Token getNextToken() {
     if (token.next != null) token = token.next;
-    else token = token.next = token_source.getNextToken();
+    else token = token.next = SimpleParserTokenManager.getNextToken();
     jj_ntk = -1;
     jj_gen++;
     return token;
@@ -1914,14 +1913,14 @@ Vector listElements;
     Token t = lookingAhead ? jj_scanpos : token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
-      else t = t.next = token_source.getNextToken();
+      else t = t.next = SimpleParserTokenManager.getNextToken();
     }
     return t;
   }
 
   static final private int jj_ntk() {
     if ((jj_nt=token.next) == null)
-      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+      return (jj_ntk = (token.next=SimpleParserTokenManager.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
