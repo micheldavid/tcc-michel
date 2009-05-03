@@ -57,7 +57,8 @@ import edu.berkeley.guir.prefusex.layout.ForceDirectedLayout;
  */
 public class ForceDemo extends Display
 {
-    private JFrame     frame;
+	private static final long serialVersionUID = 8910203868924508482L;
+	private JFrame     frame;
     private ForcePanel fpanel;
     
     private ForceSimulator m_fsim;

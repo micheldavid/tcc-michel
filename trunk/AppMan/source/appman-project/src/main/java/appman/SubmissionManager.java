@@ -22,7 +22,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     private boolean end = false; // flag que sinaliza o fim da execucao // VDN 2006/01/31 - tiramos o volatile
     volatile private static int static_die = 0;
     
-    String my_contact_address = null; // endere�o de contato deste objeto
+    String my_contact_address = null; // endereço de contato deste objeto
 
     /** PKVM (2005/08/30) : to limit number of tasks to each SM */
     private static final int MAX_NUMBER_OF_TASKS_TO_SM = 100;//20
@@ -154,8 +154,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             Vector newreadytasks = new Vector();
             
             int num_tasks_running = computeSubmissonManagerTasksLoad();
-            // se o numero de tarefas executando � menor que o m�ximo
-            // ent�o adiciona mais tarefas aos Task Managers
+            // se o numero de tarefas executando é menor que o máximo
+            // então adiciona mais tarefas aos Task Managers
             Debug.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n", true);
             System.out.print("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
             if(num_tasks_running < SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM)
@@ -165,8 +165,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             	if(n > SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SG)
             		n = SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SG;
             	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph [" + graphId + "] can manage "+ n +" more tasks, the limit is "+ MAX_NUMBER_OF_TASKS_TO_SM, true);
-            	// se h� mais tarefas para executar que o valor limite
-            	// ent�o adiciona apenas algumas
+            	// se há mais tarefas para executar que o valor limite
+            	// então adiciona apenas algumas
             	
             	//PKVM 2006/01/06 => this call replaces the original method call without parameter
             	// This was include to solve a bug detected by PKVM and VDN: AppMan did not worked
@@ -211,8 +211,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                 } 
             }
 	
-                //	Atrav�s da lista de tarefas do grafo que n�o est�o prontas para serem executadas,
-                // procura informa��es sobre aquelas que possuem arquivos de entrada provenientes
+                //	Através da lista de tarefas do grafo que não estão prontas para serem executadas,
+                // procura informações sobre aquelas que possuem arquivos de entrada provenientes
                 // de outro SubmissionManager					
             updateForeignTasksStatus(graph);
         }
@@ -221,7 +221,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
         {
             Vector alltasks = g.getAllTaskList();	
 	
-                // procura tarefas que n�o pertencem a este SubmissionManager
+                // procura tarefas que não pertencem a este SubmissionManager
             for(int i=0;i<alltasks.size();i++)
             {
                 Task t = (Task)alltasks.elementAt(i);
@@ -247,7 +247,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 		                                if(appmanager.isTaskOutputsRemoteAvailable(t.getTaskId()))
 		                                {
 		                                    Debug.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  found foreign task["+t.getTaskId()+"] FINAL state from another SubmissionManager.");
-		                                    String gfsr = appmanager.getTaskGridFileServiceContactAddressRemote(t.getTaskId()); // atualiza a referencia ao servi�o de arquivo das task remota
+		                                    String gfsr = appmanager.getTaskGridFileServiceContactAddressRemote(t.getTaskId()); // atualiza a referencia ao serviço de arquivo das task remota
 		                                    t.setSubmissionManagerContactAddress(gfsr);
 		                                    t.setState(TaskState.getInstance(TaskState.TASK_FOREIGN_FINAL));
 											Debug.debug("Task setting state: " + t.getState().getName());
@@ -331,8 +331,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                                 }
 							    catch (RemoteException e)
 								{
-                                    AppManUtil.exitApplication("Toler�ncia a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e, e);
-// 									Debug.debug("Toler�ncia a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e);				
+                                    AppManUtil.exitApplication("Tolerância a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e, e);
+// 									Debug.debug("Tolerância a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e);				
 // 									e.printStackTrace();
 //                                         //System.exit(0);
 // 									((Executor) Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
@@ -476,7 +476,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                     end = true;
                     for(int i=0;i<graphs.size();i++)
                     {
-						// se o grafo est� pronto para ser executado, ent�o execute-o
+						// se o grafo está pronto para ser executado, então execute-o
                         Graph g = (Graph)graphs.elementAt(i);					
                         if(g.getStatePercentCompleted() < 1) // if the gragh is not complete executed
                         {
@@ -501,13 +501,12 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 				{
 					Thread.sleep(5000);
 				} catch (Exception e) {
-					Debug.debug(e, true);
-					e.printStackTrace();
+					Debug.debug(e, e, true);
 				}
             }// fim while
-	
+
             Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] Stoped!", true);	
-	
+
             if(monitor != null)
             {
 				try

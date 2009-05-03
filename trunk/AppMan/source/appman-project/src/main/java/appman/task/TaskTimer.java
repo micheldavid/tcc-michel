@@ -7,6 +7,7 @@ import appman.Debug;
 
 public class TaskTimer implements Serializable {
 
+	private static final long serialVersionUID = -304386420026374881L;
 	private long downloadTimeOfFiles = 0;
 	private long timeEnd = 0;
 	private long timeStart = 0;

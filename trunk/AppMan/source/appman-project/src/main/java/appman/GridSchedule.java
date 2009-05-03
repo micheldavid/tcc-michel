@@ -1,28 +1,22 @@
 /*
  * Created on 08/06/2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
 import java.util.Vector;
 
-// import org.isam.exehda.Exehda;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 import org.isam.exehda.services.Executor.SchedulingHeuristic;
-//import org.isam.exehda.services.Executor.VetoedOperationException;
 
 /**
  * @author lucasa
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class GridSchedule implements SchedulingHeuristic
-{
-    public static final String HINT_FINAL_RESULTS_NODE       = "grid.targetHosts.host-final-results";
+public class GridSchedule implements SchedulingHeuristic {
+
+	private static final long serialVersionUID = -4225514070542699263L;
+
+	public static final String HINT_FINAL_RESULTS_NODE       = "grid.targetHosts.host-final-results";
     public static final String HINT_DEDICATED_COMPUTE_NODE   = "grid.targetHosts.oneTaskPerCPU";
     public static final String HINT_SHARED_COMPUTE_NODE      = "grid.targetHosts.localscheduler";
     public static final String HINT_SUBMISSION_MANAGER_NODE  = "grid.targetHosts.submissionmanagers.hosts";
@@ -36,7 +30,7 @@ public class GridSchedule implements SchedulingHeuristic
     private GridRemoteHostsProperties sharedComputeGridHosts;
 
         /**
-         * Singletone design pattern 
+         * Singleton design pattern 
          */
     public static synchronized GridSchedule getInstance()
     {
@@ -81,31 +75,26 @@ public class GridSchedule implements SchedulingHeuristic
 	 *  The GridSchedule.chooseCreationHost method decides which scheduling step to use
 	 *  through the information passed by <I>Executor</I> service (<I>hint</I> parameter).
 	 */
-	public HostId chooseCreationHost(String clsName,
-									  Object[] params,
-									  Object hint,
-									  java.util.Vector avoidedHosts)
-	{
-        try
-        {
+	public HostId chooseCreationHost(String clsName, Object[] params, Object hint, java.util.Vector avoidedHosts) {
+        try {
             HostId hostid = null;                        
             Debug.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts, true);
 
             if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
-                    // O laco abaixo � necessario pois o nodo selecionado em um passo
+                    // O laco abaixo é necessario pois o nodo selecionado em um passo
                     // anterior pode estar indisponivel/down, situacao na qual ele deve
                     // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
                     // evitado
                 hostid = smGridHosts.getRoundRobinHost();
 
-                    // FIX ME: o while abaixo pode bloquear para sempre se todos os nodos
+                    // FIXME: o while abaixo pode bloquear para sempre se todos os nodos
                     // foram incluidos no avoidedHosts
                 while(avoidedHosts.contains(hostid)) {
                 	hostid = smGridHosts.getRoundRobinHost();
                 }
             }
             else if ( HINT_FINAL_RESULTS_NODE.equals(hint) ) {
-                    // O laco abaixo � necessario pois o nodo selecionado em um passo
+                    // O laco abaixo é necessario pois o nodo selecionado em um passo
                     // anterior pode estar indisponivel/down, situacao na qual ele deve
                     // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
                     // evitado
@@ -137,13 +126,13 @@ public class GridSchedule implements SchedulingHeuristic
 //                Debug.debug("GridSchedule target Host scheduled: " + resources[i].getSimpleName(), true);
 //                hostid = HostId.parseId("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
             	
-                    // O laco abaixo � necessario pois o nodo selecionado em um passo
+                    // O laco abaixo é necessario pois o nodo selecionado em um passo
                     // anterior pode estar indisponivel/down, situacao na qual ele deve
                     // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
                     // evitado
                 hostid = sharedComputeGridHosts.getRoundRobinComputeHost();
 
-                    // FIX ME: o while abaixo pode bloquear para sempre se todos os nodos
+                    // FIXME: o while abaixo pode bloquear para sempre se todos os nodos
                     // foram incluidos no avoidedHosts
                 while(avoidedHosts.contains(hostid)) {
                 	hostid = smGridHosts.getRoundRobinHost();
@@ -153,11 +142,9 @@ public class GridSchedule implements SchedulingHeuristic
 
             return hostid;
         }
-
         catch (Exception e)
-        {					
-            e.printStackTrace();
-            throw new NullPointerException("Error in HostId "+ e);
+        {
+            throw new Error("Error in HostId "+ e, e);
         }
 	}
 

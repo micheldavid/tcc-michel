@@ -18,7 +18,7 @@ import java.util.Vector;
 
 public class AppManUtil
 {
-    private static Vector frames = new Vector();
+    private static final Vector<Window> frames = new Vector<Window>();
 
     public static Executor getExecutor()
         {
@@ -61,63 +61,43 @@ public class AppManUtil
             return (CellInformationBase) Exehda.getService(CellInformationBase.SERVICE_NAME);
         }
 
-    public static void exitApplication()
-        {
-//             (new Throwable()).printStackTrace();
-            
-                // ensure all application frames are disposed 
-            for (int i=0; i<frames.size(); i++) {
-                Window w = (Window) frames.elementAt(i);
+    public static void exitApplication() {
+		exitApplication(null, null);
+	}
 
-                try { w.dispose(); }
-                catch (Exception e) { /* empty */ }
-            }
+	public static void exitApplication(String msg, Throwable t) {
+		Debug.debug(msg, t, true);
 
-            
-            ((Executor) Exehda.getService(Executor.SERVICE_NAME))
-                .exitApplication();
-        }
+		// ensure all application frames are disposed
+		for (Window w : frames) {
+			try {
+				w.dispose();
+			} catch (Exception e) {}
+		}
 
-    public static void exitApplication(String msg, Throwable t)
-        {
-            if ( msg != null ) {
-                Debug.debug(msg, true);
-            }
-            
-            if ( t != null ) {
-                Debug.debug(t, true);
-                t.printStackTrace();
-            }
+		((Executor) Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
+	}
 
-            exitApplication();
-        }
-
-    
         /**
          * Registers a window (tipically a Frame or JFrame) to be automatically disposed
          * up on application exit);
          *
          * @param w a <code>java.awt.Window</code> value
          */
-    public static void registerWindow(java.awt.Window w)
-        {
-            if ( w != null && !frames.contains(w) ) {
-                frames.add(w);
-            }
-        }
+    public static void registerWindow(java.awt.Window w) {
+		if (w != null && !frames.contains(w)) {
+			frames.add(w);
+		}
+	}
 
-    public static void runAssynchronousAction(ApplicationId appId, Runnable action)
-        {
-            final ApplicationId aid = appId;
-            final Runnable a = action;
-            
-            (new Thread() {
-                @Override
-				public void run() {
-                    getExecutor().runAction(aid, a);
-                }
-                }).start();
-        }
+    public static void runAssynchronousAction(final ApplicationId appId, final Runnable action) {
+		(new Thread() {
+			@Override
+			public void run() {
+				getExecutor().runAction(appId, action);
+			}
+		}).start();
+	}
 
 	public static String getTime() { // VDN
 		Calendar cal = new GregorianCalendar();

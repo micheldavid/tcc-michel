@@ -50,7 +50,7 @@ public class GridRemoteHostsProperties
 	}
 	/*
 	 *  Atualiza estado dos hosts.
-	 * Em caso de erro, exce��o, remove o host da lista de hosts dispon�veis
+	 * Em caso de erro, exceção, remove o host da lista de hosts disponíveis
 	 */
 /*	
 	public void updateHostsProperties()
@@ -70,7 +70,7 @@ public class GridRemoteHostsProperties
 	}
 */
 	/*
-	 * Retorna host rand�mico da lista de hosts v�lidos
+	 * Retorna host randômico da lista de hosts válidos
 	 */ 
 	public HostId getRandomHost()
 	{	
@@ -150,8 +150,8 @@ public class GridRemoteHostsProperties
 	public synchronized HostId getRoundRobinComputeHost()
 	{
             // FIX ME: periodicamente deve zerar a lista e atualizar a partir da
-            // CIB. **Importante** n�o deve zerar sempre ou o RR da forma como est�
-            // implementado abaixo n�o vai funcionar!.
+            // CIB. **Importante** não deve zerar sempre ou o RR da forma como está
+            // implementado abaixo não vai funcionar!.
 		if (queueAllMachines==null) {
 			queueAllMachines = new Vector();
 			getHostFromCib();

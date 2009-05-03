@@ -10,6 +10,7 @@ import org.ggf.drmaa.Session;
 import org.ggf.drmaa.SessionFactory;
 
 import appman.rmswrapper.pbs.drmaa.JobTemplateImpl;
+import appman.task.Task;
 
 /**
  * @author rbrosinha@inf.ufrgs.br

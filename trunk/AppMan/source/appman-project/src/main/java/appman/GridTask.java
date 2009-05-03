@@ -14,6 +14,7 @@ import appman.task.Task;
  */
 public class GridTask extends GridFileService implements Runnable, GridTaskRemote
 {
+	private static final long serialVersionUID = 94618337786246610L;
 	private String command;
 	private Task mytask;
 
@@ -104,7 +105,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 			// enquanto n?o for o momento de executar espera
             synchronized (this) {
                 while (!run) wait();
-            }			
+            }
 		} catch (Exception e)
 		{
 			Debug.debug("[AppMan]\tError in run of GridTask thread, while waiting to run task"); //VDN 2006/01/13
