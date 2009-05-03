@@ -6,38 +6,38 @@
 
 package appman.parser;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Vector;
 
-import appman.clustering.*;
+import appman.Debug;
+import appman.clustering.DAGNode;
+import appman.clustering.DAG_DSC;
 
   /**
    * stores the DAG application parsed
    * @author kayser@cos.ufrj.br
    * @since 2004
    */
-  public class  ApplicationDescription implements Serializable
-  {
-    private static int INDEP = 0; // graph=independent
-    private static int LOW   = 1; // graph=loosely-coupled
-    private static int HIGH  = 2; // graph=tightly-coupled
-    private static int DEFAULT_GRAPH  = LOW; 
-    private int graphType;
+  public class  ApplicationDescription implements Serializable {
+
+	private static final long serialVersionUID = -3554750829219220099L;
+    private static final GraphType DEFAULT_GRAPH  = GraphType.LOW;
+    private GraphType graphType;
     
-    private static int DEFAULT_COMPUTATIONAL_COST=1;
-    private static int DEFAULT_COMMUNICATION_COST=1;
-    
-    public DAG_DSC applicationDAG = null;
-    private Vector listOfTasks;
+    private static int DEFAULT_COMPUTATIONAL_COST = 1;
+    private static int DEFAULT_COMMUNICATION_COST = 1;
+
+    private Vector<TaskDescription> listOfTasks;
     private int numberOfTasks=0;
     private int numberOfFinishedTasks=0;
-    
-    //public transient FileWriter grappaOut;
-        
+
+    public DAG_DSC applicationDAG = null;
+
     public ApplicationDescription () {
        this.graphType = DEFAULT_GRAPH;
        //Inicia com 10 tarefas, mas pode ir aumentando
-       this.listOfTasks = new Vector(10,10);
+       this.listOfTasks = new Vector<TaskDescription>(10,10);
        /*VDN: 4/1/6
        try{
        		//grappaOut = new FileWriter("/home/SO/dalto/eclipse/workspace/appman-mgc/grappaOut.txt");
@@ -49,15 +49,16 @@ import appman.clustering.*;
        */
        System.out.println("[GRAND]\tApplicationDescription created");
     }
-    
-    /**
-     *
-     */
+
     public void putGraphType(int graphType) {
+        this.graphType = GraphType.fromCode(graphType);
+    }
+
+    public void setGraphType(GraphType graphType) {
         this.graphType = graphType;
     }
 
-    public int getGraphType() {
+    public GraphType getGraphType() {
         return this.graphType;
     }
     
@@ -71,7 +72,7 @@ import appman.clustering.*;
     	return numberOfTasks;
     }
     
-	public Vector getListOfTasks()
+	public Vector<TaskDescription> getListOfTasks()
 	{
 		return listOfTasks;
 	}
@@ -102,8 +103,8 @@ import appman.clustering.*;
        }
        
        TaskDescription t = new TaskDescription(taskName, executable);
-       t.putInputFiles(inputFiles);
-       t.putOutputFiles(outputFiles);
+       if (inputFiles != null) t.putInputFiles(inputFiles);
+       if (outputFiles != null) t.putOutputFiles(outputFiles);
        if (computationalCost<0){
           t.putComputationalCost(DEFAULT_COMPUTATIONAL_COST);
        }else{
@@ -119,13 +120,11 @@ import appman.clustering.*;
        
        System.out.println("[GRAND]\tStarting to build DAG...");
 
-       Enumeration e = listOfTasks.elements();
-       while (e.hasMoreElements()) {
-          TaskDescription t = (TaskDescription)e.nextElement();
+       for (TaskDescription task : listOfTasks) {
           //applicationDAG.putNodeName(t.getTaskName()); -->comentado pr vindn
           //vdn 2005/03/18: changed first line, included second line
-          DAGNode node = applicationDAG.putNodeName(t.getTaskName());
-          node.setExecutable(t.getExecutable());
+          DAGNode node = applicationDAG.putNodeName(task.getTaskName());
+          node.setExecutable(task.getExecutable());
           
           // outline of the algorithm:
           //    for each task "t"
@@ -133,53 +132,48 @@ import appman.clustering.*;
           //           search for each task "ti" until find first output equals to "i"
           //           include an incoming edge in the task "t" ("ti" -> "t")
           
-          Enumeration inputList = (t.getInputFiles()).elements();
-          while (inputList.hasMoreElements()) {
-             String outfile = (String) inputList.nextElement();
-             
-             Enumeration aux = listOfTasks.elements();
-             boolean found = false;
-             while ((!found) && (aux.hasMoreElements())) {
-                TaskDescription t_aux = (TaskDescription)aux.nextElement();
-                if (!(t_aux.equals(t))){
-                   if (t_aux.hasOutputFile(outfile)) {
-                      System.out.println("[GRAND]\tedge "+t_aux.getTaskName()+"->"+t.getTaskName());
-                      applicationDAG.insertEdges(t.getTaskName(), t_aux.getTaskName());
-                      found = true;
-                   }
-                }
-             }
+          if (task.getInputFiles() != null) {
+        	  for (String outfile : task.getInputFiles()) {
 
+					for (TaskDescription foundTask : listOfTasks) {
+						if (foundTask == task) continue;
+
+						if (foundTask.hasOutputFile(outfile)) {
+							System.out.println("[GRAND]\tedge " + foundTask.getTaskName() + "->" + task.getTaskName());
+							applicationDAG.insertEdges(task.getTaskName(), foundTask.getTaskName());
+							break;
+						}
+					}
+				}
           }
-          
-          
+
        }
 
-       
        // http://www.informatics.susx.ac.uk/courses/dats/notes/html/node133.html#7452
        // LinkedList -- ArrayList edges = new ArrayList(); -- TreeSet 
-       
+
        System.out.println("[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
-       
+
        //VDN: 15/07/05//////////////// estava no SimpleParser.java
   		//applicationDAG.dump();
         applicationDAG.clustering();
-  		applicationDAG.dumpGraphiz();
+  		try {
+			applicationDAG.dumpGraphiz();
+		} catch (IOException e) {
+			Debug.debug("erro gerando arquivo .dot", e);
+		}
   		//applicationDAG.createServerRMI();
       ///////////////////////////////
-       
+
        return applicationDAG;
     }
     
-    public TaskDescription getTaskDescription(String name)
-    {
-		TaskDescription[] tasks = (TaskDescription[])listOfTasks.toArray(new TaskDescription[0]);
-		
-    	for(int i=0; i < numberOfTasks; i++)
-    	{    		
-    		if(tasks[i].getTaskName().equals(name))
-    			return tasks[i];
-    	}
+    public TaskDescription getTaskDescription(String name) {
+		TaskDescription[] tasks = (TaskDescription[]) listOfTasks.toArray(new TaskDescription[listOfTasks.size()]);
+
+		for (TaskDescription task : tasks) {
+			if (task.getTaskName().equals(name)) return task;
+		}
     	return null;
     }
     

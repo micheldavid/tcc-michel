@@ -1,8 +1,5 @@
 /*
  * Created on 30/06/2005
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
@@ -17,12 +14,11 @@ import org.isam.exehda.services.OXManager.OXHandle;
 
 /**
  * @author lucasa
- * 
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
 public class GeneralObjectActivator implements Activator {
+
+	private static final long serialVersionUID = -5564402573494806186L;
 
 	public static final String ATT_WORB_CONTACT = "object.contact:";
 

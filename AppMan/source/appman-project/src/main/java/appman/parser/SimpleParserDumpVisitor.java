@@ -119,17 +119,17 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
    }
 
    private Vector evaluateVectorOfString(Vector v) {
+       if (v == null) return null;
+
        Vector newVector = new Vector();
-       
-       Enumeration e = v.elements();
-       while (e.hasMoreElements()) {
+       for (Enumeration e = v.elements(); e.hasMoreElements();) {
           String s = evaluateString((String)e.nextElement());
           StringTokenizer st = new StringTokenizer(s,";");
           while (st.hasMoreTokens()) {
              String file = st.nextToken();
              newVector.addElement(file);
              ///System.out.println("string: "+s+"  file: "+file);
-	  }
+          }
        }
 
        return newVector;

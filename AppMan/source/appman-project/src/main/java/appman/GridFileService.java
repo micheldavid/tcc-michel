@@ -1,8 +1,5 @@
 /*
  * Created on 08/06/2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
@@ -25,6 +22,7 @@ import java.rmi.RemoteException;
  */
 public class GridFileService implements GridFileServiceRemote, Serializable {
 
+	private static final long serialVersionUID = -4639171298174076708L;
 	private String defaultdir = null;
 
 	private final static class SandBoxUtil {

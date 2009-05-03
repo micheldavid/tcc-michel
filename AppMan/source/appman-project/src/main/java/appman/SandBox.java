@@ -371,10 +371,10 @@ public class SandBox
             {
                 byte[] buffer = null;
                 
-                    // se a tarefa for estrangeira (de outro grafo) ent�o baixe o arquivo
-                    // usando a refer�ncia remota do servi�o de arquivos do grid task
+                    // se a tarefa for estrangeira (de outro grafo) então baixe o arquivo
+                    // usando a referência remota do serviço de arquivos do grid task
                 if (remote_task.getState().getCode() == TaskState.TASK_FOREIGN_FINAL) {
-                        // esta refer�ncia remota foi atualizada pelo
+                        // esta referência remota foi atualizada pelo
                         // submission manager <-- application manager
                         // <-- task <-- grid task
                     String contact_address_remote = remote_task
@@ -392,7 +392,7 @@ public class SandBox
                     buffer = smr.downloadFileFromGridTask(
                         remote_task.getTaskId(), filename);
                 }
-                else { // sen�o baixe o arquivo de forma convencional
+                else { // senão baixe o arquivo de forma convencional
                     GridFileServiceRemote gfs = remote_task.getRemoteGridTaskFileService();
                     if ( gfs == null ) {
                         throw new RemoteException("Remote grid file service not found!");
@@ -411,16 +411,14 @@ public class SandBox
         
             /**
              * Creates a file at the specified path in the local filesystem, filling it
-             * withthe data provided in the byte buffer <code>contents</code>.
+             * with the data provided in the byte buffer <code>contents</code>.
              *
-             * @param path target localtion in the local file-system
+             * @param path target location in the local file-system
              * @param contents data used to initialize the file
              */
         private final void createLocalFile(File path, byte[] contents) throws IOException
             {
-                    //
-                    // XXX: experimental stuff: using the NIO API
-                    //
+                    // experimental: using the NIO API
                 ByteBuffer buff = ByteBuffer.wrap(contents);
 
                 FileOutputStream out = new FileOutputStream(path);
@@ -444,9 +442,7 @@ public class SandBox
             throws IOException
             {
                 File dst = new File(dstDir, src.getName());
-                    //
-                    // XXX: experimental stuff: using the NIO API
-                    //
+                    // experimental: the NIO API
                 FileChannel sch = new FileInputStream(src).getChannel();
                 FileChannel dch = new FileOutputStream(dst).getChannel();
                     // Copy file contents from source to destination

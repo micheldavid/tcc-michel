@@ -18,23 +18,22 @@ package appman;
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-import java.awt.Frame;
-import java.awt.Panel;
 import java.awt.Checkbox;
+import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.Dimension;
+import java.awt.Panel;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import java.util.Hashtable;
 
 import org.isam.exehda.Exehda;
 import org.isam.exehda.services.Collector;
-import org.isam.exehda.services.Collector.Sensor;
-import org.isam.exehda.services.Collector.MonitoringData;
 import org.isam.exehda.services.Collector.ConsumerId;
 import org.isam.exehda.services.Collector.MonitoringConsumer;
+import org.isam.exehda.services.Collector.MonitoringData;
+import org.isam.exehda.services.Collector.Sensor;
 
 
 
@@ -42,7 +41,9 @@ public class CollectorDemo2
     extends Frame
     implements WindowListener, MonitoringConsumer, ItemListener
 {
-    private Panel sensorsPane;
+	private static final long serialVersionUID = 2350256153062269648L;
+
+	private Panel sensorsPane;
     private Hashtable sensorsByBox;
     private Collector collector;
     private Sensor[] sensors;
@@ -72,7 +73,7 @@ public class CollectorDemo2
             super("Collector Demo 2");
             addWindowListener(this);
             
-            Dimension d = new Dimension(200, 200);
+//            Dimension d = new Dimension(200, 200);
             
             sensorsPane = new Panel();
             sensorsPane.setLayout(new GridLayout(0,3));
@@ -111,7 +112,7 @@ public class CollectorDemo2
             System.out.println("\nTime stamp: "+timeStamp);
             for (int i=0; i<data.length; i++) {
                 if ( data[i] != null ) {
-                    System.out.print(data[i].getSensor().getSimpleName());
+                    System.out.print(data[i].getSensorName().getSimpleName());
                     System.out.print(" \t= ");
                     System.out.println(data[i].getString());
                 }

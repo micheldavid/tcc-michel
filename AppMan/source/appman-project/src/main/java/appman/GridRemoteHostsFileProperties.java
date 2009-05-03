@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
  */
 public class GridRemoteHostsFileProperties extends Properties implements Serializable
 {
+	private static final long serialVersionUID = -4809139501645717731L;
 	private String propertiesFileName;
 	private String propertiesFileSection;
 	

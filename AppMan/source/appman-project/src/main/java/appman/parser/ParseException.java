@@ -13,7 +13,9 @@ package appman.parser;
  */
 public class ParseException extends Exception {
 
-  /**
+	private static final long serialVersionUID = 4546716971367592963L;
+
+/**
    * This constructor is used by the method "generateParseException"
    * in the generated parser.  Calling this constructor generates
    * a new object of this type with the fields "currentToken",

@@ -27,10 +27,11 @@ import edu.berkeley.guir.prefusex.force.SpringForce;
 
 /**
  * @author lucasa@gmail.com
- *
  */
-public class ApplicationManager implements Runnable, ApplicationManagerRemote,
-Serializable {
+public class ApplicationManager implements Runnable, ApplicationManagerRemote, Serializable {
+
+	private static final long serialVersionUID = 440529620112600733L;
+
 	private String appmanId; // id
 
 	/** List of available SMs */
@@ -50,12 +51,8 @@ Serializable {
 	/** Flags whether to start sending graphs to remotes machines(SubmissionManagers) */
 	private boolean runsystem;
 
-	static final int ApplicationManager_FINAL = 2;
-	static final int ApplicationManager_READY = 0;
-	static final int ApplicationManager_EXECUTING = 1;
-
 	/** Current status of the execution, either READY, EXECUTING or FINAL */
-	private int state = ApplicationManager_READY;
+	private ApplicationManagerState state = ApplicationManagerState.READY;
 
 	private ApplicationManagerTimer timeInfo = null;
 
@@ -86,7 +83,7 @@ Serializable {
 	}
 
 	private void initialize(String id, ApplicationId appid) {
-		appmanId = new String(id);
+		appmanId = id;
 		submissionmanagerList = new Vector();
 		timeInfo = new ApplicationManagerTimer();
 		if (appid!=null) {
@@ -98,7 +95,7 @@ Serializable {
 
 		runsystem = false;
 
-		state = ApplicationManager_READY;
+		state = ApplicationManagerState.READY;
 		
 		Debug.debug("ApplicationManager "+id+" created.", true);
 	}
@@ -139,7 +136,7 @@ Serializable {
 		timeInfo.setTimeExecution(System.currentTimeMillis());
 		timeInfo.setTimeBegin(System.currentTimeMillis());
 		runsystem = true;
-		state = ApplicationManager_EXECUTING;
+		state = ApplicationManagerState.EXECUTING;
 	}
 
 	public void addGraph(Graph g) {
@@ -150,7 +147,7 @@ Serializable {
 				true);
 	}
 
-	public int getApplicationState() throws RemoteException {
+	public ApplicationManagerState getApplicationState() throws RemoteException {
 		return state;
 	}
 
@@ -214,7 +211,7 @@ Serializable {
 	}
 
 	/*
-	 * Retorna uma refer�ncia remota do servi�o de transfer�ncia de arquivos de uma tarefa
+	 * Retorna uma referência remota do serviço de transferência de arquivos de uma tarefa
 	 */
 	public String getTaskGridFileServiceContactAddressRemote(String taskId)
 	throws RemoteException {
@@ -325,7 +322,7 @@ Serializable {
 		try {
 			addApplicationDescription(filedata);
 		} catch (Exception e) {
-			throw new RemoteException(e.toString());
+			throw new RemoteException(e.toString(), e);
 		}
 	}
 
@@ -340,10 +337,8 @@ Serializable {
 		try {
 			appdesc = SimpleParser.parseGRIDADL(args);
 		} catch (Exception e) {
-			Debug.debug("Error on parser: " + e);
-			Debug.debug(e);
-			e.printStackTrace();
-			throw new Exception("Error on parser GRID-DAG file: " + e);
+			Debug.debug("Error on parser: " + e, e);
+			throw new Exception("Error on parser GRID-DAG file: " + e, e);
 		}
 
 		//VDN: particiona
@@ -382,7 +377,7 @@ Serializable {
 		Debug
 		.debug("ApplicationManager add a new ApplicationDescription",
 				true);
-		// cria um grafo default rand�mico
+		// cria um grafo default randômico
 		Graph g = new Graph(graphId, clusterId, appdesc);
 		addGraph(g);
 	}
@@ -452,62 +447,45 @@ Serializable {
 		float percent_completed = 0;
 
 		while (this.getApplicationStatePercentCompleted() < 1) {
-			if (runsystem == true) {
+			if (runsystem) {
 				// schedule graphs pending in the newgraphs queue
 				schedulePendingGraphs();
 				// atualiza os dados dos grafos, baixando o grafo atualizado do submission manager remoto
-				if (graphs.size() > 0) {
-					int i = 0;
-					while (i < graphs.size()) {
-						Graph local = (Graph) graphs.elementAt(i);
-						i++;
+				for (int i = 0; i < graphs.size(); i++) {
+					Graph local = (Graph) graphs.elementAt(i);
+					if (local.getStatePercentCompleted() < 1) {
+
 						SubmissionManagerRemote subman = null;
 						Graph remote = null;
-						if (local.getStatePercentCompleted() < 1) {
+						try {
+							subman = this.getSubmissionManagerRemote(local.getSubmissionManagerId());
+							Debug.debug("ApplicationManager contacting SubmissionManager ["
+								+ subman.getSubmissionManagerIdRemote() + "] to update remote graph: "
+								+ local.getGraphId(), true);
+							remote = subman.getGraphRemote(local.getGraphId());
+						} catch (RemoteException e) {
+							// Tolerância a Falhas
+							// Se o Submission Manager não responder então remove o grafo da lista e adiciona o
+							// grafo novamente no Application Manager com um novo SubMan escalonado
+							Debug.debug("Tolerância a Falhas - " + e, e, true);
 							try {
-								subman = this.getSubmissionManagerRemote(local
-										.getSubmissionManagerId());
-								Debug
-								.debug(
-										"ApplicationManager contacting SubmissionManager ["
-										+ subman
-										.getSubmissionManagerIdRemote()
-										+ "] to update remote graph: "
-										+ local.getGraphId(),
-										true);
-								remote = subman.getGraphRemote(local
-										.getGraphId());
-							} catch (RemoteException e) {
-								// Toler�ncia a Falhas
-								// Se o Submission Manager n�o responder ent�o
-								// remove o grafo da lista
-								// adiciona o grafo novamente no Application Manager com um novo SubMan escalonado									
-								Debug.debug("Toler�ncia a Falhas - " + e, true);
-								e.printStackTrace();
-								//System.exit(0);
-								try {
-									subman = scheduleSubmissionManager();
+								subman = scheduleSubmissionManager();
 
-									local.setSubmissionManagerId(subman
-											.getSubmissionManagerIdRemote());
-									graphs.remove(local);
-									this.addGraph(local);
-								} catch (Exception e2) {
-									AppManUtil
-									.exitApplication(
-											"Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO",
-											e2);
-								}
+								local.setSubmissionManagerId(subman.getSubmissionManagerIdRemote());
+								graphs.remove(i);
+								i--;
+								this.addGraph(local);
+							} catch (Exception e2) {
+								AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e2);
 							}
+						}
 
-							// update local graph copy with the new state grabbed from the remote SM
-							if (remote != null) {
-								local.copy(remote);
+						// update local graph copy with the new state grabbed from the remote SM
+						if (remote != null) {
+							local.copy(remote);
 
-								__debug__("local graph [" + local.getGraphId()
-										+ "] UPDATED, " + "percent completed="
-										+ local.getStatePercentCompleted());
-							}
+							__debug__("local graph [" + local.getGraphId() + "] UPDATED, percent completed="
+								+ local.getStatePercentCompleted());
 						}
 					}
 				}
@@ -529,7 +507,7 @@ Serializable {
 
 		} // end while
 
-		state = ApplicationManager_FINAL;
+		state = ApplicationManagerState.FINAL;
 
 		computeApplicationExecutionTimes();
 		//		Debug.debug("ApplicationManager cleaning Application Files! ", true);
@@ -690,22 +668,13 @@ Serializable {
 			String subId) throws RemoteException {
 		SubmissionManagerRemote sub = null;
 		try {
-			Debug.debug(
-					"ApplicationManager creating new remote SubmissionManager: "
-					+ subId, true);
+			Debug.debug("ApplicationManager creating new remote SubmissionManager: " + subId, true);
 
 			sub = exehdaCreateNewSubmissionManager(subId);
-		} catch (Exception e2) {
-			AppManUtil.exitApplication(null, e2);
-		} finally {
-			Debug.debug("DEBUG: " + sub, true);
-
-			if (sub == null) {
-				throw new RemoteException(
-				"Failed to instantiate new Submission Manager");
-			}
-			return sub;
+		} catch (Exception e) {
+			throw new RemoteException("Failed to instantiate new Submission Manager", e);
 		}
+		return sub;
 	}
 
 	/**

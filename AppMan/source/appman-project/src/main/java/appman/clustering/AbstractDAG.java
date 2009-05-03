@@ -13,7 +13,9 @@ import java.util.*;
  *  the DAG (Directed Acyclic Graph) of the application.
  */
 public abstract class AbstractDAG implements Iterator, Cloneable, Serializable {
-    //
+	private static final long serialVersionUID = -3558438505548128467L;
+
+	//
 	// minimum DAG interface to be implemented by subclasses
 	public abstract DAGNode putNodeName(String name);
 	public abstract DAGNode putNodeName(String name, double weight);

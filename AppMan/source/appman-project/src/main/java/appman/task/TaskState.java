@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public abstract class TaskState implements Serializable {
 
+	private static final long serialVersionUID = -2047648847224469230L;
+
 	public abstract int getCode();
 
 	public abstract String getName();

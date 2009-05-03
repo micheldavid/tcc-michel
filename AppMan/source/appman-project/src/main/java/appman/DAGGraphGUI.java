@@ -25,7 +25,8 @@ import appman.parser.SimpleParser;
  */
 public class DAGGraphGUI extends javax.swing.JFrame
 {
-	
+	private static final long serialVersionUID = -548735690290363468L;
+
 	ApplicationManagerRemote appman;
 	final ApplicationId appId;
     
@@ -161,14 +162,14 @@ public class DAGGraphGUI extends javax.swing.JFrame
                                         appman.startAppGUIRemote(graph_name[j]);					
                                     }
                                     appman.startApplicationManager();
-                                    while(appman.getApplicationState() != ApplicationManager.ApplicationManager_FINAL)
+                                    while(!ApplicationManagerState.FINAL.equals(appman.getApplicationState()))
                                     {
                                         Thread.sleep(5000);						
                                     }
                                 }
                             }catch (RemoteException e1)
                             {
-                                AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO: ", e1);
+                                AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO: ", e1);
                             }
                             catch (Exception e2)
                             {
@@ -257,13 +258,13 @@ public class DAGGraphGUI extends javax.swing.JFrame
                             
                 //stub.setStubRemote(stub);
             String contact = activator.getContactAddress(0);
-// 							Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+// 							Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
             stub.setMyObjectContactAddressRemote(contact);
             return stub ;
 							
         }catch (Exception e)
         {
-            AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e);
+            AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
         }
 		return null;
     }

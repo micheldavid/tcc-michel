@@ -18,6 +18,8 @@ import appman.GridFileServiceRemote;
  */
 public abstract class Task implements Runnable, Serializable {
 
+	private static final long serialVersionUID = -5101143107805590612L;
+
 	public static final int MAX_RETRY_TIMES = 5;
 
 	String taskId;
@@ -56,7 +58,7 @@ public abstract class Task implements Runnable, Serializable {
 
 	private void analyzeFaultTolerance(Exception e) {
 		// Tolerancia a Falhas - Task
-		Debug.debug("Tolerancia a Falhas na execu��o de tarefa ["
+		Debug.debug("Tolerancia a Falhas na execução de tarefa ["
 				+ taskId + "]" + e, true);
 		Debug
 				.debug(

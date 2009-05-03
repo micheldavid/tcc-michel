@@ -38,7 +38,7 @@ public class OutputXML{
 	}
 	
 	public void createManifest(){
-				
+
 		try {
 			manifest = new BufferedWriter(new FileWriter(filenameManifest));
 		} catch (IOException e) {
@@ -107,8 +107,8 @@ public class OutputXML{
 		
 	}
 	
-	public void writeTasks(){
-		
+	public void writeTasks() {
+
 		ApplicationDescription appDesc = SimpleParser.appDescription;
 //		DAG_DSC dag = appDesc.getDAG();
 		Vector listOfTasks = appDesc.getListOfTasks();
@@ -136,8 +136,8 @@ public class OutputXML{
 			
 			appName = node.getExecutable(); 
 
-			// BUG: o c�digo abaixo falha para comandos composts ou quando existe 
-                        // manipula��o de diret�rios (ver aplica��o povray)
+			// FIXME: BUG: o código abaixo falha para comandos composts ou quando existe manipulação de diretórios (ver
+			// aplicação povray)
 
 			// pegar o nome sem caminho
 			int barra = appName.lastIndexOf('/')+1;
@@ -172,14 +172,16 @@ public class OutputXML{
 			input = node.getInputFiles();
 			output = node.getOutputFiles();
 			//input =   //Vector inputFiles = node.getInputFiles();
-			
-			
-			
+
 			try {
-				for(int j=0; j < input.size(); j++)
-					tasks.write("\t\t\t\t<jsdl-posix:Input>"+input.get(j)+"</jsdl-posix:Input>\n");
-				for(int j=0; j < output.size(); j++)
-					tasks.write("\t\t\t\t<jsdl-posix:Output>"+output.get(j)+"</jsdl-posix:Output>\n");
+				if (input != null) {
+					for (String inFileName : (Vector<String>) input)
+						tasks.write("\t\t\t\t<jsdl-posix:Input>" + inFileName + "</jsdl-posix:Input>\n");
+				}
+				if (output != null) {
+					for (String outFileName : (Vector<String>) output)
+						tasks.write("\t\t\t\t<jsdl-posix:Output>" + outFileName + "</jsdl-posix:Output>\n");
+				}
 			} catch (IOException e) { 
 				System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 			}
@@ -219,8 +221,8 @@ public class OutputXML{
 			for (int i = 0; i < nodesList.size(); i++) {
 				dn = (DAGNode) nodesList.get(i);
 				pred = dn.getPRED();
-				if ((pred != null) || !pred.isEmpty()) {
-					
+				if (pred != null) {
+
 					for(int j=0; j < pred.size(); j++){
 						//1.0 é o peso da aresta
 						de = (DAGEdge)pred.get(j);
@@ -271,8 +273,8 @@ public class OutputXML{
 	}
 	
 	public void writeClusters(){
-		String clusterID = new String();
-		String jobID = new String();
+		String clusterID = "";
+		String jobID = "";
 		ApplicationDescription appDesc = SimpleParser.appDescription;
 		Vector listOfTasks = appDesc.getListOfTasks();
 		Vector tasks = new Vector();

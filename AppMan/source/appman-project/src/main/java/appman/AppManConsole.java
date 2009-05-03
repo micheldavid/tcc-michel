@@ -1,8 +1,5 @@
 /*
  * Created on 17/12/2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
@@ -16,9 +13,6 @@ import org.isam.exehda.ObjectId;
 
 /**
  * @author lucasa
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
 public class AppManConsole implements AppManConsoleRemote
@@ -35,52 +29,33 @@ public class AppManConsole implements AppManConsoleRemote
 	 * correto, permissões).
 	 *
 	 */
-	public AppManConsole()
-        {
-            aid = AppManUtil.getExecutor().currentApplication();
-            Debug.debug("AID: "+aid, true);
-            Debug.debug("AppManConsole created.", true);
-        }	
-	public void runApplicationManagerRemote(String filepath) throws RemoteException
-	{				
-				try
-				{					
-						appman = this.createApplicationManager("appman");
-						GridFileService fileservice = new GridFileService("AppManConsole");
-						appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
-						appman.startApplicationManager();
-						System.out.println("Wagner Iniciando Appman");
-						while(appman.getApplicationStatePercentCompleted() < 1)
-						{
-							Debug.debug(appman.getInfoRemote(), true);
-							try
-							{		
-								Thread.sleep(5000);
-							} catch (Exception e)
-							{
-								e.printStackTrace(System.out);
-								//VDN
-                                //AppManUtil.exitApplication(null, e); 
-							}
-						}	
-						System.out.println("Wagner terminando Appman");
-				}catch (RemoteException e1)
-				{
-					e1.printStackTrace(System.out);
-					//VDN
-                    //AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e1);
-				}
-				catch (Exception e2)
-				{
-					e2.printStackTrace(System.out);
-					//VDN
-                    //AppManUtil.exitApplication(null, e2);
-				}
-			
+	public AppManConsole() {
+		aid = AppManUtil.getExecutor().currentApplication();
+		Debug.debug("AID: " + aid, true);
+		Debug.debug("AppManConsole created.", true);
+	}
 
-				
-				//System.out.println("\tAKIII DEVERIA TERMINAR!!!!!!!!\n");
+	public void runApplicationManagerRemote(String filepath) throws RemoteException {
+		try {
+			appman = this.createApplicationManager("appman");
+			GridFileService fileservice = new GridFileService("AppManConsole");
+			appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
+			appman.startApplicationManager();
+			while (appman.getApplicationStatePercentCompleted() < 1) {
+				Debug.debug(appman.getInfoRemote(), true);
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e) {
+					e.printStackTrace(System.out);
+				}
+			}
+		} catch (RemoteException e1) {
+			e1.printStackTrace(System.out);
+		} catch (Exception e2) {
+			e2.printStackTrace(System.out);
+		}
 	}	
+
 	private ApplicationManagerRemote createApplicationManager(String appmanId)
         {
             try
@@ -102,22 +77,22 @@ public class AppManConsole implements AppManConsoleRemote
                     RemoteException e = new RemoteException("Host falhou");
                     throw e;
                 }
-							
+
                     //ApplicationManagerRemote stub = (ApplicationManagerRemote)h.getStub();
                 ApplicationManagerRemote stub = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(
                     h, ApplicationManagerRemote.class, "ApplicationManagerRemote");
             
                 //stub.setStubRemote(stub);
             String contact = activator.getContactAddress(0);
-//            Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+//            Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
             stub.setMyObjectContactAddressRemote(contact);
             return stub ;
 							
         }catch (Exception e)
         {
         	//VDN
-            //AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e);
-//             Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+            //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
+//             Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
 //             Debug.debug(e, true);
 //             e.printStackTrace();
 //             System.exit(0);
@@ -156,7 +131,7 @@ public class AppManConsole implements AppManConsoleRemote
 //							
 //		}catch (Exception e)
 //		{
-//			Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+//			Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
 //			Debug.debug(e, true);
 //			e.printStackTrace();
 //			System.exit(0);
@@ -164,39 +139,22 @@ public class AppManConsole implements AppManConsoleRemote
 //		return null;		
 //	}
 	
-	public static void main(String[] args) throws Exception
-	{
-		FileWriter out;
-		out = new FileWriter("tempoExecucao.txt",true);
-		
-			try {
-				out.write("vindn " + System.currentTimeMillis()+ "\n" );
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-			AppManConsole console = new AppManConsole();	
-			//System.out.println("AKIII: "+args[0]);
-			
-			console.runApplicationManagerRemote(args[0]);
-			
-			while(console.appman.getApplicationState() != ApplicationManager.ApplicationManager_FINAL)
-            {
-                Thread.sleep(5000);
-            }
-			System.out.println("\t ******************************************");
-			System.out.println("\t *** EXECUÇÃO TERMINADA COM SUCESSO!!!! ***");
-			System.out.println("\t ******************************************");
-			//VDN
-           // AppManUtil.exitApplication();
-			try {
-				out.write("vindn " +System.currentTimeMillis()+ "\n" );				
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-			
-			
+	public static void main(String[] args) throws Exception {
+		FileWriter out = new FileWriter("tempoExecucao.txt", true);
+		out.write("vindn " + System.currentTimeMillis() + "\n");
+
+		AppManConsole console = new AppManConsole();
+
+		console.runApplicationManagerRemote(args[0]);
+
+		while (!ApplicationManagerState.FINAL.equals(console.appman.getApplicationState())) {
+			Thread.sleep(5000);
+		}
+		System.out.println("\t ******************************************");
+		System.out.println("\t *** EXECUÇÃO TERMINADA COM SUCESSO!!!! ***");
+		System.out.println("\t ******************************************");
+
+		out.write("vindn " + System.currentTimeMillis() + "\n");
+		out.close();
 	}
 }

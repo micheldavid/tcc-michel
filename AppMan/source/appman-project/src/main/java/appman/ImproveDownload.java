@@ -1,8 +1,5 @@
 /*
  * Created on 17/01/2006
- * @author VDN 
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package appman;
 
@@ -10,32 +7,26 @@ import java.util.Hashtable;
 
 /**
  * @author dalto
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ImproveDownload {
-	
-	
+
 	private Hashtable hashPaths;
-	/**
-	 * 
-	 */
+
 	public ImproveDownload(int numberMaxOfTasks ) {
-		// TODO Auto-generated constructor stub
 		hashPaths = new Hashtable(numberMaxOfTasks);
-		
 	}
-	
+
 	/**
-	 * Adciona o ultimo arquivo baixado, especificando a url de onde foi baixado e o diretorio para onde ele foi copiado.
+	 * Adiciona o ultimo arquivo baixado, especificando a url de onde foi baixado e o diretorio para onde ele foi
+	 * copiado.
+	 * 
 	 * @param URLpath
 	 * @param localPath
 	 */
 	public synchronized void setLastURLFilePath(String URLpath, String localPath){
 
 		Debug.debug("ImproveDownload: add file info ("+URLpath+", "+localPath+").",true);
-        hashPaths.put(URLpath, new String(localPath));
+        hashPaths.put(URLpath, localPath);
 	}
 	
 	
