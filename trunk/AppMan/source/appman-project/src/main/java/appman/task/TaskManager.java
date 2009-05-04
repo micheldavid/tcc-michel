@@ -12,7 +12,7 @@ package appman.task;
 import java.rmi.RemoteException;
 import java.util.Vector;
 
-import appman.Debug;
+import appman.log.Debug;
 
 public class TaskManager implements TaskManagerRemote, Runnable
 {
@@ -35,7 +35,7 @@ private long downloadTimeOfTasks = 0;
  */
 public TaskManager(String id)
 {
-	taskmanagerId = new String(id);
+	taskmanagerId = id;
 	taskList = new Vector();
 	newtaskList = new Vector();
 	
@@ -90,12 +90,12 @@ public void setToDie()
 {
   long plus = 0;	
 	
-  Debug.debug("TaskManager going to DIE!", true);
+  Debug.debug("TaskManager going to DIE!");
 
   for(int i=0; i<taskList.size(); i++)
   {
   		((Task)taskList.elementAt(i)).setToDie();
-  		Debug.debug("[TM "+i+"] TIME DOWNLOAD: "+((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles(), true);
+  		Debug.debug("[TM "+i+"] TIME DOWNLOAD: "+((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles());
   		plus += ((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles();//VDN:27/1/2006
   }
   downloadTimeOfTasks = plus;//VDN:27/1/2006
@@ -115,9 +115,8 @@ public void addTaskToListRemote(Vector task) throws RemoteException
 	addTaskToList(task);
 }
 public synchronized void addTaskToList(Task task)
-{	
+{
 	newtaskList.addElement(task);	
-	Task t = (Task)newtaskList.elementAt(0);
 }
 public synchronized void addTaskToList(Vector t)
 {
@@ -158,7 +157,7 @@ public void run()
 					{
 						taskList.addAll(newtaskList); // adiciona os elementos da lista de novas tarefas à lista de tarefas
 					}
-					Debug.debug("TaskManager add new tasks "+newtaskList.toString()+" to List.", true);
+					Debug.debug("TaskManager add new tasks "+newtaskList.toString()+" to List.");
 					newtaskList.removeAllElements(); //remove os elementos da lista de novas, apos inserção destes na lista de tarefas
 					Debug.debug("TaskManager clean newtasks List.");
 			}
@@ -176,7 +175,7 @@ public void run()
 						{	
 							task.setState(TaskState.getInstance(TaskState.TASK_EXECUTING));
 							Debug.debug("Task setting state: " + task.getState().getName());					
-							Debug.debug("TaskManager executing task ["+task.getTaskId()+"] READY.", true);							
+							Debug.debug("TaskManager executing task ["+task.getTaskId()+"] READY.");							
 							Thread thread = new Thread(task);
 							thread.start();
 						}

@@ -16,6 +16,7 @@ import java.util.Vector;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ApplicationId;
 import appman.clustering.ClusteringPhase;
+import appman.log.Debug;
 import appman.parser.ApplicationDescription;
 import appman.parser.SimpleParser;
 
@@ -197,10 +198,10 @@ public class DAGGraphGUI extends javax.swing.JFrame
      */
     public static void main(String args[]) throws Exception
     {
-		Debug.debug("This program is going to test the AppMan package", true);
+		Debug.debug("This program is going to test the AppMan package");
 		DAGGraphGUI daggui = new DAGGraphGUI();
 		daggui.pack();
-		daggui.show();
+		daggui.setVisible(true);
     }
     
     

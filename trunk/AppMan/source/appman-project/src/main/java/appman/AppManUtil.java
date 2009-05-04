@@ -10,6 +10,8 @@ import org.isam.exehda.services.Worb;
 import org.isam.exehda.services.Collector;
 import org.isam.exehda.services.CellInformationBase;
 
+import appman.log.Debug;
+
 import java.awt.Window;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -66,7 +68,7 @@ public class AppManUtil
 	}
 
 	public static void exitApplication(String msg, Throwable t) {
-		Debug.debug(msg, t, true);
+		Debug.debug(msg, t);
 
 		// ensure all application frames are disposed
 		for (Window w : frames) {

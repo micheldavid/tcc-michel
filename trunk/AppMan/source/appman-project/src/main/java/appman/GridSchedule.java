@@ -9,6 +9,8 @@ import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 import org.isam.exehda.services.Executor.SchedulingHeuristic;
 
+import appman.log.Debug;
+
 /**
  * @author lucasa
  */
@@ -78,7 +80,7 @@ public class GridSchedule implements SchedulingHeuristic {
 	public HostId chooseCreationHost(String clsName, Object[] params, Object hint, java.util.Vector avoidedHosts) {
         try {
             HostId hostid = null;                        
-            Debug.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts, true);
+            Debug.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
 
             if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
                     // O laco abaixo é necessario pois o nodo selecionado em um passo
@@ -138,7 +140,7 @@ public class GridSchedule implements SchedulingHeuristic {
                 	hostid = smGridHosts.getRoundRobinHost();
                 }
             }
-            Debug.debug("GridSchedule["+hint+"] choosed host: " + hostid, true);
+            Debug.debug("GridSchedule["+hint+"] choosed host: " + hostid);
 
             return hostid;
         }

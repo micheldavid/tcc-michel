@@ -3,7 +3,7 @@ package appman.task;
 import java.io.Serializable;
 
 import appman.AppManUtil;
-import appman.Debug;
+import appman.log.Debug;
 
 public class TaskTimer implements Serializable {
 
@@ -46,7 +46,7 @@ public class TaskTimer implements Serializable {
 	}
 
 	public synchronized void setDownloadTimeOfFiles(long time_download_files) {
-		Debug.debug("[TESTE] Download Time: " + time_download_files, true);
+		Debug.debug("[TESTE] Download Time: " + time_download_files);
 		System.out.println("[TESTE] Download Time: " + time_download_files);
 		this.downloadTimeOfFiles = time_download_files;
 	}
@@ -78,8 +78,8 @@ public class TaskTimer implements Serializable {
 
 	public void printTraceInfo(Task task, String file_path) {
 		long time = timeEnd - timeStart;
-		Debug.debug("ApplicationManager task "+task.taskId+" submit time: " + getTimeSubmit(), true);
-	
+		Debug.debug("ApplicationManager task "+task.taskId+" submit time: " + getTimeSubmit());
+
 		Debug.debugToFile("\n"+task.taskId +
 		                  "\t"+task.retryTimes+
 		                  "\t"+ (timeTaskCreated) +
@@ -89,7 +89,7 @@ public class TaskTimer implements Serializable {
 		                  "\t"+(float)(time)+
 		                  "\t"+(float)(time/1000),
 		                  file_path, true);
-		
+
 		Debug.debugToFile(task.submissionManagerContactAddress+"\n",file_path, true);
 	}
 

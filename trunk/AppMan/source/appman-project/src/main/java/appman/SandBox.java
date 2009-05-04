@@ -21,6 +21,10 @@ import java.rmi.RemoteException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import appman.log.Debug;
 import appman.task.Task;
 import appman.task.TaskState;
 
@@ -33,12 +37,9 @@ import appman.task.TaskState;
  * own  sandbox. This checking, although, is not yet implemented.
  *
  * <p>TO DO: implement access constraints
- *
- * @author last modified by $Author$
- * @version $Id$
  */
-public class SandBox
-{
+public class SandBox {
+	private static final Log log = LogFactory.getLog(SandBox.class);
     private static final String SYSPROP_TMPDIR  = "java.io.tmpdir";
     private static final String SYSPROP_USER    = "user.name";
     private static final String SLASH           = File.pathSeparator;
@@ -92,7 +93,7 @@ public class SandBox
             else root = null;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
             root = null;
         }
         finally {
@@ -267,15 +268,14 @@ public class SandBox
             return dir.delete();
         }
 
-        /**
-         * Facility for logging of debugging messages.
-         *
-         * @param msg a <code>String</code> value
-         */
-    private static final void __debug__(String msg)
-        {
-            Debug.debug("[SANDBOX] "+ msg, true);
-        }
+	/**
+	 * Facility for logging of debugging messages.
+	 *
+	 * @param msg a <code>String</code> value
+	 */
+	private static final void __debug__(String msg) {
+		Debug.debug("[SANDBOX] " + msg);
+	}
     
     @Override
 	protected void finalize()

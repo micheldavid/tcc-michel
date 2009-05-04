@@ -7,18 +7,24 @@ package appman;
 import java.io.FileWriter;
 import java.rmi.RemoteException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
+
+import appman.log.Debug;
 
 /**
  * @author lucasa
  */
 
-public class AppManConsole implements AppManConsoleRemote
-{
-	ApplicationManagerRemote appman = null;
-	ApplicationId aid = null;
+public class AppManConsole implements AppManConsoleRemote {
+	
+	private static final Log log = LogFactory.getLog(AppManConsole.class);
+
+	private ApplicationManagerRemote appman = null;
+	private ApplicationId aid = null;
 		
 	/**
 	 *
@@ -31,8 +37,8 @@ public class AppManConsole implements AppManConsoleRemote
 	 */
 	public AppManConsole() {
 		aid = AppManUtil.getExecutor().currentApplication();
-		Debug.debug("AID: " + aid, true);
-		Debug.debug("AppManConsole created.", true);
+		Debug.debug("AID: " + aid);
+		Debug.debug("AppManConsole created.");
 	}
 
 	public void runApplicationManagerRemote(String filepath) throws RemoteException {
@@ -42,17 +48,15 @@ public class AppManConsole implements AppManConsoleRemote
 			appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
 			appman.startApplicationManager();
 			while (appman.getApplicationStatePercentCompleted() < 1) {
-				Debug.debug(appman.getInfoRemote(), true);
+				Debug.debug(appman.getInfoRemote());
 				try {
 					Thread.sleep(5000);
-				} catch (Exception e) {
-					e.printStackTrace(System.out);
+				} catch (InterruptedException e) {
+					log.warn(e, e);
 				}
 			}
-		} catch (RemoteException e1) {
-			e1.printStackTrace(System.out);
-		} catch (Exception e2) {
-			e2.printStackTrace(System.out);
+		} catch (Exception ex) {
+			log.error(ex, ex);
 		}
 	}	
 
@@ -84,7 +88,7 @@ public class AppManConsole implements AppManConsoleRemote
             
                 //stub.setStubRemote(stub);
             String contact = activator.getContactAddress(0);
-//            Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
+//            Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!");
             stub.setMyObjectContactAddressRemote(contact);
             return stub ;
 							
@@ -92,9 +96,7 @@ public class AppManConsole implements AppManConsoleRemote
         {
         	//VDN
             //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
-//             Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
-//             Debug.debug(e, true);
-//             e.printStackTrace();
+//             Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", e);
 //             System.exit(0);
             }
             return null;
@@ -110,7 +112,7 @@ public class AppManConsole implements AppManConsoleRemote
 //		{						
 //				Executor ex = (Executor) Exehda.getService("executor");						
 //				aid = ex.currentApplication();
-//				Debug.debug("AID: "+aid, true);
+//				Debug.debug("AID: "+aid);
 //				ObjectHandle h = ex.createObject(aid,
 //												 AppManConsole.class,
 //												 null,
@@ -125,22 +127,19 @@ public class AppManConsole implements AppManConsoleRemote
 //					}
 //							
 //					AppManConsoleRemote stub = (AppManConsoleRemote)h.getStub();					
-//					Debug.debug("AppManConsole remote created.", true);
-//					Debug.debug(stub, true);
+//					Debug.debug("AppManConsole remote created: " + stub);
 //					return stub ;
 //							
 //		}catch (Exception e)
 //		{
-//			Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
-//			Debug.debug(e, true);
-//			e.printStackTrace();
+//			Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", e);
 //			System.exit(0);
 //		}
 //		return null;		
 //	}
 	
 	public static void main(String[] args) throws Exception {
-		FileWriter out = new FileWriter("tempoExecucao.txt", true);
+		FileWriter out = new FileWriter("tempoExecucao.txt");
 		out.write("vindn " + System.currentTimeMillis() + "\n");
 
 		AppManConsole console = new AppManConsole();

@@ -3,7 +3,7 @@ package appman.task;
 import java.util.Vector;
 
 import appman.DataFile;
-import appman.Debug;
+import appman.log.Debug;
 
 public class TaskFiles implements java.io.Serializable {
 
@@ -55,7 +55,7 @@ public class TaskFiles implements java.io.Serializable {
 		// atualiza o status dos arquivos de saída
 		for (int i = 0; i < outputFiles.size(); i++) {
 			Debug.debug("Task FINAL set output file exists: "
-					+ ((DataFile) outputFiles.elementAt(i)).getName(), true);
+					+ ((DataFile) outputFiles.elementAt(i)).getName());
 			((DataFile) outputFiles.elementAt(i)).setDataFileExist(true);
 		}
 	}

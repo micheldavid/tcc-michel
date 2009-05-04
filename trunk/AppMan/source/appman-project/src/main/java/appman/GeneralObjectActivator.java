@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.util.Vector;
 
 // import org.isam.exehda.Exehda;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ObjectId;
 import org.isam.exehda.services.ObjectSeed.Activator;
 import org.isam.exehda.services.ObjectSeed.MarshaledOX;
@@ -19,6 +21,7 @@ import org.isam.exehda.services.OXManager.OXHandle;
 public class GeneralObjectActivator implements Activator {
 
 	private static final long serialVersionUID = -5564402573494806186L;
+	private static final Log log = LogFactory.getLog(GeneralObjectActivator.class);
 
 	public static final String ATT_WORB_CONTACT = "object.contact:";
 
@@ -127,7 +130,7 @@ public class GeneralObjectActivator implements Activator {
 		if (remote_interface.compareTo("ApplicationManagerRemote") == 0) {
 			FileWriter file;
 
-			String path = new String("appman_contact_adress.txt");
+			String path = "appman_contact_adress.txt";
 
 			try {
 				file = new FileWriter(path);
@@ -135,14 +138,14 @@ public class GeneralObjectActivator implements Activator {
 				file.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("escrevendo em " + path, e);
 			}
 		}
 
 		//VDN
 		if (remote_interface.compareTo("SubmissionManagerRemote") == 0) {
 			FileWriter file;
-			String path = new String("hosts.txt");
+			String path = "hosts.txt";
 			String str;
 			try {
 				str = contact.substring(contact.indexOf("hostid:") + 7, contact
@@ -152,7 +155,7 @@ public class GeneralObjectActivator implements Activator {
 				file.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e, e);
 			}
 		}/*GridTaskID
 		  * else{ FileWriter file; String path = new String("hosts.txt");

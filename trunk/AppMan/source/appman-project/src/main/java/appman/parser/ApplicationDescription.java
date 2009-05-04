@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Vector;
 
-import appman.Debug;
 import appman.clustering.DAGNode;
 import appman.clustering.DAG_DSC;
+import appman.log.Debug;
 
   /**
    * stores the DAG application parsed

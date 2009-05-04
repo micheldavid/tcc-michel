@@ -3,12 +3,15 @@
  */
 package appman;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ggf.drmaa.DrmaaException;
 import org.ggf.drmaa.JobInfo;
 import org.ggf.drmaa.JobTemplate;
 import org.ggf.drmaa.Session;
 import org.ggf.drmaa.SessionFactory;
 
+import appman.log.Debug;
 import appman.rmswrapper.pbs.drmaa.JobTemplateImpl;
 import appman.task.Task;
 
@@ -18,6 +21,7 @@ import appman.task.Task;
 public class GridTaskDrmaa extends GridFileService implements Runnable, GridTaskRemote {
 
 	private static final long serialVersionUID = -5834167770555224385L;
+	private static final Log log = LogFactory.getLog(GridTaskDrmaa.class);
 
 	private String command;
 
@@ -37,12 +41,12 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 		super(filepath_seed);
 		mytask = task;
 		command = cmd;
-		Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] cmd: " + cmd, true);
+		Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] cmd: " + cmd);
 		errorbuffer = new StringBuffer("");
 	}
 
 	public synchronized void setRun(boolean b) {
-		Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] GOING TO RUN ", true);
+		Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] GOING TO RUN ");
 		run = b;
 		notifyAll();
 	}
@@ -50,13 +54,13 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 	public void setDie() {
 		try {
 			cleanSandBoxDirectory();
-			Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] RETRY [" + mytask.getRetryTimes() + "] DIED", true);
+			Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] RETRY [" + mytask.getRetryTimes() + "] DIED");
 			synchronized (this) {
 				// die = true;
 				setEnd(true);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e, e);
 			errorbuffer.append(e.getMessage());
 		}
 	}
@@ -102,7 +106,7 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 					wait();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e, e);
 			errorbuffer.append(e.getMessage());
 			sucess = false;
 			setDie();
@@ -113,17 +117,15 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 			int v = execute();
 			if (v == 0) {
 				sucess = true;
-				Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "] Sucess OK ", true);
+				Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "] Sucess OK ");
 			} else {
 				sucess = false;
-				Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "] Error number return: " + v, true);
+				Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "] Error number return: " + v);
 			}
 			setEnd(true);
 			return;
 		} catch (Exception e) {
-			Debug.debug("[AppMan]\tError in run of GridTask thread, while executing task."); // VDN
-			// 2006/01/13
-			e.printStackTrace();
+			Debug.debug("[AppMan]\tError in run of GridTask thread, while executing task.", e);
 			errorbuffer.append(e.getMessage());
 			sucess = false;
 			setDie();
@@ -133,16 +135,16 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 
 	public void finalize() {
 		try {
-			Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "]  - Objeto sendo recolhido pelo garbage collection", true);
+			Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "]  - Objeto sendo recolhido pelo garbage collection");
 			cleanSandBoxDirectory();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e, e);
 		}
 	}
 
 	private void cleanSandBoxDirectory() throws Exception {
 		String dir = GridFileService.getTaskSandBoxPath(mytask.getName());
-		Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "]  cleaning application sandbox directory: " + dir, true);
+		Debug.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "]  cleaning application sandbox directory: " + dir);
 		GridFileService.removeDir(dir);
 	}
 
