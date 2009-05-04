@@ -3,12 +3,17 @@ package appman;
 import java.util.Vector;
 import java.rmi.RemoteException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import appman.log.Debug;
 import appman.task.Task;
 import appman.task.TaskManager;
 import appman.task.TaskState;
 
 public class SubmissionManager implements SubmissionManagerRemote, Runnable
 {
+	private static final Log log = LogFactory.getLog(SubmissionManager.class);
     private String submissionmanagerId;
 
     
@@ -36,13 +41,13 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     
     public SubmissionManager(String id, String contact_address)
         {
-            setSubmissionManagerId(new String(id));
+            setSubmissionManagerId(id);
             graphs = new Vector();
             tasksmanagerList = new Vector();
             //ID  = new ImproveDownload();
             appmanager = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(contact_address, ApplicationManagerRemote.class);
             System.out.println("\n\n\n[CONTACT]: "+contact_address+"\n\n\n");
-            Debug.debug("SubmissionManager created.", true);	
+            Debug.debug("SubmissionManager created.");	
             static_die++;
             
         }
@@ -76,7 +81,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 
                 g.setState(Graph.GRAPH_READY);		
                 graphs.addElement(g);
-                Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] add a graph: " + g.PrintInfo() + " in the new list: " + graphs.size(), true);
+                Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] add a graph: " + g.PrintInfo() + " in the new list: " + graphs.size());
             }
         }
     public Graph getGraphRemote(String graphId) throws RemoteException
@@ -112,7 +117,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                 if(t.getState().getCode() == TaskState.TASK_FINAL)
                 {                    
                     GridFileServiceRemote rfs = t.getRemoteGridTaskFileService();
-                    Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] downloading a file ["+filepath+"] from GridTask: " + taskId , true);
+                    Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] downloading a file ["+filepath+"] from GridTask: " + taskId );
                     return rfs.downloadFile(filepath);
                 }
             }
@@ -135,7 +140,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     		num_tasks_running += tm.getTaskCount(TaskState.TASK_EXECUTING);
     		// soma o numero de tarefas prontas
     		num_tasks_ready += tm.getTaskCount(TaskState.TASK_READY);
-    		if (num_tasks_ready>0) Debug.debug("SM getTaskCount READY - not counted ..."+num_tasks_ready,true);
+    		if (num_tasks_ready>0) Debug.debug("SM getTaskCount READY - not counted ..."+num_tasks_ready);
     	}
     	return num_tasks_running+num_tasks_ready;
     }
@@ -148,7 +153,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                 graph.setState(Graph.GRAPH_EXECUTING);		
             }
 	
-                //Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] get ready tasks List from Graph.", true);
+                //Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] get ready tasks List from Graph.");
             //  original do lucas => agora chamado la embaixo, com nro limitado de tarefas
             // Vector allreadytasks = graph.getReadyTaskList();
             Vector newreadytasks = new Vector();
@@ -156,7 +161,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             int num_tasks_running = computeSubmissonManagerTasksLoad();
             // se o numero de tarefas executando é menor que o máximo
             // então adiciona mais tarefas aos Task Managers
-            Debug.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n", true);
+            Debug.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
             System.out.print("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
             if(num_tasks_running < SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM)
             {            	
@@ -164,7 +169,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             	//(limite de tarefas para cada grafo, evita que o sub-grafo ocupe todo o SM, deixando os outros de lado)
             	if(n > SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SG)
             		n = SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SG;
-            	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph [" + graphId + "] can manage "+ n +" more tasks, the limit is "+ MAX_NUMBER_OF_TASKS_TO_SM, true);
+            	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph [" + graphId + "] can manage "+ n +" more tasks, the limit is "+ MAX_NUMBER_OF_TASKS_TO_SM);
             	// se há mais tarefas para executar que o valor limite
             	// então adiciona apenas algumas
             	
@@ -187,13 +192,13 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             }
             else
             {
-            	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph [" + graphId + "] CANNOT MANAGE more tasks, there is "+num_tasks_running+", the limit ", true);
+            	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph [" + graphId + "] CANNOT MANAGE more tasks, there is "+num_tasks_running+", the limit ");
             }
 	
                 // insere a lista de tarefas no TaskManager
             if(newreadytasks.size() > 0)
             {
-                Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph: " + graphId, true);
+                Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph: " + graphId);
 		 
                 TaskManager taskman = null;
                 if(taskmanId < 1) // limita o numero de task managers      
@@ -206,7 +211,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 		 
                 if(taskman != null)
                 {                	
-                	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] add tasks " + newreadytasks.toString() + " to TaskManager.", true);
+                	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] add tasks " + newreadytasks.toString() + " to TaskManager.");
                 	taskman.addTaskToList(newreadytasks);
                 } 
             }
@@ -258,15 +263,14 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                                             // yet there.
                                             //
                                         needRetry = 0;
-	                                }catch(java.rmi.ConnectException e){
-	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - connect");
-	                                	e.printStackTrace();
-	                                }catch(java.net.SocketException e2) {
-	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - socket");
-	                                	e2.printStackTrace();	                                	
+	                                }catch(java.rmi.ConnectException ex){
+	                                	log.error("Trying isTaskOutputsRemoteAvailable - connect", ex);
+	                                }catch(java.net.SocketException ex) {
+	                                	log.error("Trying isTaskOutputsRemoteAvailable - socket", ex);
 	                                }
                                     finally {
-                                            // avoid to overload the remote node with too many requests
+                                    	// performance é importante ou não, a final???
+                                        // avoid to overload the remote node with too many requests
                                         try { Thread.sleep(500); }
                                         catch (InterruptedException ie) {}
                                     }
@@ -430,19 +434,17 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
  */
     public void setDieRemote() throws RemoteException
         {
-	    	System.out.println("[SM] SET ALL SM TO DIE: ");
-	    	Debug.debug("[SM] SET ALL SM TO DIE: ", true);
+	    	Debug.debug("[SM] SET ALL SM TO DIE: ");
 
     		long plus = 0;
             for(int i=0;i<tasksmanagerList.size();i++)
             {
                 TaskManager t = (TaskManager)tasksmanagerList.elementAt(i);
                 t.setToDie();                
-                Debug.debug("[SM "+i+"] TIME DOWNLOAD: "+t.getDownloadTimeOfTasks(), true);
+                Debug.debug("[SM "+i+"] TIME DOWNLOAD: "+t.getDownloadTimeOfTasks());
                 plus += t.getDownloadTimeOfTasks(); //	VDN:27/1/2006
             }	
-			  System.out.println("[SM] Download Time: "+plus);
-			  Debug.debug("[SM] Download Time: "+plus, true);
+			  Debug.debug("[SM] Download Time: "+plus);
 			  setDownloadTimeOfTasksManagers( plus );//	VDN:27/1/2006
             end = true;
             static_die--;	
@@ -492,7 +494,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                         float pc = g.getStatePercentCompleted(); 
                         if(c < pc)
                         {
-                            Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph ["+g.getGraphId()+"] complete status: " + g.getStatePercentCompleted(), true);
+                            Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph ["+g.getGraphId()+"] complete status: " + g.getStatePercentCompleted());
                             c = pc;
                         }
                     }
@@ -501,11 +503,11 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 				{
 					Thread.sleep(5000);
 				} catch (Exception e) {
-					Debug.debug(e, e, true);
+					Debug.debug(e, e);
 				}
             }// fim while
 
-            Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] Stoped!", true);	
+            Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] Stoped!");	
 
             if(monitor != null)
             {
@@ -517,7 +519,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 					e.printStackTrace();					
 				}
                 monitor.endMonitor();
-                Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] GridResourceMonitor History: " + monitor.getHistory(), true);
+                Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] GridResourceMonitor History: " + monitor.getHistory());
             }
         }
 

@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.Exehda;
 import org.isam.exehda.services.Worb;
 import appman.ApplicationManagerRemote;
@@ -32,9 +35,9 @@ import appman.parser.ApplicationDescription;
 public class Reader implements Serializable {
 
 	private static final long serialVersionUID = -2142446295103918750L;
+	private static final Log log = LogFactory.getLog(Reader.class);
 
-	protected static String inputFilePath = new String(
-			"/home/SO/dalto/eclipse/workspace/appman-mgc/grappaOut.txt");
+	protected static String inputFilePath = "/home/SO/dalto/eclipse/workspace/appman-mgc/grappaOut.txt";
 
 	protected static ShowWindow window;
 
@@ -136,7 +139,7 @@ public class Reader implements Serializable {
 			System.out.print("[APPMAN-GRAPPAREADER]: " + appman);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e, e);
 		}
 
 		//appman =
@@ -178,8 +181,7 @@ public class Reader implements Serializable {
 			}
 			//Thread.yield();
 		} catch (Exception e) {
-			System.out.println("\n[GRAPPAREADER]: " + e + "\n\n");
-			e.printStackTrace();
+			log.error("[GRAPPAREADER]: " + e, e);
 		}
 
 	}

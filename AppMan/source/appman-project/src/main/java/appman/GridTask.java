@@ -6,6 +6,10 @@ package appman;
 
 import java.io.InputStream;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import appman.log.Debug;
 import appman.task.Task;
 
 /**
@@ -14,6 +18,7 @@ import appman.task.Task;
  */
 public class GridTask extends GridFileService implements Runnable, GridTaskRemote
 {
+	private static final Log log = LogFactory.getLog(GridTask.class);
 	private static final long serialVersionUID = 94618337786246610L;
 	private String command;
 	private Task mytask;
@@ -33,14 +38,14 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		mytask = task;
 		command = cmd;
 		
-		Debug.debug("\tGRIDTASK ["+mytask.getTaskId()+"] cmd: "+ cmd, true);
+		Debug.debug("\tGRIDTASK ["+mytask.getTaskId()+"] cmd: "+ cmd);
 		
 		errorbuffer = new StringBuffer("");
 	}
 	
 	public synchronized void setRun(boolean b) 
 	{		
-		Debug.debug("GridTask ["+mytask.getTaskId()+"] GOING TO RUN ", true);
+		Debug.debug("GridTask ["+mytask.getTaskId()+"] GOING TO RUN ");
 		run = b;
         notifyAll();
 	}
@@ -51,7 +56,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		try
 		{						
 			cleanSandBoxDirectory();
-			Debug.debug("GridTask ["+mytask.getTaskId()+"] RETRY ["+mytask.getRetryTimes()+"] DIED", true);
+			Debug.debug("GridTask ["+mytask.getTaskId()+"] RETRY ["+mytask.getRetryTimes()+"] DIED");
 
             synchronized (this) {
                 die = true;
@@ -59,7 +64,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
             }
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			log.error(e, e);
 			errorbuffer.append(e.getMessage());
 		}		
 	}
@@ -108,9 +113,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
             }
 		} catch (Exception e)
 		{
-			Debug.debug("[AppMan]\tError in run of GridTask thread, while waiting to run task"); //VDN 2006/01/13
-			System.out.println("[AppMan]\tError in run of GridTask thread, while waiting to run task"); //VDN 2006/01/13
-			e.printStackTrace();
+			Debug.debug("[AppMan]\tError in run of GridTask thread, while waiting to run task", e);
 			errorbuffer.append(e.getMessage());			
 			sucess = false;
 			setDie();			
@@ -126,21 +129,20 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 			if( v  == 0 )
 			{
 				sucess = true;
-				Debug.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"] Sucess OK ", true);
+				Debug.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"] Sucess OK ");
 				//mytask.setTaskState(Task.TASK_FINAL);//VDN:25/08/05
 			}
 			else
 			{
 				sucess = false;				
-				Debug.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"] Error number return: " + v, true);
+				Debug.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"] Error number return: " + v);
 			}
 			
 			setEnd(true);
 			return;			
 		} catch (Exception e)
 		{
-			Debug.debug("[AppMan]\tError in run of GridTask thread, while executing task."); //VDN 2006/01/13
-			e.printStackTrace();
+			Debug.debug("[AppMan]\tError in run of GridTask thread, while executing task.", e); //VDN 2006/01/13
 			errorbuffer.append(e.getMessage());			
 			sucess = false;
 			setDie();			
@@ -153,11 +155,11 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 	{
 		try
 		{
-			Debug.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  - Objeto sendo recolhido pelo garbage collection", true);
+			Debug.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  - Objeto sendo recolhido pelo garbage collection");
 			cleanSandBoxDirectory();
 		}catch (Exception e)
 		{
-			e.printStackTrace();			
+			log.error(e, e);
 		}
 	}
 
@@ -174,13 +176,13 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
     private void cleanSandBoxDirectory()throws Exception 
 	{
 		String dir = GridFileService.getTaskSandBoxPath(mytask.getName());
-		Debug.debug("GridTask from Task ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  cleaning application sandbox directory: " + dir, true);
+		Debug.debug("GridTask from Task ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  cleaning application sandbox directory: " + dir);
 		GridFileService.removeDir(dir);		
 	}
 
     private int execute() throws Exception
 	{   
-        Debug.debug("GridTask ["+mytask.getTaskId()+"] RUNNING", true);
+        Debug.debug("GridTask ["+mytask.getTaskId()+"] RUNNING");
 
         checkDie();
         
@@ -196,7 +198,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 			//String[] cmd = {"/bin/bash", "-i", "-c", "export > log; read"};
 
 
-        Debug.debug("GridTask from Task ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  executing comand line application: " + cmd[3], true);
+        Debug.debug("GridTask from Task ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  executing comand line application: " + cmd[3]);
 
         checkDie();
 			

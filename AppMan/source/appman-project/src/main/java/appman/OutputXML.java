@@ -31,10 +31,10 @@ public class OutputXML{
 	
 	
 	public OutputXML(){
-		filenameManifest = new String("manifest.xml");
-		filenameTasks = new String("tasks.xml");
-		filenameEdges = new String("edges.xml");
-		filenameClusters = new String("clusters.xml");
+		filenameManifest = "manifest.xml";
+		filenameTasks = "tasks.xml";
+		filenameEdges = "edges.xml";
+		filenameClusters = "clusters.xml";
 	}
 	
 	public void createManifest(){
@@ -113,7 +113,7 @@ public class OutputXML{
 //		DAG_DSC dag = appDesc.getDAG();
 		Vector listOfTasks = appDesc.getListOfTasks();
 		 String jobName = new String();
-		 String jobID = new String(); 
+		 String jobID = new String();
 		 String jobWeight = new String();
 		 String appName = new String();
 		 String executable = new String();

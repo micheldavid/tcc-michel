@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
-import appman.Debug;
+import appman.log.Debug;
 
 public class AppDataSource {
 

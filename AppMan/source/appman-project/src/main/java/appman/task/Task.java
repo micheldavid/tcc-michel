@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import appman.AppManUtil;
-import appman.Debug;
 import appman.GridFileServiceRemote;
+import appman.log.Debug;
 
 /**
  * Task.java - Copyright lucasa
@@ -58,15 +58,9 @@ public abstract class Task implements Runnable, Serializable {
 
 	private void analyzeFaultTolerance(Exception e) {
 		// Tolerancia a Falhas - Task
-		Debug.debug("Tolerancia a Falhas na execução de tarefa ["
-				+ taskId + "]" + e, true);
-		Debug
-				.debug(
-						"Task ["
-								+ taskId
-								+ "]   Error! Trying to put the task as dependent state again RETRY ["
-								+ retryTimes + "] TIMES", true);
-		e.printStackTrace();
+		Debug.debug("Tolerancia a Falhas na execução de tarefa [" + taskId + "]", e);
+		Debug.debug("Task [" + taskId + "]   Error! Trying to put the task as dependent state again RETRY ["
+			+ retryTimes + "] TIMES", e);
 		retryTimes++;
 		state = TaskState.getInstance(TaskState.TASK_DEPENDENT);
 		Debug.debug("Task setting state: " + state.getName());
@@ -140,7 +134,7 @@ public abstract class Task implements Runnable, Serializable {
 		type = TaskType.TASK_TYPE_INTERMEDIATE;
 		timeInfo.setTimeTaskCreate(AppManUtil.getTime());// VDN:26/08
 
-		Debug.debug("Task [" + taskId + "] created.", true);
+		Debug.debug("Task [" + taskId + "] created.");
 	}
 
 	public void run() {
@@ -148,8 +142,7 @@ public abstract class Task implements Runnable, Serializable {
 		Debug.debug("Task setting state: " + state.getName());
 		timeInfo.setTimeSubmited(AppManUtil.getTime());
 
-		Debug.debug("Task [" + taskId + "] retry[" + retryTimes
-				+ "] executing", true);
+		Debug.debug("Task [" + taskId + "] retry[" + retryTimes + "] executing");
 		try {
 			execute();
 			timeInfo.setTimeEnd(System.currentTimeMillis());
@@ -160,9 +153,7 @@ public abstract class Task implements Runnable, Serializable {
 
 		files.updateOutputFilesState();
 
-		Debug.debug(
-				"Task FINAL retry[" + retryTimes + "]: " + taskId,
-				true);
+		Debug.debug("Task FINAL retry[" + retryTimes + "]: " + taskId);
 		state = TaskState.getInstance(TaskState.TASK_FINAL);
 		Debug.debug("Task setting state: " + state.getName());
 	}
