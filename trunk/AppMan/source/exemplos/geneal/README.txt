@@ -1,2 +1,0 @@
-- Esta pasta contém um versão da aplicação geneal modificada para ser executada pelo appman.
-- O código fonte foi baseado na revisão 254 de https://saloon.inf.ufrgs.br/svn/isam/trunk/isam-apps/genome.

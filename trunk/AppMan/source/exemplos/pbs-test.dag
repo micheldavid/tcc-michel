@@ -1,3 +1,0 @@
-graph independent
-
-task t0 -e "/home/rbrosinha/appman-pp/rbrosinha-pp-2006-2/exemplos/pbs-test.sh > t0.out" -i http://www.inf.ufrgs.br/~rbrosinha/screen.css -o t0.out
