@@ -1,5 +1,0 @@
-graph independent
-
-foreach i in 0..49 {
-  task ${i} -e "chmod a+x factorial_3s; ./factorial_3s > t.out."${i} -i http://www.cos.ufrj.br/~kayser/tmp/factorial_3s -o "t.out."${i}
-}
