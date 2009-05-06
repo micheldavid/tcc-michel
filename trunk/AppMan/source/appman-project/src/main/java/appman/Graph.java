@@ -396,7 +396,6 @@ public class Graph implements Serializable {
 	}
 
 	public Vector<DataFile> getDataFileList() {
-		// FIXME BUG: must return a copy, otherwise external modifications to vector will corrupt the graph
 		return (Vector<DataFile>) datafileList.clone();
 	}
 
