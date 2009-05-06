@@ -25,7 +25,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     private ApplicationManagerRemote appmanager = null;
 
     private boolean end = false; // flag que sinaliza o fim da execucao // VDN 2006/01/31 - tiramos o volatile
-    volatile private static int static_die = 0;
     
     String my_contact_address = null; // endereço de contato deste objeto
 
@@ -48,8 +47,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             appmanager = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(contact_address, ApplicationManagerRemote.class);
             System.out.println("\n\n\n[CONTACT]: "+contact_address+"\n\n\n");
             Debug.debug("SubmissionManager created.");	
-            static_die++;
-            
         }
 
     public float getGraphStatePercentCompletedRemote(String graphId) throws RemoteException
@@ -447,10 +444,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 			  Debug.debug("[SM] Download Time: "+plus);
 			  setDownloadTimeOfTasksManagers( plus );//	VDN:27/1/2006
             end = true;
-            static_die--;	
-            end = true;
-//             if(SubmissionManager.static_die <= 0)
-//                 ((Executor) Exehda.getService("executor")).exitApplication();
         }
 
     public void run()
