@@ -155,8 +155,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             int num_tasks_running = computeSubmissonManagerTasksLoad();
             // se o numero de tarefas executando é menor que o máximo
             // então adiciona mais tarefas aos Task Managers
-            Debug.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
-            System.out.print("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
+            Debug.debug("****NUMERO DE TAREFAS NO SM[" + submissionmanagerId + ": " + num_tasks_running);
             if(num_tasks_running < SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM)
             {            	
             	int n = SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM - num_tasks_running; // numero de novas tarefas a serem executadas
