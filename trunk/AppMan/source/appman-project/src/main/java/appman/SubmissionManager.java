@@ -269,7 +269,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 	                                	log.error("Trying isTaskOutputsRemoteAvailable - socket", ex);
 	                                }
                                     finally {
-                                    	// performance é importante ou não, a final???
+                                    	// FIXME performance é importante ou não, a final???
                                         // avoid to overload the remote node with too many requests
                                         try { Thread.sleep(500); }
                                         catch (InterruptedException ie) {}
@@ -457,19 +457,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
         {
             Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] thread run.");
 
-            GridResourceMonitor monitor = null;
-            try
-            {
-                    //monitor = new GridResourceMonitor(this.getSubmissionManagerId());
-                    //monitor.startMonitor();
-                    //Thread.sleep(10000);
-            }
-            catch (Exception e)
-            {
-                Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] GridResourceMonitor creation FAILED.");
-                monitor = null;	
-            }
-	
             float c = 0;
             while(!end)
             {
@@ -509,18 +496,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 
             Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] Stoped!");	
 
-            if(monitor != null)
-            {
-				try
-				{
-					Thread.sleep(10000);
-				} catch (Exception e) {
-					Debug.debug(e);
-					e.printStackTrace();					
-				}
-                monitor.endMonitor();
-                Debug.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] GridResourceMonitor History: " + monitor.getHistory());
-            }
         }
 
     public static void
