@@ -14,6 +14,8 @@ import org.isam.exehda.services.ObjectSeed.Activator;
 import org.isam.exehda.services.ObjectSeed.MarshaledOX;
 import org.isam.exehda.services.OXManager.OXHandle;
 
+import appman.log.Debug;
+
 /**
  * @author lucasa
  */
@@ -63,7 +65,7 @@ public class GeneralObjectActivator implements Activator {
 			adress = AppManUtil.getWorb().exportService(obj, oclass[i],
 					objectClass + oxID.toString() + i);
 			contactAddress.addElement(adress);
-			System.out.println("[VDN]Export Object:" + adress + "\n");
+			Debug.debug("[VDN]Export Object:" + adress);
 		}
 
 		// update the ox meta-attribute 'contact'

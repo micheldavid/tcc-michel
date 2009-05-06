@@ -60,10 +60,8 @@ public class AppManConsole implements AppManConsoleRemote {
 		}
 	}	
 
-	private ApplicationManagerRemote createApplicationManager(String appmanId)
+	private ApplicationManagerRemote createApplicationManager(String appmanId) throws RemoteException
         {
-            try
-            {
 					
                 GeneralObjectActivator activator = new GeneralObjectActivator("ApplicationManager",
                                                                               new Class[] {ApplicationManagerRemote.class},
@@ -78,8 +76,7 @@ public class AppManConsole implements AppManConsoleRemote {
                     // if h is null, so get some error in the remote object
                 if(h == null)
                 {
-                    RemoteException e = new RemoteException("Host falhou");
-                    throw e;
+                    throw new RemoteException("Host falhou");
                 }
 
                     //ApplicationManagerRemote stub = (ApplicationManagerRemote)h.getStub();
@@ -91,15 +88,7 @@ public class AppManConsole implements AppManConsoleRemote {
 //            Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!");
             stub.setMyObjectContactAddressRemote(contact);
             return stub ;
-							
-        }catch (Exception e)
-        {
-        	//VDN
-            //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
-//             Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", e);
-//             System.exit(0);
-            }
-            return null;
+
         }
 	private ApplicationManager createLocalApplicationManager() throws RemoteException
         {

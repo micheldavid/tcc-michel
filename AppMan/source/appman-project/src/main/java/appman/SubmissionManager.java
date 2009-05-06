@@ -43,9 +43,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             setSubmissionManagerId(id);
             graphs = new Vector();
             tasksmanagerList = new Vector();
-            //ID  = new ImproveDownload();
             appmanager = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(contact_address, ApplicationManagerRemote.class);
-            System.out.println("\n\n\n[CONTACT]: "+contact_address+"\n\n\n");
+            log.debug("[CONTACT]: "+contact_address);
             Debug.debug("SubmissionManager created.");	
         }
 
@@ -70,12 +69,9 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             addGraph(g);
         }
     public void addGraph(Graph g)
-        {	
+        {
             synchronized(graphs)
             {
-            	if (graphs == null) System.out.println("ERRO  addGraph == graphs Null :-P");//PKVM
-            	if (g == null) System.out.println("ERRO addGraph == g Null :-P");//PKVM
-
                 g.setState(Graph.GRAPH_READY);		
                 graphs.addElement(g);
                 Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] add a graph: " + g.PrintInfo() + " in the new list: " + graphs.size());
@@ -102,7 +98,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     {
     		return my_contact_address;    
     }
-    
+
     public byte[] downloadFileFromGridTask(String taskId, String filepath) throws java.rmi.RemoteException
     {
     	for(int i=0;i < graphs.size(); i++)
@@ -121,9 +117,10 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
         }	
             return null;
     }
+
     /**
      *  Calculate how many tasks are managed by this Submission Manager.
-     * 
+     *
      * @return n Tasks.
      */
     private int computeSubmissonManagerTasksLoad()
@@ -142,7 +139,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     	return num_tasks_running+num_tasks_ready;
     }
     private void executeGraph(String graphId)
-        {		
+        {
             // retorna o grafo do vetor de grafos
             Graph graph = getGraph(graphId);	
             if(graph.getState() == Graph.GRAPH_READY)
@@ -169,7 +166,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             	Debug.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] executing graph [" + graphId + "] can manage "+ n +" more tasks, the limit is "+ MAX_NUMBER_OF_TASKS_TO_SM);
             	// se há mais tarefas para executar que o valor limite
             	// então adiciona apenas algumas
-            	
+
             	//PKVM 2006/01/06 => this call replaces the original method call without parameter
             	// This was include to solve a bug detected by PKVM and VDN: AppMan did not worked
             	// for clusters with size greater than MAX_NUMBER_OF_TASKS_TO_SG.
@@ -212,8 +209,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                 	taskman.addTaskToList(newreadytasks);
                 } 
             }
-	
-                //	Através da lista de tarefas do grafo que não estão prontas para serem executadas,
+
+                //Através da lista de tarefas do grafo que não estão prontas para serem executadas,
                 // procura informações sobre aquelas que possuem arquivos de entrada provenientes
                 // de outro SubmissionManager					
             updateForeignTasksStatus(graph);
@@ -222,7 +219,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     private void updateForeignTasksStatus(Graph g)
         {
             Vector alltasks = g.getAllTaskList();	
-	
+
                 // procura tarefas que não pertencem a este SubmissionManager
             for(int i=0;i<alltasks.size();i++)
             {
@@ -231,7 +228,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                 if(g.getTask(t.getTaskId()) == null)
                     if( ! isTaskFromHere(t.getTaskId())  ) // the task is from another submissiom manager
                     {
-                            //Debug.debug("SubmissionManager graph ["+g.getGraphId()+"] ["+this.getSubmissionManagerId()+"] updating not ready task["+t.getTaskId()+"] " + t.getTaskStateString());			
                         try
                         {				
                             if(t.getState().getCode() == TaskState.TASK_DEPENDENT)
@@ -282,7 +278,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                     }
                     else // Else the Task is from a graph managed by this submission manager
                     {
-                            //Debug.debug("SubmissionManager looking for tasks from another graph within this SubmissionManager.");
                             // look for the graph that has the task
                         for(int j=0;j<graphs.size();j++)
                         {				
@@ -296,13 +291,10 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                                     {									
                                         t.setState(TaskState.getInstance(TaskState.TASK_FOREIGN));
 										Debug.debug("Task setting state: " + t.getState().getName());									
-                                            //Debug.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  updating foreign task["+t.getTaskId()+"] status from another graph within this SubmissionManager.");
                                     }
                                     if(t.getState().getCode() == TaskState.TASK_FOREIGN)
                                     {
-                                            //Debug.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  looking for task["+t.getTaskId()+"] outputs files from another SubmissionManager.");
-                                            //appmanager.PrintInfoRemote();
-                                        int outPutRetry = MAX_NUMBER_OF_RETRIES; 
+                                        int outPutRetry = MAX_NUMBER_OF_RETRIES;
                                         boolean sucess = false;
                                         while(!sucess && outPutRetry > 0){ //VDN
         	                                try{         	
@@ -318,15 +310,10 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 		                                        }
         	                                }catch(java.rmi.ConnectException e){
         	                                	outPutRetry--;
-        	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - connect");
-        	                                	e.printStackTrace();
-        	                                }catch(java.net.SocketException e2) {
-        	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - socket");
-        	                                	e2.printStackTrace();	                                	
+        	                                	log.error("Trying isTaskOutputsRemoteAvailable - connect", e);
+        	                                }catch(java.net.SocketException e) {
+        	                                	log.error("Trying isTaskOutputsRemoteAvailable - socket", e);
         	                                }
-        	                                	
-        	                                
-            	                                        
                                         }
                                     }
                                 }
@@ -367,10 +354,9 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             }
         }
 
-/*
- * retorna true e  a tarefa pertence a este submission manager
- * retorna false se a tarefa pertence a outro submission manager 
- */
+    /**
+     * @return true se taskId pertence a este SM
+     */
     private boolean isTaskFromHere(String taskId)
         {	
             for(int i=0;i<graphs.size();i++)
@@ -424,20 +410,20 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 	{
 		return downloadTimeOfTasksManagers;	
 	}
-	
-	
+
+
 /*
  *  Set All TaskManagers Remote Grid Tasks to DIE
  */
     public void setDieRemote() throws RemoteException
         {
-	    	Debug.debug("[SM] SET ALL SM TO DIE: ");
+	    	Debug.debug("[SM] " + submissionmanagerId + " chamando setToDie em todos TM");
 
     		long plus = 0;
             for(int i=0;i<tasksmanagerList.size();i++)
             {
                 TaskManager t = (TaskManager)tasksmanagerList.elementAt(i);
-                t.setToDie();                
+                t.setToDie();
                 Debug.debug("[SM "+i+"] TIME DOWNLOAD: "+t.getDownloadTimeOfTasks());
                 plus += t.getDownloadTimeOfTasks(); //	VDN:27/1/2006
             }	

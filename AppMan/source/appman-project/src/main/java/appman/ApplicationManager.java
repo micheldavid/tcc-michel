@@ -346,9 +346,9 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		//GraphGenerator.clusteringAlgorithm(clusters, appdesc); //VDN Comentou
 		//VDN: defino o numero de clusters depois do particionamento. 
 		GraphGenerator.clusteringPhaseAlgorithm(clusterP, clusters, appdesc);//VDN Inseriu
-		System.out.println("\t\t\n\nVDN: " + clusters.length + "\n");
+		Debug.debug("VDN: " + clusters.length);
 		nclusters = clusters.length; //VDN
-		System.out.println("\t\t\n\nVDN: " + nclusters + "\n");
+		Debug.debug("VDN: " + nclusters);
 		String graph_name[] = new String[nclusters];
 		for (int j = 0; j < nclusters; j++) {
 			graph_name[j] = "grafo" + String.valueOf(rand.nextInt());
@@ -473,7 +473,6 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 					}
 				}
 			}
-
 
 			if (percent_completed < getApplicationStatePercentCompleted()) {
 				percent_completed = getApplicationStatePercentCompleted();
@@ -648,17 +647,10 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	 * @return a <code>SubmissionManagerRemote</code> value
 	 * @exception RemoteException if an error occurs
 	 */
-	private final SubmissionManagerRemote createNewSubmissionManager(
-			String subId) throws RemoteException {
-		SubmissionManagerRemote sub = null;
-		try {
-			Debug.debug("ApplicationManager creating new remote SubmissionManager: " + subId);
+	private final SubmissionManagerRemote createNewSubmissionManager(String subId) throws RemoteException {
+		Debug.debug("ApplicationManager creating new remote SubmissionManager: " + subId);
 
-			sub = exehdaCreateNewSubmissionManager(subId);
-		} catch (Exception e) {
-			throw new RemoteException("Failed to instantiate new Submission Manager", e);
-		}
-		return sub;
+		return exehdaCreateNewSubmissionManager(subId);
 	}
 
 	/**
@@ -669,8 +661,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	 * @param smId a <code>String</code> value
 	 * @return a <code>SubmissionManagerRemote</code> value
 	 */
-	private final SubmissionManagerRemote exehdaCreateNewSubmissionManager(
-			String smId) {
+	private final SubmissionManagerRemote exehdaCreateNewSubmissionManager(String smId) {
 		// O metodo setHeuristic() eh justamente o metodo que instala a heuristica
 		// de escalonamento especifica do AppMan. Hoje essa heuristica desconsidera
 		// aquele escalonador de proposito geral, fazendo o trabalho completo
