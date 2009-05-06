@@ -25,6 +25,7 @@ import appman.GridFileServiceRemote;
 import appman.GridSchedule;
 import appman.GridTask;
 import appman.GridTaskRemote;
+import appman.ImproveDownload;
 import appman.SubmissionManager;
 import appman.SubmissionManagerRemote;
 import appman.log.Debug;
@@ -35,12 +36,13 @@ import appman.log.Debug;
  * Refactored in 2006/01/10 by VDN and PKVM
  * 
  * @author lucasa
- *  
  */
 public class MyTask extends Task implements Serializable {
 	private static final long serialVersionUID = -2992989365373513990L;
 	
 	private static final Log log = LogFactory.getLog(MyTask.class);
+
+	public static ImproveDownload ID = new ImproveDownload(SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM);
 
 	/**
 	 * @param id
@@ -291,7 +293,7 @@ public class MyTask extends Task implements Serializable {
 				while (retry <= Task.MAX_RETRY_TIMES) 
 				{
 					//if ((smr==null) || ( !((SubmissionManager)smr).ID.URLFileExists(filepath) )) //VDN + PKVM 2006/02/06
-					if( !SubmissionManager.ID.URLFileExists(filepath) )//VDN
+					if( !ID.URLFileExists(filepath) )//VDN
 	//				if(true)//VDN
 					{
 						Debug.debug("MyTask - URLFileExists retornou false - retry="+retry+" task="+this.getName());
@@ -317,7 +319,7 @@ public class MyTask extends Task implements Serializable {
 					} else {
 //						System.out.println("Download de Arquivo ja Feito, copiando de "+SubmissionManager.ID.getLocalPathFromURL(filepath));
 //						Debug.debug("Download de Arquivo ja Feito, copiando de "+SubmissionManager.ID.getLocalPathFromURL(filepath));
-						if (copyFileFromDir(SubmissionManager.ID.getLocalPathFromURL(filepath)))
+						if (copyFileFromDir(ID.getLocalPathFromURL(filepath)))
 							break;
 					}
 					
@@ -338,7 +340,7 @@ public class MyTask extends Task implements Serializable {
 		String dir = "";
 		try {
 			dir = gridfileservice.getDefaultDir()+"/"+localfile;
-			SubmissionManager.ID.setLastURLFilePath(filepath, dir);
+			ID.setLastURLFilePath(filepath, dir);
 		} catch (RemoteException e) {
 			log.error("buscando pasta padrão", e);
 		}
