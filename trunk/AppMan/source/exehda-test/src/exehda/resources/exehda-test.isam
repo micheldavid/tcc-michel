@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<isamapp spec="1.0" href="rcreate.isam">
+	<info>
+		<title>Exehda Test</title>
+		<vendor>ISAM team</vendor>
+		<description>
+			Exehda testing application
+		</description> 
+		<icon href="objseeddemo.png" />
+	</info>
+	<code>
+		<main class="exehda.test.AsyncExecTest" />
+		<jar href="bda:/exehda-test.jar" />
+	</code>
+</isamapp>
