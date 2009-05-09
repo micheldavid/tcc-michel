@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>jar</packaging>
+	<groupId>exehda</groupId>
+	<artifactId>exehda-test</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<name>Exehda testing project</name>
+
+	<properties>
+		<resourceEncoding>UTF-8</resourceEncoding>
+		<sourceEncoding>UTF-8</sourceEncoding>
+		<javaSourceVersion>1.5</javaSourceVersion>
+		<javaTargetVersion>1.5</javaTargetVersion>
+
+		<!-- linux
+		<project.dist.dir>/home/michel/share/appman</project.dist.dir> -->
+		<project.dist.dir>Z:/appman</project.dist.dir>
+		<project.bin.dir>${project.dist.dir}/bin</project.bin.dir>
+		<bda.dir>${project.dist.dir}/bda</bda.dir>
+		<exehda.resources>${project.basedir}/src/exehda/resources</exehda.resources>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>exehda</groupId>
+			<artifactId>exehda-core</artifactId>
+			<version>0.0.2006-02-09</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>${sourceEncoding}</encoding>
+					<debug>true</debug>
+					<source>${javaSourceVersion}</source>
+					<target>${javaTargetVersion}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rmic-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>rmic-process-classes</id>
+						<goals>
+							<goal>rmic</goal>
+						</goals>
+						<configuration>
+							<version>compat</version>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<includes>
+								<include>exehda/test/AsyncExecTest.class</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>${resourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Prepara projeto para ser executado pelo exehda</id>
+						<phase>pre-integration-test</phase>
+						<configuration>
+							<tasks>
+								<mkdir dir="${bda.dir}" />
+								<copy file="${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar"
+									tofile="${bda.dir}/exehda-test.jar" verbose="true"/>
+
+								<copy todir="${project.bin.dir}" verbose="true">
+									<fileset dir="${exehda.resources}"/>
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
