@@ -18,8 +18,6 @@ import java.rmi.RemoteException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import appman.log.Debug;
-
 /**
  * @author lucasa
  *  
@@ -60,7 +58,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 
 	public static boolean removeDir(String filepath) throws Exception {
 		File file = new File(filepath);
-		Debug.debug("GridFileService removeDir [" + filepath + "]: "
+		log.debug("GridFileService removeDir [" + filepath + "]: "
 				+ file.getAbsolutePath());
 		if (file.isDirectory()) {
 			String[] cmd = { "/bin/bash", "--login", "-c",
@@ -85,7 +83,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			String[] cmd = { "/bin/bash", "--login", "-c", "mkdir -p " + dir };
 			Runtime.getRuntime().exec(cmd).waitFor();
 			filepath = dir + "/" + filepath;
-			Debug.debug("GridFileService uploadFile upload to [" + filepath + "]");
+			log.debug("GridFileService uploadFile upload to [" + filepath + "]");
 			File file = new File(filepath);
 			if (file.exists()) {
 				return;
@@ -205,15 +203,15 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 	public synchronized void installURLFile(String url, String localFile,
 			boolean chmod) throws RemoteException {
 		try {
-			Debug.debug("GridFileService installURLFile calculating default directory");
+			log.debug("GridFileService installURLFile calculating default directory");
 			String dir = defaultdir;
-			Debug.debug("GridFileService installURLFile default directory[" + dir + "]");
+			log.debug("GridFileService installURLFile default directory[" + dir + "]");
 			String[] cmd = { "/bin/bash", "--login", "-c", "mkdir -p " + dir };
 			Runtime.getRuntime().exec(cmd).waitFor();
 			String localpath = dir + "/" + localFile;
 			File f = new File(localpath);
 			if (f.exists()) {
-				Debug.debug("GridFileService File already installed.");
+				log.debug("GridFileService File already installed.");
 				if (chmod) {
 					Runtime.getRuntime().exec("chmod u+x " + localpath)
 							.waitFor();
@@ -225,7 +223,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 
 			if ((url.indexOf("http") != -1) || (url.indexOf("ftp") != -1)) {
 				//Baixa da URL
-				Debug.debug("GridTask Installing file " + url + " to " + localpath);
+				log.debug("GridTask Installing file " + url + " to " + localpath);
 				BufferedOutputStream out = new BufferedOutputStream(
 						new FileOutputStream(new File(localpath)));
 
@@ -250,7 +248,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			} else {
 				//Copia do disco
 
-				Debug.debug("GridTask Installing file " + url + " to " + localpath);
+				log.debug("GridTask Installing file " + url + " to " + localpath);
 
 				try {
 					// Create channel on the source
@@ -276,10 +274,9 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			//						Runtime.getRuntime().exec("chmod u+x "+localpath).waitFor();
 			//					}
 
-			Debug.debug("GridTask Files installation completed.");
+			log.debug("GridTask Files installation completed.");
 		} catch (Exception e) {
-			System.out.println("[GridFileService]:");
-			throw new RemoteException(e.toString());
+			throw new RemoteException(e.getMessage(), e);
 		}
 	}
 }

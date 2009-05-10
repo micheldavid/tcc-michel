@@ -18,21 +18,6 @@ public class Debug {
 	private static final Log log = LogFactory.getLog(Debug.class);
 	private static final File file = new File("appman.log");
 
-	public static void debug(Object str) {
-		Debug.debug(str, null);
-	}
-
-	public static void debug(Object str, Throwable th) {
-		try {
-			if (!file.exists()) file.createNewFile();
-		} catch (IOException e) {
-			log.error("criando arquivo " + file.getPath(), e);
-		}
-		// jah que tudo eh debug, quando houver exceção será tratado como warning
-		if (th == null) log.debug(str);
-		else log.warn(str, th);
-	}
-
 	public static void newDebugFile(String str, String filepath) {
 		File file = new File(filepath);
 		if (file.exists()) file.delete();
@@ -47,7 +32,7 @@ public class Debug {
 
 			FileOutputStream fout = new FileOutputStream(file, true);
 			OutputStreamWriter output = new OutputStreamWriter(fout);
-			output.write(String.valueOf(str));
+			output.write(String.valueOf(str) + "\n");
 			output.close();
 			fout.close();
 			if (stdOut) {

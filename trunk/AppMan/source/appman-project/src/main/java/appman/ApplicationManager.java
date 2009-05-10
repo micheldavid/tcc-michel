@@ -100,7 +100,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 		state = ApplicationManagerState.READY;
 		
-		Debug.debug("ApplicationManager "+id+" created.");
+		log.debug("ApplicationManager "+id+" created.");
 	}
 
 	public synchronized String getInfoRemote() throws RemoteException {
@@ -108,7 +108,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	}
 
 	public void PrintInfo() throws RemoteException {
-		Debug.debug(getInfo());
+		log.debug(getInfo());
 	}
 
 	public String getInfo() throws RemoteException {
@@ -143,7 +143,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 	public void addGraph(Graph g) {
 		newgraphs.add(g);
-		Debug.debug("ApplicationManager add a new graph: " + g.getGraphId());
+		log.debug("ApplicationManager add a new graph: " + g.getGraphId());
 	}
 
 	public ApplicationManagerState getApplicationState() throws RemoteException {
@@ -190,15 +190,14 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 	public synchronized boolean isTaskOutputsRemoteAvailable(String taskId)
 	throws RemoteException, java.net.SocketException {
-		//Debug.debug("ApplicationManager isDisponibleTaskOutputsRemote locating task ["+taskId+"] in "+graphs.size()+" graphs");
+		//log.debug("ApplicationManager isDisponibleTaskOutputsRemote locating task ["+taskId+"] in "+graphs.size()+" graphs");
 		for (int i = 0; i < graphs.size(); i++) {
 			Graph g = (Graph) graphs.elementAt(i);
 			Task t = g.getTask(taskId);
-			//Debug.debug("ApplicationManager isDisponibleTaskOutputsRemote looking for task ["+taskId+"] in graph ["+g.getGraphId()+"]");
+			//log.debug("ApplicationManager isDisponibleTaskOutputsRemote looking for task ["+taskId+"] in graph ["+g.getGraphId()+"]");
 			if (t != null) {
 				if (t.getState().getCode() == TaskState.TASK_FINAL) {
-					Debug
-					.debug("ApplicationManager isTaskOutputsRemoteAvailable task ["
+					log.debug("ApplicationManager isTaskOutputsRemoteAvailable task ["
 							+ t.getTaskId()
 							+ "] status: "
 							+ t.getState().getName());
@@ -224,7 +223,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 					String gfsr = sm.getMyObjectRemoteContactAddress();
 					return gfsr;
 				} catch (RemoteException e) {
-					Debug.debug(e, e);
+					log.warn(e, e);
 					throw e;
 				}
 			}
@@ -261,7 +260,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				if (subId == null) { // round-robin
 					if (submissionmanagerList.isEmpty()) {
 						subId = String.valueOf(submanId++);
-						Debug.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
+						log.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
 						subr = createNewSubmissionManager(subId);
 						submissionmanagerList.add(subr);
 					} else {
@@ -271,7 +270,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				} else { // a specific SM instance has been requested
 					subr = getSubmissionManagerRemote(subId);
 					if (subr == null) {
-						Debug.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
+						log.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
 						subr = createNewSubmissionManager(subId);
 						submissionmanagerList.add(subr);
 					} else {
@@ -279,7 +278,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 					}
 				}
 
-				Debug.debug("ApplicationManager scheduled the SubmissionManager ["
+				log.debug("ApplicationManager scheduled the SubmissionManager ["
 					+ subr.getSubmissionManagerIdRemote() + "]");
 
 			} catch (IOException e) {
@@ -324,7 +323,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		try {
 			appdesc = SimpleParser.parseGRIDADL(args);
 		} catch (Exception e) {
-			Debug.debug("Error on parser: " + e, e);
+			log.warn("Error on parser: " + e, e);
 			throw new Exception("Error on parser GRID-DAG file: " + e, e);
 		}
 
@@ -343,9 +342,9 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		//GraphGenerator.clusteringAlgorithm(clusters, appdesc); //VDN Comentou
 		//VDN: defino o numero de clusters depois do particionamento. 
 		GraphGenerator.clusteringPhaseAlgorithm(clusterP, clusters, appdesc);//VDN Inseriu
-		Debug.debug("VDN: " + clusters.length);
+		log.debug("VDN: " + clusters.length);
 		nclusters = clusters.length; //VDN
-		Debug.debug("VDN: " + nclusters);
+		log.debug("VDN: " + nclusters);
 		String graph_name[] = new String[nclusters];
 		for (int j = 0; j < nclusters; j++) {
 			graph_name[j] = "grafo" + String.valueOf(rand.nextInt());
@@ -361,13 +360,13 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 	public void addApplicationDescription(String graphId, String clusterId,
 			ApplicationDescription appdesc) {
-		Debug.debug("ApplicationManager add a new ApplicationDescription");
+		log.debug("ApplicationManager add a new ApplicationDescription");
 		// cria um grafo default randômico
 		addGraph(new Graph(graphId, clusterId, appdesc));
 	}
 
 	public void setAllSubmissionManagersToDie() {
-		Debug.debug("[AM] SET ALL AM TO DIE: ");
+		log.debug("[AM] SET ALL AM TO DIE: ");
 
 		long plus = 0;
 		for (int i = 0; i < submissionmanagerList.size(); i++) {
@@ -376,7 +375,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				.setDieRemote();
 				plus += ((SubmissionManagerRemote) submissionmanagerList
 						.elementAt(i)).getDownloadTimeOfTasksManagers();
-				Debug.debug("[AM " + i + "] TIME DOWNLOAD: "
+				log.debug("[AM " + i + "] TIME DOWNLOAD: "
 					+ ((SubmissionManagerRemote) submissionmanagerList.elementAt(i)).getDownloadTimeOfTasksManagers());
 			} catch (IOException ex) {
 				log.info("erro em setDieRemota - ignorado", ex);
@@ -395,7 +394,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		for (int i = 0; i < graphs.size(); i++) {
 			Graph g = (Graph) graphs.elementAt(i);
 			Vector tasks = g.getTaskList();
-			Debug.debug("ApplicationManager begin time: "
+			log.debug("ApplicationManager begin time: "
 					+ timeInfo.getTimeBegin());
 			for (int j = 0; j < tasks.size(); j++) {
 				Task t = (Task) tasks.elementAt(j);
@@ -432,7 +431,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 					Graph remote = null;
 					try {
 						subman = this.getSubmissionManagerRemote(local.getSubmissionManagerId());
-						Debug.debug("ApplicationManager contacting SubmissionManager ["
+						log.debug("ApplicationManager contacting SubmissionManager ["
 							+ subman.getSubmissionManagerIdRemote() + "] to update remote graph: "
 							+ local.getGraphId());
 						remote = subman.getGraphRemote(local.getGraphId());
@@ -440,7 +439,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 						// Tolerância a Falhas
 						// Se o Submission Manager não responder então remove o grafo da lista e adiciona o
 						// grafo novamente no Application Manager com um novo SubMan escalonado
-						Debug.debug("Tolerância a Falhas - " + e, e);
+						log.warn("Tolerância a Falhas - " + e, e);
 						try {
 							subman = scheduleSubmissionManager();
 
@@ -465,7 +464,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 			if (percent_completed < getApplicationStatePercentCompleted()) {
 				percent_completed = getApplicationStatePercentCompleted();
-				Debug.debug("ApplicationManager Application graphs completed: "
+				log.debug("ApplicationManager Application graphs completed: "
 						+ getApplicationStatePercentCompleted());
 			}
 			if (percent_completed == 1f) continue;
@@ -493,12 +492,12 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		state = ApplicationManagerState.FINAL;
 
 		computeApplicationExecutionTimes();
-		Debug.debug("ApplicationManager set all Submission Managers TO DIE! ");
+		log.debug("ApplicationManager set all Submission Managers TO DIE! ");
 		setAllSubmissionManagersToDie();
 
 		timeInfo.setTimeExecution(System.currentTimeMillis()
 				- timeInfo.getTimeExecution());
-		Debug.debug("ApplicationManager Application completed time: " + (float) timeInfo.getTimeExecution() / 1000
+		log.debug("ApplicationManager Application completed time: " + (float) timeInfo.getTimeExecution() / 1000
 			+ " seconds");
 		appDescription = appman.parser.SimpleParser.appDescription;
 
@@ -521,18 +520,18 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	}
 
 	public Display startAppGUI(String graphId) {
-		Debug.debug("ApplicatinManager GUI Interface loading...");
+		log.debug("ApplicatinManager GUI Interface loading...");
 		while (this.getGraph(graphId) == null) {
 			try {
 				Thread.sleep(100);
 			} catch (Exception e) {
-				Debug.debug(e, e);
+				log.warn(e, e);
 			}
 		}
 
 		Graph g = this.getGraph(graphId);
 
-		Debug.debug(
+		log.debug(
 				"ApplicatinManager GUI Interface creating display for graph: "
 				+ g.PrintInfo());
 
@@ -548,7 +547,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	}
 
 	public Display startDefaultAppGUI() {
-		Debug.debug("ApplicatinManager Default GUI Interface loading...");
+		log.debug("ApplicatinManager Default GUI Interface loading...");
 
 		ForceSimulator fsim = new ForceSimulator();
 		fsim.addForce(new NBodyForce(-0.4f, -1f, 0.9f));
@@ -559,7 +558,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		edu.berkeley.guir.prefuse.graph.Graph gt = generator
 		.getRandomTreeDirected(3, 3, (float) 0.7);
 		ForceDemo fdemo = new ForceDemo(gt, fsim);
-		Debug.debug(
+		log.debug(
 				"ApplicatinManager GUI Interface creating display for DEFAULT graph: "
 				+ gt.getNodeCount() + " nodes, " + gt.getEdgeCount()
 				+ " edges");
@@ -578,7 +577,11 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	}
 
 	private final void __debug__(String msg, Throwable th) {
-		Debug.debug("[APPMAN] " + msg, th);
+		if (th == null) {
+			log.debug("[APPMAN] " + msg, th);
+		} else {
+			log.warn("[APPMAN] " + msg, th);
+		}
 	}
 
 	/**
@@ -647,7 +650,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	 * @exception RemoteException if an error occurs
 	 */
 	private final SubmissionManagerRemote createNewSubmissionManager(String subId) throws RemoteException {
-		Debug.debug("ApplicationManager creating new remote SubmissionManager: " + subId);
+		log.debug("ApplicationManager creating new remote SubmissionManager: " + subId);
 
 		return exehdaCreateNewSubmissionManager(subId);
 	}

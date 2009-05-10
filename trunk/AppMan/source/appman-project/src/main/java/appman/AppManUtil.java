@@ -2,27 +2,22 @@
 
 package appman;
 
-import org.isam.exehda.Exehda;
+import java.awt.Window;
+import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
+import org.isam.exehda.Exehda;
+import org.isam.exehda.services.CellInformationBase;
+import org.isam.exehda.services.Collector;
 import org.isam.exehda.services.Executor;
 import org.isam.exehda.services.OXManager;
 import org.isam.exehda.services.Worb;
-import org.isam.exehda.services.Collector;
-import org.isam.exehda.services.CellInformationBase;
 
-import appman.log.Debug;
-
-import java.awt.Window;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Vector;
-
-
-public class AppManUtil
-{
+public class AppManUtil {
     private static final Vector<Window> frames = new Vector<Window>();
+    private static final Log log = LogFactory.getLog(AppManUtil.class);
 
     public static Executor getExecutor()
         {
@@ -70,7 +65,7 @@ public class AppManUtil
 	}
 
 	public static void exitApplication(String msg, Throwable t) {
-		Debug.debug(msg, t);
+		log.warn(msg, t);
 
 		// ensure all application frames are disposed
 		for (Window w : frames) {

@@ -5,26 +5,23 @@
 
 package appman;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Hashtable;
-import java.net.ConnectException;
-import java.rmi.RemoteException;
-
-
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.rmi.RemoteException;
+import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import appman.log.Debug;
 import appman.task.Task;
 import appman.task.TaskState;
 
@@ -274,7 +271,7 @@ public class SandBox {
 	 * @param msg a <code>String</code> value
 	 */
 	private static final void __debug__(String msg) {
-		Debug.debug("[SANDBOX] " + msg);
+		log.debug("[SANDBOX] " + msg);
 	}
     
     @Override

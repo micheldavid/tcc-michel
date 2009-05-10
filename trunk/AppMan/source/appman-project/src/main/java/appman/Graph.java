@@ -3,7 +3,9 @@ package appman;
 import java.io.Serializable;
 import java.util.Vector;
 
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.parser.ApplicationDescription;
 import appman.task.Task;
 import appman.task.TaskState;
@@ -11,6 +13,7 @@ import appman.task.TaskState;
 public class Graph implements Serializable {
 
 	private static final long serialVersionUID = -535333494608899387L;
+	private static final Log log = LogFactory.getLog(Graph.class);
 
 	private String graphId;
 	private String mysubmanId; // default submission manager
@@ -50,7 +53,7 @@ public class Graph implements Serializable {
 	
 		updateGraphNodesInternalData();
 
-		Debug.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
+		log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
 	}
 	
 	public Graph(String graphid, String subid)
@@ -67,7 +70,7 @@ public class Graph implements Serializable {
 		
 		state = GRAPH_READY;
 		
-		Debug.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
+		log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
 	}
 	public Graph(String graphid, String subid, String subidother)
 	{
@@ -83,7 +86,7 @@ public class Graph implements Serializable {
 	
 		state = GRAPH_READY;
 	
-		Debug.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
+		log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
 	}
 	public Graph(String graphid, String subid, boolean empty)
 	{
@@ -98,12 +101,12 @@ public class Graph implements Serializable {
 			createDefaultGraph(2, 2, (float) 0.9);
 			updateGraphNodesInternalData();
 			state = GRAPH_READY;
-			Debug.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
+			log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
 		}
 		else
 		{
 			state = GRAPH_READY;
-			Debug.debug("Graph new empty graph created");
+			log.debug("Graph new empty graph created");
 		}
 	}
 	public String PrintInfo()
@@ -120,12 +123,12 @@ public class Graph implements Serializable {
 		GraphGenerator generator = new GraphGenerator(mysubmanId);
 		graph = generator.getRandomTreeDirected(a,b, c);
 		datafileList = generator.getDataFileList();
-		Debug.debug(datafileList);
+		log.debug(datafileList);
 		
 		taskList = buildTaskList();
-		Debug.debug(taskList);
+		log.debug(taskList);
 		
-		Debug.debug("Graph default graph structure created");
+		log.debug("Graph default graph structure created");
 	}
 	
 	/*
@@ -141,12 +144,12 @@ public class Graph implements Serializable {
 			GraphGenerator generator = new GraphGenerator(listsubmanId);
 			graph = generator.getRandomTreeDirected(a, b, c);
 			datafileList = generator.getDataFileList();
-			Debug.debug(datafileList);
+			log.debug(datafileList);
 		
 			taskList = buildTaskList();
-			Debug.debug(taskList);
+			log.debug(taskList);
 		
-			Debug.debug("Graph default graph structure created");
+			log.debug("Graph default graph structure created");
 		}
 
 	public Vector getTaskList()
@@ -204,14 +207,14 @@ public class Graph implements Serializable {
 				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT )
 				{
 					t.setState(TaskState.getInstance(TaskState.TASK_READY));
-					Debug.debug("Task setting state: " + t.getState().getName());
+					log.debug("Task setting state: " + t.getState().getName());
 					readyTasks.add(t);
 				}
                 else if ( t.getState().getCode()==TaskState.TASK_READY ) {
                     readyTasks.add(t);
                 }
 			}
-			//Debug.debug("Task READY: " + readyTasks);	
+			//log.debug("Task READY: " + readyTasks);	
 			return readyTasks;
 	}
 	
@@ -231,7 +234,7 @@ public class Graph implements Serializable {
 				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT )
 				{
 					t.setState(TaskState.getInstance(TaskState.TASK_READY));
-					Debug.debug("Task setting state: " + t.getState().getName());
+					log.debug("Task setting state: " + t.getState().getName());
 					readyTasks.add(t);
 				}
                 else if ( t.getState().getCode()==TaskState.TASK_READY ) {
@@ -243,7 +246,7 @@ public class Graph implements Serializable {
 					break;
 				}
 			}
-			Debug.debug("Task READY: " + readyTasks);	
+			log.debug("Task READY: " + readyTasks);	
 			return readyTasks;
 	}	
 	
@@ -313,7 +316,7 @@ public class Graph implements Serializable {
 		{			
 				if( ! isDataFileAvailable(inputs[i].getDataFileId()) )
 				{
-					//Debug.debug("Graph isDisponibleTaskInputsTask ["+task.getTaskId()+"] FALSE: " + inputs[i].getDataFileId());
+					//log.debug("Graph isDisponibleTaskInputsTask ["+task.getTaskId()+"] FALSE: " + inputs[i].getDataFileId());
 					return false;
 				}
 		}
@@ -325,11 +328,11 @@ public class Graph implements Serializable {
 	{
 		// get the tasks vector from the graph
 		Vector<Object> tasks = GraphGenerator.getTaskList(graph);
-		Debug.debug("build task: " + tasks);		
+		log.debug("build task: " + tasks);		
 		// add mytasks to the task list
 		Vector mytasks = new Vector();
 		// create a vector with the tasks from the my submanager
-		Debug.debug("Graph ["+ getGraphId() +"] buildtaskList SubManId: " + getSubmissionManagerId());
+		log.debug("Graph ["+ getGraphId() +"] buildtaskList SubManId: " + getSubmissionManagerId());
 		
 		for(int i=0;i<tasks.size();i++)
 		{
@@ -509,7 +512,7 @@ public class Graph implements Serializable {
                                   + ", OUTput: " + xlist.getFiles().getOutputFiles().length
                                   + ", STATUS: " + xlist.getState().getName());
                 
-				System.out.println("Name: "+xlist.getTaskId()
+				log.debug("Name: "+xlist.getTaskId()
                                    +"  Status:"+xlist.getState().getName()
                                    +" DAG_DSC "+ appDescription);
 
@@ -522,7 +525,7 @@ public class Graph implements Serializable {
 				    // no caso do xlist.getTaskId() do Lucas, retorna vazio e nao consigo
 				    // achar o indice na minha estrutura
 				indexDSC = appDescription.applicationDAG.getIndexByName(xlist.getTaskId());
-				System.out.println("GET_TASK_ID: "+xlist.getTaskId()
+				log.debug("GET_TASK_ID: "+xlist.getTaskId()
                                    +"  GET_NAME: "+xlist.getName()
                                    + "indexDSC: "+indexDSC);
 				appDescription.applicationDAG.changeColor(indexDSC,xlist.getState().getColor());

@@ -5,11 +5,11 @@ package appman;
 
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 import org.isam.exehda.services.Executor.SchedulingHeuristic;
-
-import appman.log.Debug;
 
 /**
  * @author lucasa
@@ -17,6 +17,7 @@ import appman.log.Debug;
 public class GridSchedule implements SchedulingHeuristic {
 
 	private static final long serialVersionUID = -4225514070542699263L;
+	private static final Log log = LogFactory.getLog(GridSchedule.class);
 
 	public static final String HINT_FINAL_RESULTS_NODE       = "grid.targetHosts.host-final-results";
     public static final String HINT_DEDICATED_COMPUTE_NODE   = "grid.targetHosts.oneTaskPerCPU";
@@ -80,7 +81,7 @@ public class GridSchedule implements SchedulingHeuristic {
 	public HostId chooseCreationHost(String clsName, Object[] params, Object hint, java.util.Vector avoidedHosts) {
         try {
             HostId hostid = null;                        
-            Debug.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
+            log.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
 
             if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
                     // O laco abaixo é necessario pois o nodo selecionado em um passo
@@ -117,15 +118,15 @@ public class GridSchedule implements SchedulingHeuristic {
             	// 2006/02/03 - isso so precisa fazer uma vez?
 //                CellInformationBase cib = AppManUtil.getCellInformationBase();
 //                ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-//                Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length, true);
+//                log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
 //                for(int i=0;i<resources.length; i++)
 //                {
-//                    Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName(), true);
+//                    log.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
 //                }
             	// 2006/02/03 mudou de aleatorio pra Round Robin
 //                Random rand = new Random();
 //                int i = rand.nextInt(resources.length);
-//                Debug.debug("GridSchedule target Host scheduled: " + resources[i].getSimpleName(), true);
+//                log.debug("GridSchedule target Host scheduled: " + resources[i].getSimpleName());
 //                hostid = HostId.parseId("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
             	
                     // O laco abaixo é necessario pois o nodo selecionado em um passo
@@ -140,7 +141,7 @@ public class GridSchedule implements SchedulingHeuristic {
                 	hostid = smGridHosts.getRoundRobinHost();
                 }
             }
-            Debug.debug("GridSchedule["+hint+"] choosed host: " + hostid);
+            log.debug("GridSchedule["+hint+"] choosed host: " + hostid);
 
             return hostid;
         }

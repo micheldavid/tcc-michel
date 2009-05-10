@@ -14,8 +14,6 @@ import org.isam.exehda.HostId;
 import org.isam.exehda.ResourceName;
 import org.isam.exehda.services.CellInformationBase;
 
-import appman.log.Debug;
-
 /**
  * @author lucasa
  *
@@ -43,12 +41,12 @@ public class GridRemoteHostsProperties {
 		// 2006/02/03
 //        CellInformationBase cib = AppManUtil.getCellInformationBase();
 //        ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-//        Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length);
+//        log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
 //        queueAllMachines = new Vector();
 //        for(int i=0;i<resources.length; i++)
 //        {
 //        	queueAllMachines.add((String)resources[i].getSimpleName());
-//            Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
+//            log.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
 //        }
 
 
@@ -60,7 +58,7 @@ public class GridRemoteHostsProperties {
 /*	
 	public void updateHostsProperties()
 	{
-		//System.out.println("GridRemoteHostProperties - updateHostsProperties");
+		//log.debug("GridRemoteHostProperties - updateHostsProperties");
 		for(int i = 0; i < hosts.size(); i++)
 		{
 			try
@@ -68,7 +66,7 @@ public class GridRemoteHostsProperties {
 				HostId targetHost = HostId.getByName((String) hosts.get(i));
 			} catch (java.net.UnknownHostException e)
 			{
-				Debug.debug("GridRemoteHostProperties Host Error, removing [ "+ (String) hosts.get(i) +" ] from the hosts list");
+				log.debug("GridRemoteHostProperties Host Error, removing [ "+ (String) hosts.get(i) +" ] from the hosts list");
 				hosts.remove(i);
 			}
 		}
@@ -127,7 +125,7 @@ public class GridRemoteHostsProperties {
 	{
       CellInformationBase cib = AppManUtil.getCellInformationBase();
       ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-      Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length);
+      log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
 
 		
 		HostId targetHost = null;
@@ -160,12 +158,12 @@ public class GridRemoteHostsProperties {
 		}
 		HostId targetHost = null;
 		String first = (String)queueAllMachines.get(0);
-		System.out.println("getRoundRobin first "+first);
+		log.debug("getRoundRobin first "+first);
 		queueAllMachines.remove(0);
 		queueAllMachines.add(first);
 
 		try {
-			//System.out.println("getRoundRobin host "+host);
+			//log.debug("getRoundRobin host "+host);
 			targetHost = HostId.parseId("hostid:"+first+"."+HostId.getLocalHost().getCell().getName());
 		} catch (Exception e) {
 			log.error(e, e);
@@ -181,13 +179,13 @@ public class GridRemoteHostsProperties {
 
     CellInformationBase cib = AppManUtil.getCellInformationBase();
     ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-    Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length);
+    log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
     
     for(int i=0;i<resources.length; i++)
     {
     	queueAllMachines.add(resources[i].getSimpleName());
     	//queueAllMachines.add("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
-        Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
+    	log.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
     }
 	}
 	/*

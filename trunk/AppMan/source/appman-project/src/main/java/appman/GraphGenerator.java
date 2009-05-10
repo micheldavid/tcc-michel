@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.parser.ApplicationDescription;
 import appman.parser.TaskDescription;
 import appman.task.MyTask;
@@ -27,6 +29,8 @@ import edu.berkeley.guir.prefuse.graph.Node;
  */
 public class GraphGenerator extends GraphLib
 {
+	private static final Log log = LogFactory.getLog(GraphGenerator.class);
+
 	private int taskid = 0; // generate tasks ids
 	private int fileid = 0; // generate datafile ids
 	private Vector<DataFile> datafiles;
@@ -35,7 +39,7 @@ public class GraphGenerator extends GraphLib
 
 	public GraphGenerator(String subid)
 	{
-		//Debug.debug("GraphGenerator loading submisson manager Id:");
+		//log.debug("GraphGenerator loading submisson manager Id:");
 		submanid = subid;
 		listsubmanid = new String[]{submanid};
 	}
@@ -45,10 +49,10 @@ public class GraphGenerator extends GraphLib
 		listsubmanid = subid;
 		submanid = listsubmanid[0];
 		/*
-		Debug.debug("GraphGenerator loading submisson managers Ids:");
+		log.debug("GraphGenerator loading submisson managers Ids:");
 		for(int i=0; i < listsubmanid.length; i++)
 		{
-			Debug.debug(listsubmanid[i]);
+			log.debug(listsubmanid[i]);
 		}
 		*/
 	}
@@ -94,7 +98,7 @@ public class GraphGenerator extends GraphLib
 		Random rand = new Random();
 		int r = Math.abs(rand.nextInt()%listsubmanid.length);
 		String random_submanid = listsubmanid[r];
-		Debug.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
+		log.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
 		//Node child = new DefaultTreeNode(); // create root
 		GraphNode child = new GraphNode(createDefaultTask(String.valueOf(taskid),random_submanid,"/bin/echo ["+ String.valueOf(taskid)+"]  > ./file["+String.valueOf(taskid)+"].txt"));			
 		child.setAttribute("label",((Task)child.getNodeData()).getTaskId());
@@ -162,7 +166,7 @@ public class GraphGenerator extends GraphLib
 			// random choose the sumbmanid from the list
 			int r = Math.abs(rand.nextInt()%listsubmanid.length); 
 			String random_submanid = listsubmanid[r];
-			Debug.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
+			log.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
 			GraphNode nn = new GraphNode(createDefaultTask(String.valueOf(taskid), random_submanid,"/bin/echo ["+ String.valueOf(taskid)+"]  > ./file["+String.valueOf(taskid)+"].txt"));				
 			nn.setAttribute("label",((Task)nn.getNodeData()).getTaskId());
 			nn.setAttribute("depth",String.valueOf(depth));
@@ -210,7 +214,7 @@ public class GraphGenerator extends GraphLib
 		List taskList = appdesc.getListOfTasks();
 		TaskDescription[] tasks = (TaskDescription[])taskList.toArray(new TaskDescription[0]);
 		
-		Debug.debug("GraphGenerator convertApplicationDescriptionToGraph: num tasks - " + n);
+		log.debug("GraphGenerator convertApplicationDescriptionToGraph: num tasks - " + n);
 		
 		Vector gnodes = new Vector();// vetor auxiliar com dados do nodo do grafo
 		Vector gnodes_names = new Vector();// vetor auxiliar com o nome da tarefa do nodo
@@ -228,7 +232,7 @@ public class GraphGenerator extends GraphLib
 			g.addNode(node); // add task in  the graph
 			gnodes.addElement(node);
 			gnodes_names.addElement(id);
-			//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph: add Task command line: " + ((Task)node.getNodeData()).getCommand_Line());VDN:4/1/6					
+			//log.debug("GraphGenerator convertApplicationDescriptionToGraph: add Task command line: " + ((Task)node.getNodeData()).getCommand_Line());VDN:4/1/6					
 		}
 		
 			   for (TaskDescription t : appdesc.getListOfTasks()) {
@@ -265,7 +269,7 @@ public class GraphGenerator extends GraphLib
 									 DataFile datafile = new DataFile(filename, filename, tfrom);										 
 									 datafiles.addElement(datafile); // add this new datafile to the list
 									 tto.getFiles().addDataFileToInputList(datafile);
-									 //Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] input dependency from: " + tfrom.getTaskId() +" -> to: " + tto.getTaskId()); VDN:4/1/6
+									 //log.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] input dependency from: " + tfrom.getTaskId() +" -> to: " + tto.getTaskId()); VDN:4/1/6
 
 									 DataFile[] from_out = tfrom.getFiles().getOutputFiles();
 									 boolean already_inserted = false;
@@ -279,7 +283,7 @@ public class GraphGenerator extends GraphLib
 									 if(! already_inserted)
 									 {
 										tfrom.getFiles().addDataFileToOutputList(datafile);
-										//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] output dependency from: " + tfrom.getTaskId() +" -> to: " + tto.getTaskId());VDN: 4/1/6
+										//log.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] output dependency from: " + tfrom.getTaskId() +" -> to: " + tto.getTaskId());VDN: 4/1/6
 									 }
 
 								  	found = true;
@@ -298,7 +302,7 @@ public class GraphGenerator extends GraphLib
 							datafile.setDataFileExist(true);										 
 							datafiles.addElement(datafile); // add this new datafile to the list
 							tto.getFiles().addDataFileToInputList(datafile);
-							//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] input dependency from Application Inputs to Task ["+tto.getTaskId()+"]", true); VDN: 2006/01/13
+							//log.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] input dependency from Application Inputs to Task ["+tto.getTaskId()+"]"); VDN: 2006/01/13
 						 }
 
 					  }
@@ -330,12 +334,12 @@ public class GraphGenerator extends GraphLib
 					GraphNode to = (GraphNode)gnodes.elementAt(gnodes_names.indexOf(to_name));
 					Task task = (Task)to.getNodeData();
 					task.setTaskType(TaskType.TASK_TYPE_FINAL);
-					//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph SET Task["+task.getTaskId()+"] TYPE FINAL", true);  VDN 2006/01/13
+					//log.debug("GraphGenerator convertApplicationDescriptionToGraph SET Task["+task.getTaskId()+"] TYPE FINAL");  VDN 2006/01/13
 					DataFile datafile = new DataFile(filename, filename, task);
 					datafile.setDataFileExist(false);
 					datafiles.addElement(datafile); // add this new datafile to the list						
 					task.getFiles().addDataFileToOutputList(datafile);					 	
-				 	//Debug.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] output dependency from Application Outputs to Task ["+task.getTaskId()+"]", true); VDN 2006/01/13
+				 	//log.debug("GraphGenerator convertApplicationDescriptionToGraph add datafile ["+datafile.getDataFileId()+"] output dependency from Application Outputs to Task ["+task.getTaskId()+"]"); VDN 2006/01/13
 				  }
 
 			   }
@@ -375,26 +379,26 @@ public class GraphGenerator extends GraphLib
 		
 		for(int i=0; i < cluster.size(); i++)//i equivale ao nivel
 		{
-			System.out.print("Level "+i+" ");
+			String debug = "";
+			debug += "Level "+i+" ";
 			for(int j=0; j < ((Vector)cluster.get(i)).size(); j++)//j equivale as tarefas q estao no nivel i
 			{
 				taskName = ((String)((Vector)cluster.get(i)).get(j)); //nome da tarefa
-				System.out.print(((Vector)(cluster.get(i))).get(j) + " " );
+				debug += ((Vector)(cluster.get(i))).get(j) + " ";
 				for(int k=0; k < tasks.length; k++)//tenho q buscar o nome da tarefa. arggg!!
 				{
-					
 					if( taskName.compareTo(tasks[k].getTaskName()) == 0 )
 					{
 						String id = clusterId[i];
 						tasks[k].setClusterId( id );
-						System.out.print("\n 1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id+"\n");
+						debug += "\n 1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id;
 						break;
 					}
 				}
 			}
-			System.out.print("\n");
+			log.debug(debug);
 		}
-		System.out.print("SAIU!\n");
+		log.debug("SAIU!");
 	}
 
 }
