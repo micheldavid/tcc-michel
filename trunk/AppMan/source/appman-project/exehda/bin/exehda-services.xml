@@ -1,889 +1,120 @@
 <EXEHDA>
-
-    <PROFILE name="baseKTX">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="ktx"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value="worb:tcp://gradep.inf.ufrgs.br:1980/cib"/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="localhost"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=ktx"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=ktx"/>
-       <PROP name="backEnd.ldap.passwd" value="secret"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/romulo/svnroot/appman/branches/rbrosinha-pp-2006-2/lib"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-
-
-  </PROFILE>
-
-
-    <PROFILE name="baseGRADEP">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-GRADEP"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-       <!-- <PROP name="logLevel" value="5000"/> -->
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value="worb:tcp://gradep.inf.ufrgs.br:1980/cib"/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="gradep.inf.ufrgs.br"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="testeupf"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/romulo/svnroot/appman/branches/rbrosinha-pp-2006-2/lib"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-
-
-  </PROFILE>
-
-
-  <PROFILE name="base2COPPE">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-COPPE"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value="worb:tcp://143.54.85.17:1980/cib;worb:tcp://devel-frontend.hepgrid.uerj.br:1980/cib;worb:tcp://giga01.lncc.br:1980/cib"/> 
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/lucas/appman-dev/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-
-
-  </PROFILE>
-
-  <PROFILE name="baseHEPGRID">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-HEPGRID"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value="worb:tcp://143.54.85.17:1980/cib;worb:tcp://labia.cos.ufrj.br:1980/cib"/> 
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/lucas/appman-dev/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-
-
-  </PROFILE>
-
-
-  <PROFILE name="baseLNCC">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-LNCC"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value="worb:tcp://143.54.85.17:1980/cib;worb:tcp://labia.cos.ufrj.br:1980/cib;worb:tcp://devel-frontend.hepgrid.uerj.br:1980/cib"/> 
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/lucas/appman-dev/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-  </PROFILE>
-
-   <PROFILE name="base2">
-
-    <PROP name="localhost.id" value="78"/> 
-    <!-- <PROP name="localhost.inetaddr" value="146.164.34.133"/> -->
-    <PROP name="localhost.cell" value="CELL-LABIA"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="4000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="#neighborhood" value="worb:tcp://labia.cos.ufrj.br:1980/cib;worb:tcp://devel-frontend.hepgrid.uerj.br:1980/cib"/> 
-       <!-- <PROP name="neighborhood" value="worb:tcp://143.54.85.17:1980/cib"/> -->
-       <PROP name="neighborhood" value=""/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="10.0.0.2"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=exehda,dc=labia,dc=cos,dc=ufrj,dc=br"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=exehda,dc=labia,dc=cos,dc=ufrj,dc=br"/>
-       <PROP name="backEnd.ldap.passwd" value="SenhaDoOpenLDAP"/>
-    </SERVICE>
-
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/SO/dalto/eclipse/workspace/appman19.12.05/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-  </PROFILE>
-  
-  
-     <PROFILE name="base2-ldaufrgs">
-
-    <PROP name="localhost.id" value="78"/>
-    <!-- <PROP name="localhost.inetaddr" value="146.164.34.133"/> -->
-    <PROP name="localhost.cell" value="CELL-LABIA"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="4000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/SO/dalto/eclipse/workspace/appman19.12.05/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-  </PROFILE>
-  
-  
-  <PROFILE name="base-labia-ldapufrgs">
-
-    <PROP name="localhost.id" value="78"/>
-    <PROP name="localhost.cell" value="CELL-LABIA"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="4000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value=""/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/SO/dalto/eclipse/workspace/appman19.12.05/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-  </PROFILE>
-
-  
-  
-
-    <PROFILE name="baseLOCAL">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-LOCAL"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value="worb:tcp://indiana.inf.ufrgs.br:1980/cib"/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="moe.inf.ufrgs.br"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=moe,dc=saloon"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=moe,dc=saloon"/>
-       <PROP name="backEnd.ldap.passwd" value="gnu"/>
-    </SERVICE>
-
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/lucasa/faculdade/projetos/appman/cvs/appman-dev/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-  </PROFILE>
-
-    <PROFILE name="baseLOCAL2">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-LOCAL2"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="neighborhood" value=""/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-       <PROP name="docroot" value="/home/lucasa/faculdade/projetos/appman/cvs/appman-dev/bin"/>
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/path/to/avu/docroot"/>
-    </SERVICE>
-
-   <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-       <PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
-    </SERVICE>
-
-   <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-       <PROP name="schedHeuristic" value=""/>
-    </SERVICE>
-
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
-    </SERVICE>
-    
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29901"/>
-    </SERVICE>
-
-    <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
-    </SERVICE>	
-
-    <SERVICE name="discoverer" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-       <PROP name="contactAddress" value="worb:tcp://curly.inf.ufrgs.br:1980/discoverer" />
-    </SERVICE>
-  </PROFILE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-       <PROP name="#neighborhood" value="worb:tcp://labia.cos.ufrj.br:1980/cib/;worb:tcp://devel-frontend.hepgrid.uerj.br:1980/cib"/> 
-       <PROP name="neighborhood" value=""/>
-       <PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-       <PROP name="backEnd.ldap.server" value="143.54.85.17"/>
-       <PROP name="backEnd.ldap.rootDn" value="dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.user" value="cn=admin,dc=gradep-ufrgs"/>
-       <PROP name="backEnd.ldap.passwd" value="senha"/>
-    </SERVICE>
-
- 
-  <PROFILE name="nodo-local">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-LOCAL"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-       <PROP name="port" value="1980"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
-       <PROP name="contactAddress" value="worb:tcp://moe.inf.ufrgs.br:1980/cib"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
-       <PROP name="bdaHost" value="moe.inf.ufrgs.br" />
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/home/lucc/Projects/ISAM/FakeAvu"/>
-    </SERVICE>
-
-    <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-    </SERVICE>
-
-   <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
-       <PROP name="contactAddress" value="worb:tcp://moe.inf.ufrgs.br:1980/oxmanager"/>
-    </SERVICE>	
-
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29902"/>
-    </SERVICE>
-
-    <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-    </SERVICE>
-    
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
-    </SERVICE>
-
-  </PROFILE>
-  
-  <PROFILE name="nodo-gradep-1">
-
-    <PROP name="localhost.id" value="1"/>
-    <PROP name="localhost.cell" value="CELL-GRADEP"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-       <PROP name="port" value="1980"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
-       <PROP name="contactAddress" value="worb:tcp://14.54.85.17:1980/cib"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
-       <PROP name="bdaHost" value="14.54.85.17" />
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/home/lucc/Projects/ISAM/FakeAvu"/>
-    </SERVICE>
-
-    <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-    </SERVICE>
-
-   <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
-       <PROP name="contactAddress" value="worb:tcp://14.54.85.17:1980/oxmanager"/>
-    </SERVICE>	
-
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29902"/>
-    </SERVICE>
-
-    <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-    </SERVICE>
-    
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
-    </SERVICE>
-
-  </PROFILE>
-  <PROFILE name="nodo-gradep-2">
-
-    <PROP name="localhost.id" value="2"/>
-    <PROP name="localhost.cell" value="CELL-GRADEP"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-       <PROP name="port" value="1980"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
-       <PROP name="contactAddress" value="worb:tcp://14.54.85.17:1980/cib"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
-       <PROP name="bdaHost" value="14.54.85.17" />
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
-       <PROP name="docroot" value="/home/lucc/Projects/ISAM/FakeAvu"/>
-    </SERVICE>
-
-    <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-    </SERVICE>
-
-   <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
-       <PROP name="contactAddress" value="worb:tcp://14.54.85.17:1980/oxmanager"/>
-    </SERVICE>	
-
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29902"/>
-    </SERVICE>
-
-    <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-    </SERVICE>
-    
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
-    </SERVICE>
-
-  </PROFILE>
-
-
-
-
-  <PROFILE name="nodo-labia">
-
-    <!-- <PROP name="localhost.id" value="1"/> -->
-    <PROP name="localhost.cell" value="CELL-LABIA"/>
-
-    <SERVICE name="logger" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-       <PROP name="logLevel" value="5000"/>
-    </SERVICE>
-
-    <SERVICE name="worb" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
-       <PROP name="port" value="1980"/>
-    </SERVICE>
-
-    <SERVICE name="cib" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
-       <PROP name="contactAddress" value="worb:tcp://10.0.0.3:1980/cib"/>
-    </SERVICE>
-
-    <SERVICE name="bda" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
-       <PROP name="bdaHost" value="10.0.0.3" />
-    </SERVICE>
-
-    <SERVICE name="avu" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.avu.AvuImplClient"/>
-       <PROP name="avuHost" value="10.0.0.3"/>
-    </SERVICE>
-
-    <SERVICE name="executor" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
-    </SERVICE>
-
-   <SERVICE name="oxmanager" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
-    </SERVICE>	
-
-    <SERVICE name="gatekeeper" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
-       <PROP name="port" value="29902"/>
-    </SERVICE>
-
-    <SERVICE name="objectseed" loadPolicy="boot">
-       <PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
-    </SERVICE>
-    
-    <SERVICE name="collector" loadPolicy="demand">
-       <PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
-    </SERVICE>
-
-  </PROFILE>
-
-
+	<PROFILE name="base">
+		<PROP name="localhost.id" value="0"/>
+		<PROP name="localhost.cell" value="home"/>
+		<SERVICE name="logger" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+			<PROP name="logLevel" value="4000"/>
+		</SERVICE>
+		<SERVICE name="worb" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+		</SERVICE>
+		<SERVICE name="cib" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
+			<PROP name="neighborhood" value="worb:tcp://server1:1980/cib"/>
+			<PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
+			<PROP name="backEnd.ldap.server" value="server1"/>
+			<PROP name="backEnd.ldap.rootDn" value="dc=exehda"/>
+			<PROP name="backEnd.ldap.user" value="cn=admin,dc=exehda"/>
+			<PROP name="backEnd.ldap.passwd" value="1234"/>
+		</SERVICE>
+		<SERVICE name="bda" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
+			<PROP name="docroot" value="/home/michel/share/appman/bda"/>
+		</SERVICE>
+		<SERVICE name="avu" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
+			<PROP name="docroot" value="/path/to/avu/docroot"/>
+		</SERVICE>
+		<SERVICE name="executor" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+			<PROP name="defaultHeuristic" value="org.isam.exehda.services.primos.exec.HostIdSchedHeuristic"/>
+		</SERVICE>
+		<SERVICE name="objectseed" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+			<PROP name="schedHeuristic" value=""/>
+		</SERVICE>
+		<SERVICE name="collector" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplCell"/>
+		</SERVICE>
+		<SERVICE name="gatekeeper" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+			<PROP name="port" value="29901"/>
+		</SERVICE>
+		<SERVICE name="oxmanager" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.oxm.DualOXManagerCell"/>
+		</SERVICE>
+		<SERVICE name="discoverer" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
+			<PROP name="contactAddress" value="worb:tcp://server1:1980/discoverer" />
+		</SERVICE>
+	</PROFILE>
+	<PROFILE name="nodo1">
+		<PROP name="localhost.id" value="1"/>
+		<PROP name="localhost.cell" value="home"/>
+		<SERVICE name="logger" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+			<PROP name="logLevel" value="5000"/>
+		</SERVICE>
+		<SERVICE name="worb" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+		</SERVICE>
+		<SERVICE name="cib" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
+			<PROP name="contactAddress" value="worb:tcp://server1:1980/cib"/>
+		</SERVICE>
+		<SERVICE name="bda" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+			<PROP name="bdaHost" value="server1" />
+		</SERVICE>
+		<SERVICE name="executor" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+		</SERVICE>
+		<SERVICE name="oxmanager" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
+		</SERVICE>
+		<SERVICE name="gatekeeper" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+		</SERVICE>
+		<SERVICE name="objectseed" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+		</SERVICE>
+		<SERVICE name="collector" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
+		</SERVICE>
+	</PROFILE>
+	<PROFILE name="nodo2">
+		<PROP name="localhost.id" value="2"/>
+		<PROP name="localhost.cell" value="home"/>
+		<SERVICE name="logger" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+			<PROP name="logLevel" value="5000"/>
+		</SERVICE>
+		<SERVICE name="worb" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+		</SERVICE>
+		<SERVICE name="cib" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
+			<PROP name="contactAddress" value="worb:tcp://server1:1980/cib"/>
+		</SERVICE>
+		<SERVICE name="bda" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+			<PROP name="bdaHost" value="server1" />
+		</SERVICE>
+		<SERVICE name="executor" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+		</SERVICE>
+		<SERVICE name="oxmanager" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
+		</SERVICE>
+		<SERVICE name="gatekeeper" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+		</SERVICE>
+		<SERVICE name="objectseed" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+		</SERVICE>
+		<SERVICE name="collector" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
+		</SERVICE>
+	</PROFILE>
 </EXEHDA>
-
