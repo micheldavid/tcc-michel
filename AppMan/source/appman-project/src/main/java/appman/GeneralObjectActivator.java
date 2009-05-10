@@ -13,8 +13,6 @@ import org.isam.exehda.services.OXManager.OXHandle;
 import org.isam.exehda.services.ObjectSeed.Activator;
 import org.isam.exehda.services.ObjectSeed.MarshaledOX;
 
-import appman.log.Debug;
-
 /**
  * @author lucasa
  */
@@ -64,28 +62,27 @@ public class GeneralObjectActivator implements Activator {
 			adress = AppManUtil.getWorb().exportService(obj, oclass[i],
 					objectClass + oxID.toString() + i);
 			contactAddress.addElement(adress);
-			Debug.debug("[VDN]Export Object:" + adress);
+			log.debug("[VDN]Export Object:" + adress);
 		}
 
 		// update the ox meta-attribute 'contact'
 		OXHandle oxh = AppManUtil.getOXManager().createHandle(oxID);
-// 		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxID + ": "
-// 				+ obj, true);
+// 		log.debug("GeneralObjectActivator OXManager ObjectId: " + oxID + ": " + obj);
 		for (int i = 0; i < interfaceClass.length; i++) {
-			System.out.println("VINDN: ADRESS" + contactAddress.elementAt(i)
+			log.debug("VINDN: ADRESS" + contactAddress.elementAt(i)
 					+ "interface class:" + interfaceClass[i]);
 			oxh.setAttribute(ATT_WORB_CONTACT + interfaceClass[i],
 					contactAddress.elementAt(i));
-// 			Debug.debug(
+// 			log.debug(
 // 					"GeneralObjectActivator getRemoteObjectReference setAttribute: "
 // 							+ ATT_WORB_CONTACT
 // 							+ interfaceClass[i]
 // 							+ " - "
 // 							+ oxh.getAttribute(ATT_WORB_CONTACT
-// 									+ interfaceClass[i]), true);
+// 									+ interfaceClass[i]));
 		}
-// 		Debug.debug("GeneralObjectActivator Object starting remote: " + obj
-// 				+ "objectClass", true);
+// 		log.debug("GeneralObjectActivator Object starting remote: " + obj
+// 				+ "objectClass");
 		//if is runnable, create a new thread and make it run
 		if ((obj instanceof Runnable) && (run)) {
 			new Thread((Runnable) obj).start();

@@ -28,7 +28,7 @@ public class TaskDescription implements Serializable {
 	public TaskDescription(String taskName, String executable) {
 		this.taskName = taskName;
 		this.executable = executable;
-		// System.out.println("[GRAND]\tNew " + toString());
+		// log.debug("[GRAND]\tNew " + toString());
 	}
 
 	public String getTaskName() {

@@ -6,11 +6,17 @@ package appman.parser;
  */
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
   public class  DAG implements Serializable
   {
 	private static final long serialVersionUID = -4295017125464737354L;
+	private static final Log log = LogFactory.getLog(DAG.class);
 	private List nodes; // taskArray 
     private List nodesName; // taskArray 
     
@@ -20,7 +26,7 @@ import java.util.*;
           nodes.add(null);
        }
        nodesName = new Vector(numberOfNodes);
-       System.out.println("[GRAND]\tNew DAG");
+       log.debug("[GRAND]\tNew DAG");
     }
 
     /**
@@ -44,7 +50,7 @@ import java.util.*;
     private List getIncomingEdgesByName(String name){
        List nodesList = null;
        int index = this.nodesName.indexOf(name);
-       // System.out.println("!!!!! "+ index);
+       // log.debug("!!!!! "+ index);
        nodesList = (List) this.nodes.get(index);
        if (nodesList == null) {
           nodesList = new ArrayList();

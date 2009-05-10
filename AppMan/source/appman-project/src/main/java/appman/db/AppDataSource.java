@@ -6,12 +6,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.dbcp.BasicDataSource;
-
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class AppDataSource {
 
 	private static final long serialVersionUID = -85835755789357234L;
+	private static final Log log = LogFactory.getLog(AppDataSource.class);
 
 	private static BasicDataSource ds;
 
@@ -36,7 +37,7 @@ public class AppDataSource {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		} catch (SQLException ex) {
-			Debug.debug("erro fechando handlers", ex);
+			log.warn("erro fechando handlers", ex);
 		}
 	}
 

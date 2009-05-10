@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author lucasa
@@ -20,6 +21,7 @@ import appman.log.Debug;
 public class GridRemoteHostsFileProperties extends Properties implements Serializable
 {
 	private static final long serialVersionUID = -4809139501645717731L;
+	private static final Log log = LogFactory.getLog(GridRemoteHostsFileProperties.class);
 	private String propertiesFileName;
 	private String propertiesFileSection;
 	
@@ -28,12 +30,13 @@ public class GridRemoteHostsFileProperties extends Properties implements Seriali
 		try {
 			propertiesFileName = filename;
 			propertiesFileSection = filesection;
-			// Debug.debug("Load Properties File: " + propertiesFileName);
-			InputStream fis = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
-			// Debug.debug(fis);
-			this.load(fis);
+			// log.debug("Load Properties File: " + propertiesFileName);
+			InputStream fis = getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+			// log.debug(fis);
+			load(fis);
+			fis.close();
 		} catch (IOException ex) {
-			Debug.debug(ex, ex);
+			log.warn(ex, ex);
 			System.exit(0);
 		}
 	}
@@ -42,7 +45,7 @@ public class GridRemoteHostsFileProperties extends Properties implements Seriali
 	{
 		ArrayList targetHosts = new ArrayList();
 		String hosts = this.getProperty(propertiesFileSection);
-		Debug.debug("GridRemoteHostsFileProperties hosts loaded from file: " + propertiesFileName + " - section: " + propertiesFileSection + " - ["+hosts+"]");
+		log.debug("GridRemoteHostsFileProperties hosts loaded from file: " + propertiesFileName + " - section: " + propertiesFileSection + " - ["+hosts+"]");
 		StringTokenizer st = new StringTokenizer(hosts, ";");
 		while (st.hasMoreTokens())
 		{
@@ -50,7 +53,7 @@ public class GridRemoteHostsFileProperties extends Properties implements Seriali
 			if(!str.equals(";"))
 			{
 				targetHosts.add(str);
-				Debug.debug(str);
+				log.debug(str);
 			}
 		}
 		

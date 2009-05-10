@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.clustering.DAGNode;
 import appman.clustering.DAG_DSC;
-import appman.log.Debug;
 
   /**
    * stores the DAG application parsed
@@ -22,6 +24,7 @@ import appman.log.Debug;
   public class  ApplicationDescription implements Serializable {
 
 	private static final long serialVersionUID = -3554750829219220099L;
+	private static final Log log = LogFactory.getLog(ApplicationDescription.class);
     private static final GraphType DEFAULT_GRAPH  = GraphType.LOW;
     private GraphType graphType;
     
@@ -44,10 +47,10 @@ import appman.log.Debug;
        		grappaOut = new FileWriter("/tmp/grappaOut.txt");
     
        }catch( IOException e){
-       		System.out.println("[APP.DESC] :"+e);
+       		log.debug("[APP.DESC] :"+e);
        }
        */
-       System.out.println("[GRAND]\tApplicationDescription created");
+       log.debug("[GRAND]\tApplicationDescription created");
     }
 
     public void putGraphType(int graphType) {
@@ -99,7 +102,7 @@ import appman.log.Debug;
        
        if( taskName.compareTo("") == 0 ){
 			taskName = "task"+(numberOfTasks-1);
-			//System.out.println("VAZIOOOOOOOOOOO!!!!");
+			//log.debug("VAZIOOOOOOOOOOO!!!!");
        }
        
        TaskDescription t = new TaskDescription(taskName, executable);
@@ -118,7 +121,7 @@ import appman.log.Debug;
     public DAG_DSC inferDAG() {
        applicationDAG = new DAG_DSC(numberOfTasks);
        
-       System.out.println("[GRAND]\tStarting to build DAG...");
+       log.debug("[GRAND]\tStarting to build DAG...");
 
        for (TaskDescription task : listOfTasks) {
           //applicationDAG.putNodeName(t.getTaskName()); -->comentado pr vindn
@@ -139,7 +142,7 @@ import appman.log.Debug;
 						if (foundTask == task) continue;
 
 						if (foundTask.hasOutputFile(outfile)) {
-							System.out.println("[GRAND]\tedge " + foundTask.getTaskName() + "->" + task.getTaskName());
+							log.debug("[GRAND]\tedge " + foundTask.getTaskName() + "->" + task.getTaskName());
 							applicationDAG.insertEdges(task.getTaskName(), foundTask.getTaskName());
 							break;
 						}
@@ -152,7 +155,7 @@ import appman.log.Debug;
        // http://www.informatics.susx.ac.uk/courses/dats/notes/html/node133.html#7452
        // LinkedList -- ArrayList edges = new ArrayList(); -- TreeSet 
 
-       System.out.println("[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
+       log.debug("[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
 
        //VDN: 15/07/05//////////////// estava no SimpleParser.java
   		//applicationDAG.dump();
@@ -160,7 +163,7 @@ import appman.log.Debug;
   		try {
 			applicationDAG.dumpGraphiz();
 		} catch (IOException e) {
-			Debug.debug("erro gerando arquivo .dot", e);
+			log.warn("erro gerando arquivo .dot", e);
 		}
   		//applicationDAG.createServerRMI();
       ///////////////////////////////

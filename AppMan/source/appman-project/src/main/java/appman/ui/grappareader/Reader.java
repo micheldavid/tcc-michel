@@ -114,15 +114,17 @@ public class Reader implements Serializable {
 			// Get the input stream and read from it
 			// Used to sincronize command execution
 			InputStream in = child.getInputStream();
+			StringBuilder debug = new StringBuilder();
 			int c;
 			while ((c = in.read()) != -1) {
-				System.out.print((char) c);
+				debug.append((char) c);
 			}
+			log.debug(debug.toString());
 			in.close();
 			/////////////////////////////////////////////////
 
 		} catch (IOException e) {
-			System.out.println("ERRRO NA EXECUCAO!!!");
+			log.error("ERRRO NA EXECUCAO!!!", e);
 		}
 
 		/**
@@ -136,7 +138,7 @@ public class Reader implements Serializable {
 			Worb worb = (Worb) Exehda.getService(Worb.SERVICE_NAME);
 			appman = (ApplicationManagerRemote) worb.lookupService(
 					contact_address, ApplicationManagerRemote.class);
-			System.out.print("[APPMAN-GRAPPAREADER]: " + appman);
+			log.debug("[APPMAN-GRAPPAREADER]: " + appman);
 
 		} catch (Exception e) {
 			log.error(e, e);
@@ -166,7 +168,7 @@ public class Reader implements Serializable {
 							.changeColorNode(dag_dsc.getNameByIndex(i),
 									colorToString((dag_dsc
 											.getNodeByIndex(i)).status));
-					//System.out.print("NODE: "+names[i]+"
+					//log.debug("NODE: "+names[i]+"
 					// COLOR:"+colorToString(colors[i])+"\n\n");
 					if ((dag_dsc.getNodeByIndex(i)).status != 2) {
 						end = false;

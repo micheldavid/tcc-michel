@@ -13,7 +13,6 @@ import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 
 import appman.db.DBHelper;
-import appman.log.Debug;
 
 /**
  * @author lucasa
@@ -32,7 +31,7 @@ public class AppManConsole implements AppManConsoleRemote {
 	 */
 	public AppManConsole() {
 		aid = AppManUtil.getExecutor().currentApplication();
-		Debug.debug("AppManConsole Application: " + aid);
+		log.debug("AppManConsole Application: " + aid);
 	}
 
 	public void runApplicationManagerRemote(String filepath) throws RemoteException {
@@ -89,9 +88,9 @@ public class AppManConsole implements AppManConsoleRemote {
 		if (jobId != null) {
 			DBHelper.registerAppEnd(jobId, success);
 		}
-		System.out.println("\t ******************************************");
-		System.out.println("\t *** EXECUÇÃO TERMINADA COM SUCESSO!!!! ***");
-		System.out.println("\t ******************************************");
+		log.debug("\t ******************************************");
+		log.debug("\t *** EXECUÇÃO TERMINADA COM SUCESSO!!!! ***");
+		log.debug("\t ******************************************");
 
 		out = new FileWriter("tempoExecucao.txt");
 		out.write("vindn " + System.currentTimeMillis() + "\n");

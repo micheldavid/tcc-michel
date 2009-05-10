@@ -1,12 +1,37 @@
 package appman.ui.grappareader;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
 
-import att.grappa.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import att.grappa.Graph;
+import att.grappa.GrappaAdapter;
+import att.grappa.GrappaConstants;
+import att.grappa.GrappaPanel;
+import att.grappa.GrappaSupport;
+import att.grappa.Parser;
 
 /**
  * Displays the graphical user interface.
@@ -27,6 +52,7 @@ public class ShowWindow
 	implements GrappaConstants, Serializable
 {
 	private static final long serialVersionUID = 8556936168377636198L;
+	private static final Log log = LogFactory.getLog(ShowWindow.class);
 
 	public DemoFrame  frame  = null;
 
@@ -42,7 +68,7 @@ public class ShowWindow
     public static void main(String[] args) {
 	InputStream input = System.in;
 	if(args.length > 1) {
-	    System.err.println("USAGE: java Demo12 [input_graph_file]");
+	    log.error("USAGE: java Demo12 [input_graph_file]");
 	    System.exit(1);
 	} else if(args.length == 1) {
 	    if(args[0].equals("-")) {
@@ -51,7 +77,7 @@ public class ShowWindow
 		try {
 		    input = new FileInputStream(args[0]);
 		} catch(FileNotFoundException fnf) {
-		    System.err.println(fnf.toString());
+		    log.error(fnf.toString(), fnf);
 		    System.exit(1);
 		}
 	    }
@@ -89,7 +115,7 @@ public class ShowWindow
 		try {
 		    input = new FileInputStream(file);
 		} catch(FileNotFoundException fnf) {
-		    System.err.println(fnf.toString());
+			log.error(fnf.toString(), fnf);
 		    System.exit(1);
 		}
 	    
@@ -109,15 +135,14 @@ public class ShowWindow
 	    //program.debug_parse(4);
 	    program.parse();
 	} catch(Exception ex) {
-	    System.err.println("Exception: " + ex.getMessage());
-	    ex.printStackTrace(System.err);
+		log.error("Exception: " + ex.getMessage(), ex);
 	    System.exit(1);
 	}
 	att.grappa.Graph graph = null;
 
 	graph = program.getGraph();
 
-	System.err.println("The graph contains " + graph.countOfElements(GrappaConstants.NODE|GrappaConstants.EDGE|GrappaConstants.SUBGRAPH) + " elements.");
+	log.error("The graph contains " + graph.countOfElements(GrappaConstants.NODE|GrappaConstants.EDGE|GrappaConstants.SUBGRAPH) + " elements.");
 	numberNodes = graph.countOfElements(GrappaConstants.NODE);//VDN
 	
 	
@@ -126,7 +151,7 @@ public class ShowWindow
 	graph.setErrorWriter(new PrintWriter(System.err,true));
 	//graph.printGraph(new PrintWriter(System.out));
 
-	System.err.println("bbox=" + graph.getBoundingBox().getBounds().toString());
+	log.error("bbox=" + graph.getBoundingBox().getBounds().toString());
 
 	if (frame == null) {
 		frame = new DemoFrame(graph);
@@ -140,7 +165,7 @@ public class ShowWindow
 		long numMillisecondsToSleep = 5000; // 0.5 seconds
 		Thread.sleep(numMillisecondsToSleep);
 	} catch (InterruptedException e) {
-		System.out.println("Erro no sleep");
+		log.debug("Erro no sleep", e);
 	}
 
 	Node n2 = graph.findNodeByName("C");
@@ -271,7 +296,7 @@ public class ShowWindow
 		    try {
 			connector = Runtime.getRuntime().exec(ShowWindow.SCRIPT);
 		    } catch(Exception ex) {
-			System.err.println("Exception while setting up Process: " + ex.getMessage() + "\nTrying URLConnection...");
+		    	log.error("Exception while setting up Process: " + ex.getMessage() + "\nTrying URLConnection...", ex);
 			connector = null;
 		    }
 		    if(connector == null) {
@@ -283,23 +308,22 @@ public class ShowWindow
 			    urlConn.setUseCaches(false);
 			    urlConn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
 			} catch(Exception ex) {
-			    System.err.println("Exception while setting up URLConnection: " + ex.getMessage() + "\nLayout not performed.");
+				log.error("Exception while setting up URLConnection: " + ex.getMessage() + "\nLayout not performed.", ex);
 			    connector = null;
 			}
 		    }
 		    if(connector != null) {
 			if(!GrappaSupport.filterGraph(graph,connector)) {
-			    System.err.println("ERROR: somewhere in filterGraph");
+				log.error("ERROR: somewhere in filterGraph");
 			}
 			if(connector instanceof Process) {
 			    try {
 				int code = ((Process)connector).waitFor();
 				if(code != 0) {
-				    System.err.println("WARNING: proc exit code is: " + code);
+					log.error("WARNING: proc exit code is: " + code);
 				}
 			    } catch(InterruptedException ex) {
-				System.err.println("Exception while closing down proc: " + ex.getMessage());
-				ex.printStackTrace(System.err);
+			    	log.error("Exception while closing down proc: " + ex.getMessage(), ex);
 			    }
 			}
 			connector = null;

@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.log.Debug;
 
 public class TaskTimer implements Serializable {
 
 	private static final long serialVersionUID = -304386420026374881L;
+	private static final Log log = LogFactory.getLog(TaskTimer.class);
 	private long downloadTimeMillisOfFiles = 0;
 	private Date timeEnd;
 	private Date timeStart;
@@ -22,8 +26,7 @@ public class TaskTimer implements Serializable {
 	}
 
 	public synchronized void setDownloadTimeOfFiles(long time_download_files) {
-		Debug.debug("[TESTE] Download Time: " + time_download_files);
-		System.out.println("[TESTE] Download Time: " + time_download_files);
+		log.debug("[TESTE] Download Time: " + time_download_files);
 		this.downloadTimeMillisOfFiles = time_download_files;
 	}
 
@@ -80,9 +83,9 @@ public class TaskTimer implements Serializable {
 		if (timeEnd != null)
 			totalTime = timeEnd.getTime() - timeStart.getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		Debug.debug("ApplicationManager task " + task.taskId + " submit time: " + sdf.format(getTimeSubmited()));
+		log.debug("ApplicationManager task " + task.taskId + " submit time: " + sdf.format(getTimeSubmited()));
 
-		Debug.debugToFile("\n"+task.taskId +
+		Debug.debugToFile(task.taskId +
 		                  "\t"+task.retryTimes+
 		                  "\t"+ (timeTaskCreated == null ? "-" : sdf.format(timeTaskCreated)) +
 		                  "\t"+ (timeSubmited == null ? "-" : sdf.format(timeSubmited)) +
@@ -92,6 +95,8 @@ public class TaskTimer implements Serializable {
 		                  "\t"+(totalTime/1000f),
 		                  file_path, true);
 
-		Debug.debugToFile(task.submissionManagerContactAddress+"\n",file_path, true);
+		if (task.submissionManagerContactAddress != null) {
+			Debug.debugToFile(task.submissionManagerContactAddress,file_path, true);
+		}
 	}
 }

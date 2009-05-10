@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.AppManUtil;
 import appman.GridFileServiceRemote;
-import appman.log.Debug;
 
 /**
  * Task.java - Copyright lucasa
@@ -20,6 +22,7 @@ import appman.log.Debug;
 public abstract class Task implements Runnable, Serializable {
 
 	private static final long serialVersionUID = -5101143107805590612L;
+	private static final Log log = LogFactory.getLog(Task.class);
 
 	public static final int MAX_RETRY_TIMES = 5;
 
@@ -59,12 +62,12 @@ public abstract class Task implements Runnable, Serializable {
 
 	private void analyzeFaultTolerance(Exception e) {
 		// Tolerancia a Falhas - Task
-		Debug.debug("Tolerancia a Falhas na execução de tarefa [" + taskId + "]", e);
-		Debug.debug("Task [" + taskId + "]   Error! Trying to put the task as dependent state again RETRY ["
+		log.warn("Tolerancia a Falhas na execução de tarefa [" + taskId + "]", e);
+		log.warn("Task [" + taskId + "]   Error! Trying to put the task as dependent state again RETRY ["
 			+ retryTimes + "] TIMES", e);
 		retryTimes++;
 		state = TaskState.getInstance(TaskState.TASK_DEPENDENT);
-		Debug.debug("Task setting state: " + state.getName());
+		log.debug("Task setting state: " + state.getName());
 		this.remoteFileService = null;
 		if (retryTimes > Task.MAX_RETRY_TIMES) {
 			AppManUtil.exitApplication("Fatal Error: Task [" + taskId
@@ -131,19 +134,19 @@ public abstract class Task implements Runnable, Serializable {
 		files = new TaskFiles(input, output);
 		state = TaskState.getInstance(TaskState.TASK_DEPENDENT);
 		
-		Debug.debug("Task setting state: " + state.getName());
+		log.debug("Task setting state: " + state.getName());
 		type = TaskType.TASK_TYPE_INTERMEDIATE;
 		timeInfo.setTimeTaskCreated(new Date());// VDN:26/08
 
-		Debug.debug("Task [" + taskId + "] created.");
+		log.debug("Task [" + taskId + "] created.");
 	}
 
 	public void run() {
 		state = TaskState.getInstance(TaskState.TASK_EXECUTING);
-		Debug.debug("Task setting state: " + state.getName());
+		log.debug("Task setting state: " + state.getName());
 		timeInfo.setTimeSubmited(new Date());
 
-		Debug.debug("Task [" + taskId + "] retry[" + retryTimes + "] executing");
+		log.debug("Task [" + taskId + "] retry[" + retryTimes + "] executing");
 		try {
 			execute();
 			timeInfo.setTimeEnd(new Date());
@@ -154,9 +157,9 @@ public abstract class Task implements Runnable, Serializable {
 
 		files.updateOutputFilesState();
 
-		Debug.debug("Task FINAL retry[" + retryTimes + "]: " + taskId);
+		log.debug("Task FINAL retry[" + retryTimes + "]: " + taskId);
 		state = TaskState.getInstance(TaskState.TASK_FINAL);
-		Debug.debug("Task setting state: " + state.getName());
+		log.debug("Task setting state: " + state.getName());
 	}
 
 	public synchronized void setCommandLine(String string) {

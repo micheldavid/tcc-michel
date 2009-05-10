@@ -28,6 +28,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Hashtable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.Exehda;
 import org.isam.exehda.services.Collector;
 import org.isam.exehda.services.Collector.ConsumerId;
@@ -42,6 +44,7 @@ public class CollectorDemo2
     implements WindowListener, MonitoringConsumer, ItemListener
 {
 	private static final long serialVersionUID = 2350256153062269648L;
+	private static final Log log = LogFactory.getLog(CollectorDemo2.class);
 
 	private Panel sensorsPane;
     private Hashtable sensorsByBox;
@@ -109,12 +112,10 @@ public class CollectorDemo2
 
     public void update( long timeStamp, MonitoringData[] data )
         {
-            System.out.println("Time stamp: "+timeStamp);
+    	log.debug("Time stamp: "+timeStamp);
             for (int i=0; i<data.length; i++) {
                 if ( data[i] != null ) {
-                    System.out.print(data[i].getSensorName().getSimpleName());
-                    System.out.print(" \t= ");
-                    System.out.println(data[i].getString());
+                	log.debug(data[i].getSensorName().getSimpleName() + " \t= " + data[i].getString());
                 }
             }
         }

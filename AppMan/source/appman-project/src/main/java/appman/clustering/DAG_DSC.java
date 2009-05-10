@@ -13,6 +13,9 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.OutputXML;
 
 /**
@@ -21,6 +24,7 @@ import appman.OutputXML;
 public class DAG_DSC extends AbstractDAG implements Serializable {
 
 	private static final long serialVersionUID = 514066862412628229L;
+	private static final Log log = LogFactory.getLog(DAG_DSC.class);
 
 	/** to implementent iterator interface */
 	protected int iteratorIndex = 0;
@@ -394,14 +398,13 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 //			if ((dn.edges == null) || dn.edges.isEmpty()) {
 			if ((dn.predecessorsName == null) || dn.predecessorsName.isEmpty()) {
 				levels[noAdj] = dn.nodeName;
-				//System.out.println("O nodo "+ ((DAGNode)
+				//log.debug("O nodo "+ ((DAGNode)
 				// nodesCopy.get(i)).nodeName+" nao tem adjacencias!
 				// ("+noAdj+")" );
 				noAdj++;
 			}
 
 		}
-		//System.out.println("\n\n");
 
 		return levels;
 
@@ -416,23 +419,23 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 	 * int r = 0; //contador da lista de vertices a ser removidos DAGNode dn;
 	 * int index;
 	 * 
-	 * //System.out.println(" nodesNameCopy : " +nodesNameCopy.size()+ " - " //
+	 * //log.debug(" nodesNameCopy : " +nodesNameCopy.size()+ " - " //
 	 * +index);
 	 * 
-	 * //System.out.println("Removendo "+nodeName);
+	 * //log.debug("Removendo "+nodeName);
 	 * 
 	 * for (i = 0; i < nodesCopy.size(); i++) { dn = (DAGNode) nodesCopy.get(i);
 	 * if ((dn.edges != null) && !(dn.edges.isEmpty())) { int limit =
 	 * dn.edges.size(); for (j = 0; j < limit; j++) {
 	 * 
 	 * if (((String) dn.edges.get(j)).compareTo(nodeName) == 0) {
-	 * dn.edges.remove(j); //System.out.println("Removeu: //
+	 * dn.edges.remove(j); //log.debug("Removeu: //
 	 * "+nodesNameCopy.get(index)+" em // "+nodesNameCopy.get(i)); j =
 	 * nodesCopy.size() + 1; //break no for }
 	 *  }
 	 *  } }
 	 * 
-	 * //System.out.println("Removeu: "+nodesNameCopy.get(index));
+	 * //log.debug("Removeu: "+nodesNameCopy.get(index));
 	 * 
 	 * nodesCopy.remove(getIndexByNameCopy(nodeName));
 	 *  }
@@ -449,7 +452,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 		DAGNode dn;
 		int index;
 
-		//System.out.println(" nodesNameCopy : " +nodesNameCopy.size()+ " - "
+		//log.debug(" nodesNameCopy : " +nodesNameCopy.size()+ " - "
 		// +index);
 
 		for (i = 0; i < dagNodes.size(); i++) {
@@ -461,7 +464,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 
 					if (((String) dn.predecessorsName.get(j)).compareTo(nodeName) == 0) {
 						dn.predecessorsName.remove(j);
-						//System.out.println("Removeu:
+						//log.debug("Removeu:
 						// "+nodesNameCopy.get(index)+" em
 						// "+nodesNameCopy.get(i));
 						j = dagNodes.size() + 1; //break no for
@@ -471,7 +474,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 			}
 		}
 
-		System.out.println("Removeu: " + nodeName);
+		log.debug("Removeu: " + nodeName);
 
 		dagNodes.remove(getIndexByName(nodeName));
 
@@ -519,21 +522,22 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 		String adj;
 		List list;
 
-		System.out.println("[GRAND]\tDAG dump:");
+		log.debug("[GRAND]\tDAG dump:");
 
 		if (dagNodes != null) {
+			String debug = "";
 			for (int i = 0; i < dagNodes.size(); i++) {
 				node = ((DAGNode) dagNodes.get(i)).nodeName;
-				System.out.print("   " + node + " (incoming list): ");
+				debug += "   " + node + " (incoming list): ";
 //				list = ((DAGNode) dagNodes.get(i)).edges;
 				list = ((DAGNode) dagNodes.get(i)).predecessorsName;
 				if (list != null) {
 					for (int j = 0; j < list.size(); j++) {
 						adj = (String) list.get(j);
-						System.out.print(" " + adj);
+						debug += " " + adj;
 					}
 				}
-				System.out.println("");
+				log.debug(debug);
 			}
 		}
 
@@ -608,15 +612,11 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 		//writing clusters in dot format
 		if(cp != null){
 			//cluster = cp.clustering();
-			//System.out.print("\n[VINDN]:PASSOU SIZE:"+cluster.size()+"\n");
 			for(int i=0; i < cluster.size(); i++){
-				//System.out.print("\n[VINDN]:PASSOU2  node: \n");
 				out.println("subgraph cluster"+i+"{");
-				//System.out.print("\n[VINDN]:PASSOU2  node: \n");
 				for(int j=0; j < ((Vector)cluster.get(i)).size(); j++){
 
 					node = ((String)((Vector)cluster.get(i)).get(j));
-					//System.out.print("\n[VINDN]:PASSOU  node: "+node+"\n");
 					out.println(node+" [color="+ color +", style=filled];");
 				}
 				out.println("}");
@@ -631,7 +631,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 				list = ((DAGNode) dagNodes.get(i)).predecessors;
 				if (list != null) {
 					for (int j = 0; j < list.size(); j++) {
-						System.out.println("====> "+list.get(j));
+						log.debug("====> "+list.get(j));
 						//adj = (String) list.get(j); => 2005/05/06: estava assim, talvez a linha de baixo introduza um erro
 						adj = ((DAGEdge) list.get(j)).nodeName;
 						out.println(adj+"->"+node);
@@ -660,14 +660,10 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
             // Get the input stream and read from it
 			// Used to sincronize command execution 
 			InputStream in = child.getInputStream();
-	        int c;
-	        while ((c = in.read()) != -1) {
-	            System.out.print((char)c);
-	        }
 	        in.close();
 			/////////////////////////////////////////////////
 
-		} catch (IOException e) {System.out.println("ERRRO NA EXECUCAO!!!");}
+		} catch (IOException e) {log.debug("ERRRO NA EXECUCAO!!!");}
 		*/
 
 		//VDN:Teste
@@ -690,9 +686,6 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
 
 	
 	
-    /**
-     *  
-     */
 	private String colorToString(int intColor) {
 		String color="";
 		switch( intColor ){
@@ -725,24 +718,6 @@ public class DAG_DSC extends AbstractDAG implements Serializable {
     public List getDAGcopy(){
 	   return dagNodes;
 	}
-
-    /**
-	 *  
-	 */
-	/*
-	 * public void dumpCopy() {
-	 * 
-	 * String node; String adj; List list;
-	 * 
-	 * System.out.println(" DAG dump Copy:");
-	 * 
-	 * if (nodesCopy != null) { for (int i = 0; i < nodesCopy.size(); i++) {
-	 * node = ((DAGNode) nodesCopy.get(i)).nodeName; System.out.print(" " + node + "
-	 * (incoming list): "); list = ((DAGNode) nodesCopy.get(i)).edges; if (list !=
-	 * null) { for (int j = 0; j < list.size(); j++) { adj = (String)
-	 * list.get(j); System.out.print(" " + adj); } } System.out.println(""); } }
-	 *  }
-	 */
 
 	/**
 	 * from Iterator interface; Returns true if the iteration has more elements.

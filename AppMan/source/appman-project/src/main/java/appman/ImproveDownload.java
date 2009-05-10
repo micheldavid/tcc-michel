@@ -5,12 +5,15 @@ package appman;
 
 import java.util.Hashtable;
 
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author dalto
  */
 public class ImproveDownload {
+
+	private static final Log log = LogFactory.getLog(ImproveDownload.class);
 
 	private Hashtable hashPaths;
 
@@ -27,7 +30,7 @@ public class ImproveDownload {
 	 */
 	public synchronized void setLastURLFilePath(String URLpath, String localPath){
 
-		Debug.debug("ImproveDownload: add file info ("+URLpath+", "+localPath+").");
+		log.debug("ImproveDownload: add file info ("+URLpath+", "+localPath+").");
         hashPaths.put(URLpath, localPath);
 	}
 	
@@ -39,9 +42,9 @@ public class ImproveDownload {
 	 */
 	public boolean URLFileExists(String url){
 		
-		Debug.debug("ImproveDownload: URLpaths.size() = "+hashPaths.size());		
+		log.debug("ImproveDownload: URLpaths.size() = "+hashPaths.size());		
 		String urlPath = (String)hashPaths.get(url);
-		Debug.debug("ImproveDownload: URLpaths = "+urlPath);
+		log.debug("ImproveDownload: URLpaths = "+urlPath);
 		return urlPath != null; 
 	}
 
