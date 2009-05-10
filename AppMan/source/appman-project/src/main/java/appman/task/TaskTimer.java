@@ -76,16 +76,18 @@ public class TaskTimer implements Serializable {
 	}
 
 	public void printTraceInfo(Task task, String file_path) {
-		long totalTime = timeEnd.getTime() - timeStart.getTime();
+		long totalTime = 0;
+		if (timeEnd != null)
+			totalTime = timeEnd.getTime() - timeStart.getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		Debug.debug("ApplicationManager task " + task.taskId + " submit time: " + sdf.format(getTimeSubmited()));
 
 		Debug.debugToFile("\n"+task.taskId +
 		                  "\t"+task.retryTimes+
-		                  "\t"+ sdf.format(timeTaskCreated) +
-		                  "\t"+ sdf.format(timeSubmited) +
-		                  "\t"+ sdf.format(timeTaskStart)+
-		                  "\t"+ sdf.format(timeTaskEnd) +
+		                  "\t"+ (timeTaskCreated == null ? "-" : sdf.format(timeTaskCreated)) +
+		                  "\t"+ (timeSubmited == null ? "-" : sdf.format(timeSubmited)) +
+		                  "\t"+ (timeTaskStart == null ? "-" : sdf.format(timeTaskStart))+
+		                  "\t"+ (timeTaskEnd == null ? "-" : sdf.format(timeTaskEnd)) +
 		                  "\t"+(totalTime)+
 		                  "\t"+(totalTime/1000f),
 		                  file_path, true);
