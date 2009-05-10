@@ -15,10 +15,10 @@
 		<javaTargetVersion>1.5</javaTargetVersion>
 
 		<!-- linux
-		<appman.dir>/home/michel/share/appman</appman.dir> -->
-		<appman.dir>Z:/appman</appman.dir>
-		<appman.bin.dir>${appman.dir}/bin</appman.bin.dir>
-		<bda.dir>${appman.dir}/bda</bda.dir>
+		<project.dist.dir>/home/michel/share/appman</project.dist.dir> -->
+		<project.dist.dir>Z:/appman</project.dist.dir>
+		<project.bin.dir>${project.dist.dir}/bin</project.bin.dir>
+		<bda.dir>${project.dist.dir}/bda</bda.dir>
 		<exehda.resources>${project.basedir}/src/exehda/resources</exehda.resources>
 	</properties>
 
@@ -89,10 +89,6 @@
 					<debug>true</debug>
 					<source>${javaSourceVersion}</source>
 					<target>${javaTargetVersion}</target>
-					<excludes>
-						<exclude>appman/rmswrapper/**</exclude>
-						<exclude>appman/GridTaskDrmaa.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 
@@ -129,11 +125,6 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
@@ -164,7 +155,7 @@
 								<copy file="${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar"
 									tofile="${bda.dir}/appman-dev.jar" verbose="true"/>
 
-								<copy todir="${appman.bin.dir}" verbose="true">
+								<copy todir="${project.bin.dir}" verbose="true">
 									<fileset dir="${exehda.resources}"/>
 								</copy>
 							</tasks>

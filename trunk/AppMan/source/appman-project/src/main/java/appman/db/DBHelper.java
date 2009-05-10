@@ -7,31 +7,31 @@ import java.sql.Timestamp;
 
 public class DBHelper {
 
-	public static void registerAppStart(String appId, String jobId) throws SQLException {
+	public static void registerAppId(String appId, Integer jobId) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
 			conn = AppDataSource.getConnection();
-			stmt = conn.prepareStatement("UPDATE APPMAN_JOB SET EXEHDA_APP_ID = ?, DTSTART = ? WHERE JOB_ID = ?");
+			stmt = conn.prepareStatement("UPDATE APPMAN_JOB SET EXEHDA_APP_ID = ? WHERE JOB_ID = ?");
 			int i = 1;
 			stmt.setString(i++, appId);
-			stmt.setTimestamp(i++, new Timestamp(System.currentTimeMillis()));
-			stmt.setInt(i++, Integer.parseInt(jobId));
+			stmt.setInt(i++, jobId);
 			stmt.execute();
 		} finally {
 			AppDataSource.closeHandlers(conn, stmt, null);
 		}
 	}
 
-	public static void registerAppEnd(String jobId) throws SQLException {
+	public static void registerAppEnd(Integer jobId, boolean success) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
 			conn = AppDataSource.getConnection();
-			stmt = conn.prepareStatement("UPDATE APPMAN_JOB SET DTEND = ? WHERE JOB_ID = ?");
+			stmt = conn.prepareStatement("UPDATE APPMAN_JOB SET DTEND = ?, SUCCESS = ? WHERE JOB_ID = ?");
 			int i = 1;
 			stmt.setTimestamp(i++, new Timestamp(System.currentTimeMillis()));
-			stmt.setInt(i++, Integer.parseInt(jobId));
+			stmt.setString(i++, success ? "Y" : "N");
+			stmt.setInt(i++, jobId);
 			stmt.execute();
 		} finally {
 			AppDataSource.closeHandlers(conn, stmt, null);

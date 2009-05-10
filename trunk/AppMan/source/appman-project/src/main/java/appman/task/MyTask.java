@@ -3,19 +3,19 @@
  */
 package appman.task;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.Vector;
 
-// import org.isam.exehda.Exehda;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.ObjectId;
-// import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
 import appman.AppManUtil;
 import appman.DataFile;
@@ -92,8 +92,8 @@ public class MyTask extends Task implements Serializable {
 			// guarda a referência do objeto remoto numa variável da classe
 
 			Debug.debug("MyTask [" + this.getTaskId() + "] remote GridTask created");
-			timeInfo.setTimeStart(System.currentTimeMillis());
-			timeInfo.setTimeTaskStart();
+			timeInfo.setTimeStart(new Date());
+			timeInfo.setTimeTaskStart(new Date());
 
 			// this is one important part of the task instantiation: if the
 			// input files cannot be transfered from a web site, or are already 
@@ -150,10 +150,10 @@ public class MyTask extends Task implements Serializable {
 				// VDN 2006/01/13 - include statement bellow
 				// gridtaskremote.setDie();
 			}
-		} catch (RemoteException ex) {
+		} catch (IOException ex) {
 			if (gridtaskremote != null) try {
 				gridtaskremote.setDie();
-			} catch (RemoteException ex2) {
+			} catch (IOException ex2) {
 				Debug.debug("dying error", ex2);
 			}
 			throw ex;
@@ -216,20 +216,21 @@ public class MyTask extends Task implements Serializable {
 			for (int i = 0; i < results_datafile.length; i++) {
 				String filepath = results_datafile[i].getName();
 				Debug.debug("Transfering file: " + filepath);
-				result_gridfileservice.uploadFile(gridfileservice
-						.downloadFile(filepath), filepath);
+				byte[] fileData = gridfileservice.downloadFile(filepath);
+				if (fileData == null) {
+					log.error("ENVIANDO NULL PARA GRIDFILESERVICE");
+				}
+				result_gridfileservice.uploadFile(fileData, filepath);
 			}
 			Debug.debug("MyTask [" + this.getTaskId() + "] results transfered to user machine!");
 		}
 	}
 
 	/**
-	 * @throws RemoteException
-	 * @throws ConnectException
+	 * @throws IOException
 	 * @throws InterruptedException
-	 * @throws MalformedURLException
 	 */
-	private void downloadInputFiles() throws RemoteException, ConnectException, InterruptedException, MalformedURLException {
+	private void downloadInputFiles() throws IOException, InterruptedException {
 
 		Debug.debug("MyTask : starting method downloadInputFiles...");
 
@@ -273,6 +274,9 @@ public class MyTask extends Task implements Serializable {
 							   // convencional
 						{
 							buffer = remote_task.downloadFile(filepath);
+						}
+						if (buffer == null) {
+							log.error("ARQUIVO EM BRANCO --> ERRO NO GRIDFILESERVICE");
 						}
 						gridfileservice.uploadFile(buffer, filepath);
 						Debug.debug("MyTask Task[" + this.getTaskId() + "] upload remote file[" + filepath
@@ -341,7 +345,7 @@ public class MyTask extends Task implements Serializable {
 		try {
 			dir = gridfileservice.getDefaultDir()+"/"+localfile;
 			ID.setLastURLFilePath(filepath, dir);
-		} catch (RemoteException e) {
+		} catch (IOException e) {
 			log.error("buscando pasta padrão", e);
 		}
 
@@ -352,15 +356,14 @@ public class MyTask extends Task implements Serializable {
 	/**
 	 * 
 	 * @param h
-	 * @throws RemoteException
-	 * @throws MalformedURLException
+	 * @throws IOException
 	 * 
 	 * If download was done then return true else return false.
 	 * 
 	 * Refactory by VDN
 	 */
 	
-	private boolean downloadFileFromURL(String filepath) throws RemoteException, MalformedURLException{
+	private boolean downloadFileFromURL(String filepath) throws IOException {
 		boolean noError = false;
 		
 		try {
@@ -389,14 +392,7 @@ public class MyTask extends Task implements Serializable {
 					+ "]  installURLFile URL[" + filepath
 					+ "] Error", eurl);
 			throw eurl;
-		} catch (ConnectException ec) {
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec);
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, ec);
-			retry++;
-			throw ec;
-		} catch (RemoteException ec) {
+		} catch (IOException ec) {
 			Debug.debug("Mytask [" + this.getTaskId()
 					+ "] installURLFile Error:" + ec);
 			Debug.debug("Mytask [" + this.getTaskId()
@@ -417,7 +413,7 @@ public class MyTask extends Task implements Serializable {
 	 */
 	
 	
-	private boolean copyFileFromDir( String filepath ) throws MalformedURLException, RemoteException{
+	private boolean copyFileFromDir( String filepath ) throws IOException {
 		boolean sucess = false;
 		
 		try {
@@ -438,14 +434,7 @@ public class MyTask extends Task implements Serializable {
 					+ "] GridTask installURLFile Sucess OK: "
 					+ filepath + " -> " + localfile);
 			sucess = true;
-		} catch (ConnectException ec) {
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec);
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, ec);
-			retry++;
-			throw ec;
-		} catch (RemoteException ec) {
+		} catch (IOException ec) {
 			Debug.debug("Mytask [" + this.getTaskId()
 					+ "] installURLFile Error:" + ec);
 			Debug.debug("Mytask [" + this.getTaskId()
@@ -502,7 +491,6 @@ public class MyTask extends Task implements Serializable {
 
 			Debug
 				.debug("MyTask Task [" + this.getTaskId() + "] - Error, the dependent files are lost! RETRY: " + retry);
-			Thread.sleep(10000);
 			AppManUtil.exitApplication();
 			// 												((Executor)
 			// Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
@@ -574,7 +562,7 @@ public class MyTask extends Task implements Serializable {
 					+ this.getRetryTimes() + "]");
 			if (gridtaskremote != null)
 				gridtaskremote.setDie();
-		} catch (RemoteException e) {
+		} catch (IOException e) {
 			Debug.debug("Mytask Task [" + this.getTaskId() + "]  SET TO DIE ["
 					+ this.getRetryTimes() + "] FATAL Error:" + e, e);
 		}
@@ -586,14 +574,14 @@ public class MyTask extends Task implements Serializable {
 	 * foi criado Assim, os arquivos são baixados da máquina remota, para a
 	 * máquina de submissão por RMI
 	 */
-	public byte[] downloadFile(String filepath) throws RemoteException {
+	public byte[] downloadFile(String filepath) throws IOException {
 		try {
 			if (getRemoteGridTaskFileService() != null) {
 				GridFileServiceRemote rfs = getRemoteGridTaskFileService();
 				return rfs.downloadFile(filepath);
 			} else
 				throw new RemoteException("Remote grid file service Error!");
-		} catch (RemoteException e1) {
+		} catch (IOException e1) {
 			throw e1;
 		} catch (Exception e2) {
 			AppManUtil.exitApplication("Mytask Task [" + this.getTaskId()

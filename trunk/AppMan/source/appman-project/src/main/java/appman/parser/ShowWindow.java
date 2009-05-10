@@ -95,7 +95,7 @@ public class ShowWindow
 
 	frame = new DemoFrame(graph);
 
-	frame.show();
+	frame.setVisible(true);
 	
 	//////////// Codigo vindn
 	/*
@@ -120,6 +120,7 @@ public class ShowWindow
 
     class DemoFrame extends JFrame implements ActionListener
     {
+		private static final long serialVersionUID = 937529245941815589L;
 	GrappaPanel gp;
 	Graph graph = null;
 
@@ -147,7 +148,7 @@ public class ShowWindow
 		});
 
 	    JScrollPane jsp = new JScrollPane();
-	    jsp.getViewport().setBackingStoreEnabled(true);
+	    jsp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
 	    gp = new GrappaPanel(graph);
 	    gp.addGrappaListener(new GrappaAdapter());

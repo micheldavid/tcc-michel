@@ -6,13 +6,12 @@ package appman;
 import java.io.FileWriter;
 import java.util.Vector;
 
-// import org.isam.exehda.Exehda;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ObjectId;
+import org.isam.exehda.services.OXManager.OXHandle;
 import org.isam.exehda.services.ObjectSeed.Activator;
 import org.isam.exehda.services.ObjectSeed.MarshaledOX;
-import org.isam.exehda.services.OXManager.OXHandle;
 
 import appman.log.Debug;
 
@@ -89,10 +88,7 @@ public class GeneralObjectActivator implements Activator {
 // 				+ "objectClass", true);
 		//if is runnable, create a new thread and make it run
 		if ((obj instanceof Runnable) && (run)) {
-			thr = new Thread((Runnable) obj);
-			thr.start();
-		} else {
-			thr = null;
+			new Thread((Runnable) obj).start();
 		}
 	}
 
@@ -107,89 +103,39 @@ public class GeneralObjectActivator implements Activator {
 		 * //if runnable, interrupt the thread if(thr != null){ thr.interrupt();
 		 * thr.join(); thr = null; }
 		 */
-		//
-		//TODO: add implementation
-		//					 
+		// TODO implementar desativação do serviço no Exehda primeiro
 	}
-
-	private transient Thread thr;
 
 	public static Object getRemoteObjectReference(ObjectId oxhandle,
 			Class chandle, String remote_interface) {
-// 		Debug.debug("GeneralObjectActivator getRemoteObjectReference: "
-// 				+ remote_interface, true);
+
 		//obtain master contact from oxm
 		OXHandle oxh = AppManUtil.getOXManager().createHandle(oxhandle);
-// 		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxhandle,
-// 				true);
-// 		Debug.debug(
-// 				"GeneralObjectActivator getRemoteObjectReference getAttribute: "
-// 						+ ATT_WORB_CONTACT + remote_interface, true);
 		String contact = (String) oxh.getAttribute(ATT_WORB_CONTACT
 				+ remote_interface);
 
-		//VDN
-		if (remote_interface.compareTo("ApplicationManagerRemote") == 0) {
-			FileWriter file;
-
-			String path = "appman_contact_adress.txt";
-
-			try {
-				file = new FileWriter(path);
+		// gravando os contatos caso alguém mais queira interagir com estes serviços
+		try {
+			if (ApplicationManagerRemote.class.isAssignableFrom(chandle)) {
+				FileWriter file = new FileWriter("appman_contact_adress.txt");
 				file.write(contact);
 				file.close();
 
-			} catch (Exception e) {
-				log.error("escrevendo em " + path, e);
+			} else if (SubmissionManagerRemote.class.isAssignableFrom(chandle)) {
+				FileWriter file = new FileWriter("hosts.txt", true);
+				file.write(contact.substring(contact.indexOf("hostid:") + 7, contact.indexOf('.')) + "\n");
+				file.close();
 			}
+		} catch (Exception e) {
+			log.error("escrevendo contatos", e);
 		}
 
-		//VDN
-		if (remote_interface.compareTo("SubmissionManagerRemote") == 0) {
-			FileWriter file;
-			String path = "hosts.txt";
-			String str;
-			try {
-				str = contact.substring(contact.indexOf("hostid:") + 7, contact
-						.indexOf('.'));
-				file = new FileWriter(path, true);
-				file.write(str + "\n");
-				file.close();
-
-			} catch (Exception e) {
-				log.error(e, e);
-			}
-		}/*GridTaskID
-		  * else{ FileWriter file; String path = new String("hosts.txt");
-		  * 
-		  * try{
-		  * 
-		  * file = new FileWriter(path, true);
-		  * file.write(remote_interface+"\n"); file.close();
-		  *  } catch(Exception e){ e.printStackTrace(); }
-		  *  }
-		  */
-
-// 		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
-// 				+ contact, true);
-		//System.out.println("Contato ?????????????????????????? "+contact);
-
 		//get master from worb
-		Object object = AppManUtil.getWorb().lookupService(contact, chandle);
-// 		Debug.debug(
-// 				"GeneralObjectActivator getRemoteObjectReference lookupService REMOTE object: "
-// 						+ object, true);
-		return object;
+		return getRemoteObjectReference(contact, chandle);
 	}
 
 	public static Object getRemoteObjectReference(String contact, Class chandle) {
-// 		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
-// 				+ contact, true);
-		Object object = AppManUtil.getWorb().lookupService(contact, chandle);
-// 		Debug.debug(
-// 				"GeneralObjectActivator getRemoteObjectReference lookupService REMOTE object: "
-// 						+ object, true);
-		return object;
+		return AppManUtil.getWorb().lookupService(contact, chandle);
 	}
 
 }

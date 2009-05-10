@@ -6,15 +6,15 @@
 
 package appman;
 
-import org.isam.exehda.ObjectId;
-
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.Vector;
 
-// import org.isam.exehda.Exehda;
-import org.isam.exehda.HostId;
 import org.isam.exehda.ApplicationId;
+import org.isam.exehda.HostId;
+import org.isam.exehda.ObjectId;
+
 import appman.clustering.ClusteringPhase;
 import appman.log.Debug;
 import appman.parser.ApplicationDescription;
@@ -168,7 +168,7 @@ public class DAGGraphGUI extends javax.swing.JFrame
                                         Thread.sleep(5000);						
                                     }
                                 }
-                            }catch (RemoteException e1)
+                            }catch (IOException e1)
                             {
                                 AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO: ", e1);
                             }

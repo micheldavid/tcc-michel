@@ -5,11 +5,15 @@
 package appman;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.ObjectId;
 
@@ -29,20 +33,19 @@ import edu.berkeley.guir.prefusex.force.SpringForce;
 /**
  * @author lucasa@gmail.com
  */
-public class ApplicationManager implements ApplicationManagerRemote, Serializable {
+public class ApplicationManager implements ApplicationManagerRemote, Serializable, SubmissionManagerExecuteHandler {
 
 	private static final long serialVersionUID = 440529620112600733L;
+	private static final Log log = LogFactory.getLog(ApplicationManager.class);
 
 	private String appmanId; // id
 
 	/** List of available SMs */
-	private Vector submissionmanagerList;
+	private Vector<SubmissionManagerRemote> submissionmanagerList;
 	/** Seed for creating new unique IDs for instantiated SMs */
 	private int submanId = 0;
 	/** helper counter used to implement round-robin scheduling over available SMs */
 	private int schedule_loop = 0;
-	/** Means: choosing any of the available SMs would be ok */
-	private static final String SCHED_ANY_SM = "";
 
 	/** List of graphs already scheduled to some SM. */
 	private Vector graphs;
@@ -53,6 +56,10 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	private ApplicationManagerState state = ApplicationManagerState.READY;
 
 	private ApplicationManagerTimer timeInfo = null;
+
+	private Object lockCompletedSM = new Object();
+	private int completedSM = 0;
+	private ArrayList<SubmissionManagerExecuteThread> smRunning;
 
 	//VDN
 	ApplicationDescription appDescription;
@@ -81,7 +88,8 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		Debug.newDebugFile("APPMANLOG", "appman.log");
 
 		appmanId = id;
-		submissionmanagerList = new Vector();
+		submissionmanagerList = new Vector<SubmissionManagerRemote>();
+		smRunning = new ArrayList<SubmissionManagerExecuteThread>();
 		timeInfo = new ApplicationManagerTimer();
 		if (appid!=null) {
 			applicationId = appid;
@@ -110,10 +118,8 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		str += "\nApplication Manager execution status: "
 			+ getApplicationStatePercentCompleted() * 100 + " %";
 		for (int i = 0; i < submissionmanagerList.size(); i++) {
-			SubmissionManagerRemote smr = (SubmissionManagerRemote) submissionmanagerList
-			.elementAt(i);
-			str += "\nApplicationManager manage Submission Manager: "
-				+ smr.getSubmissionManagerIdRemote();
+			SubmissionManagerRemote smr = submissionmanagerList.elementAt(i);
+			str += "\nApplicationManager manage Submission Manager: " + smr.getSubmissionManagerIdRemote();
 		}
 		for (int j = 0; j < graphs.size(); j++) {
 			Graph g = (Graph) graphs.elementAt(j);
@@ -230,8 +236,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	throws RemoteException {
 		synchronized (submissionmanagerList) {
 			for (int i = 0; i < submissionmanagerList.size(); i++) {
-				SubmissionManagerRemote candidate = (SubmissionManagerRemote) submissionmanagerList
-				.elementAt(i);
+				SubmissionManagerRemote candidate = submissionmanagerList.elementAt(i);
 				if (candidate.getSubmissionManagerIdRemote().equals(subId)) {
 					return candidate;
 				}
@@ -240,59 +245,51 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		return null;
 	}
 
+	/**
+	 * @param subId null para escolher qualquer um
+	 * @return SM disponível
+	 */
 	private SubmissionManagerRemote scheduleSubmissionManager(String subId) {
-
-		SubmissionManagerRemote subr = null;
 
 		synchronized (submissionmanagerList) {
 
+			SubmissionManagerRemote subr = null;
 			try {
+
 				// either return the specific SM requested or do a round-robin selection
 				// among the SMs available
-				if (SCHED_ANY_SM.equals(subId)) { // round-robin
+				if (subId == null) { // round-robin
 					if (submissionmanagerList.isEmpty()) {
 						subId = String.valueOf(submanId++);
-						Debug.debug(
-								"ApplicationManager need to create a new SubmissionManager: "
-								+ subId);
+						Debug.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
 						subr = createNewSubmissionManager(subId);
 						submissionmanagerList.add(subr);
 					} else {
-						subr = (SubmissionManagerRemote) submissionmanagerList
-						.elementAt(schedule_loop++
-								% submissionmanagerList.size());
+						subr = submissionmanagerList.elementAt(schedule_loop++ % submissionmanagerList.size());
+						subr.getIsAliveRemote();
 					}
 				} else { // a specific SM instance has been requested
 					subr = getSubmissionManagerRemote(subId);
 					if (subr == null) {
-						Debug.debug(
-								"ApplicationManager need to create a new SubmissionManager: "
-								+ subId);
+						Debug.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
 						subr = createNewSubmissionManager(subId);
 						submissionmanagerList.add(subr);
+					} else {
+						subr.getIsAliveRemote();
 					}
 				}
 
-				Debug.debug(
-						"ApplicationManager scheduling a SubmissionManager");
-				subr.getIsAliveRemote();
-				Debug.debug(
-						"ApplicationManager scheduled the SubmissionManager ["
-						+ subr.getSubmissionManagerIdRemote() + "]");
+				Debug.debug("ApplicationManager scheduled the SubmissionManager ["
+					+ subr.getSubmissionManagerIdRemote() + "]");
 
-			} catch (RemoteException e) {
+			} catch (IOException e) {
 				// Tolerancia a Falhas
 				// se o Submission Manager remoto escolhido nao responder ao ping isAlive, entao 
 				// remove este da lista e  recursivamente realiza outro escalonamento
-				//
-				Debug.debug("Tolerancia a Falhas - " + e);
-				Debug
-				.debug("ApplicationManager Scheduling SubmissionManager ERROR, removing fault SubmissionManager from the list");
+				log.warn("Chamada ao SM " + subr + " falhou, removendo SM " + subId, e);
 				submissionmanagerList.removeElement(subr);
 				subr = scheduleSubmissionManager();
 			}
-
-			System.gc();
 
 			return subr;
 		}
@@ -370,7 +367,6 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	}
 
 	public void setAllSubmissionManagersToDie() {
-		System.out.println("[AM] SET ALL AM TO DIE: ");
 		Debug.debug("[AM] SET ALL AM TO DIE: ");
 
 		long plus = 0;
@@ -380,16 +376,10 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				.setDieRemote();
 				plus += ((SubmissionManagerRemote) submissionmanagerList
 						.elementAt(i)).getDownloadTimeOfTasksManagers();
-				Debug
-				.debug(
-						"[AM "
-						+ i
-						+ "] TIME DOWNLOAD: "
-						+ ((SubmissionManagerRemote) submissionmanagerList
-								.elementAt(i))
-								.getDownloadTimeOfTasksManagers());
-			} catch (RemoteException e) {
-
+				Debug.debug("[AM " + i + "] TIME DOWNLOAD: "
+					+ ((SubmissionManagerRemote) submissionmanagerList.elementAt(i)).getDownloadTimeOfTasksManagers());
+			} catch (IOException ex) {
+				log.info("erro em setDieRemota - ignorado", ex);
 			}
 		}
 
@@ -413,7 +403,6 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 			}
 		}
 	}
-
 
 	/**
 	 * Main-thread. Stays in loop (2 steps) until the computation is completed:
@@ -447,7 +436,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 							+ subman.getSubmissionManagerIdRemote() + "] to update remote graph: "
 							+ local.getGraphId());
 						remote = subman.getGraphRemote(local.getGraphId());
-					} catch (RemoteException e) {
+					} catch (IOException e) {
 						// Tolerância a Falhas
 						// Se o Submission Manager não responder então remove o grafo da lista e adiciona o
 						// grafo novamente no Application Manager com um novo SubMan escalonado
@@ -479,28 +468,38 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				Debug.debug("ApplicationManager Application graphs completed: "
 						+ getApplicationStatePercentCompleted());
 			}
+			if (percent_completed == 1f) continue;
 
-			try {
-				Thread.sleep(5000);
-			} catch (Exception e) {
-				Debug.debug(e, e);
+			log.warn("\n\n\n\nWAITING SM...");
+			synchronized (lockCompletedSM) {
+				try {
+					if (completedSM == 0) {
+						lockCompletedSM.wait();
+					}
+					completedSM = 0;
+				} catch (InterruptedException e) {
+					log.error("esperando sinal dos SMs", e);
+				}
 			}
+			log.warn("\n\n\n\nCONTINUING...");
+//			try {
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//				log.error("aguardando SMs", e);
+//			}
 
 		} // end while
 
 		state = ApplicationManagerState.FINAL;
 
 		computeApplicationExecutionTimes();
-		//		Debug.debug("ApplicationManager cleaning Application Files! ", true);
 		Debug.debug("ApplicationManager set all Submission Managers TO DIE! ");
 		setAllSubmissionManagersToDie();
 
 		timeInfo.setTimeExecution(System.currentTimeMillis()
 				- timeInfo.getTimeExecution());
-		Debug
-		.debug("ApplicationManager Application completed time: "
-				+ (float) timeInfo.getTimeExecution() / 1000
-				+ " seconds");
+		Debug.debug("ApplicationManager Application completed time: " + (float) timeInfo.getTimeExecution() / 1000
+			+ " seconds");
 		appDescription = appman.parser.SimpleParser.appDescription;
 
 		//VDN
@@ -616,7 +615,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 						__debug__("graph[" + ng.getGraphId()
 								+ "] scheduled to SM[" + smId + "]");
-					} catch (RemoteException re) {
+					} catch (IOException re) {
 						__debug__("Failed to assign graph to SM=" + subman
 								+ ". Graph will be re-scheduled");
 						// return the graph to the pending graphs pool
@@ -637,7 +636,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	 * @return a <code>SubmissionManagerRemote</code> value
 	 */
 	private final SubmissionManagerRemote scheduleSubmissionManager() {
-		return scheduleSubmissionManager(SCHED_ANY_SM);
+		return scheduleSubmissionManager(null);
 	}
 
 	/**
@@ -660,8 +659,9 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	 *
 	 * @param smId a <code>String</code> value
 	 * @return a <code>SubmissionManagerRemote</code> value
+	 * @throws RemoteException erro remoto
 	 */
-	private final SubmissionManagerRemote exehdaCreateNewSubmissionManager(String smId) {
+	private final SubmissionManagerRemote exehdaCreateNewSubmissionManager(String smId) throws RemoteException {
 		// O metodo setHeuristic() eh justamente o metodo que instala a heuristica
 		// de escalonamento especifica do AppMan. Hoje essa heuristica desconsidera
 		// aquele escalonador de proposito geral, fazendo o trabalho completo
@@ -671,33 +671,37 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 		AppManUtil.getExecutor().setHeuristic(GridSchedule.getInstance());
 
-		ObjectId oxID;
-		try {
-			Debug.debug("DEBUG createNewSubmissionManagerAction TRY");
+		GeneralObjectActivator gactivator = new GeneralObjectActivator("SubmissionManager",
+			new Class[] { SubmissionManagerRemote.class }, new String[] { "SubmissionManagerRemote" }, true);
 
-			GeneralObjectActivator gactivator = new GeneralObjectActivator(
-					"SubmissionManager",
-					new Class[] { SubmissionManagerRemote.class },
-					new String[] { "SubmissionManagerRemote" }, true);
+		ObjectId oxID = AppManUtil.getExecutor().createObject(SubmissionManager.class,
+			new Object[] { smId, my_contact_address }, gactivator, GridSchedule.HINT_SUBMISSION_MANAGER_NODE);
 
-			oxID = AppManUtil.getExecutor().createObject(
-					SubmissionManager.class,
-					new Object[] { smId, my_contact_address }, gactivator,
-					GridSchedule.HINT_SUBMISSION_MANAGER_NODE);
+		SubmissionManagerRemote stub = (SubmissionManagerRemote) GeneralObjectActivator.getRemoteObjectReference(oxID,
+			SubmissionManagerRemote.class, "SubmissionManagerRemote");
 
-			SubmissionManagerRemote stub = (SubmissionManagerRemote) GeneralObjectActivator
-			.getRemoteObjectReference(oxID,
-					SubmissionManagerRemote.class,
-					"SubmissionManagerRemote");
+		stub.setMyObjectRemoteContactAddress(gactivator.getContactAddress(oxID, "SubmissionManagerRemote"));
 
-			stub.setMyObjectRemoteContactAddress(gactivator.getContactAddress(
-					oxID, "SubmissionManagerRemote"));
-
-			return stub;
-		} catch (Exception e) {
-			__debug__("ERROR: exehdaCreateNewSubmissionManager failed due to"
-					+ e, e);
+		synchronized (smRunning) {
+			SubmissionManagerExecuteThread thread = new SubmissionManagerExecuteThread(smId, stub, this);
+			smRunning.add(thread);
+			thread.start();
 		}
-		return null;
+		return stub;
+	}
+
+	public void runSubmissionManagerFinished(SubmissionManagerExecuteThread thread, Exception ex) {
+		synchronized (smRunning) {
+			smRunning.remove(thread);
+		}
+		synchronized (lockCompletedSM) {
+			completedSM++;
+			lockCompletedSM.notify();
+		}
+		if (ex != null) {
+			log.error("SM " + thread.getSubmissionManagerId() + " falhou", ex);
+		} else {
+			log.debug("SM " + thread.getSubmissionManagerId() + " terminou a execução", ex);
+		}
 	}
 }
