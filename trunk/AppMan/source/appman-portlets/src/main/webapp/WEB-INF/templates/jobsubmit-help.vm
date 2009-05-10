@@ -1,0 +1,33 @@
+<link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
+<script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/jobsubmit.js"></script>
+<form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
+<div class="portlet-font">
+	<fieldset class="appman">
+		<legend class="portlet-form-label">Informações</legend>
+		<table class="portlet-section-body">
+			<tr>
+				<td>
+					<div class="portlet-msg-info">
+						Esta portlet é parte integrante do <a href="http://code.google.com/p/tcc-michel/" target="_blank">
+							trabalho de conclusão de curso de Michel David da Costa</a>
+					</div>
+					Configurações em uso (arquivo <i>~/.appman-portlets/env.properties</i>):
+					<table>
+						#foreach($key in ${config.keys})
+							<tr><td><b>$key</b></td><td>$config.getString($key)</td></tr>
+						#end
+					</table>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+    <fieldset class="appman">
+    	<legend class="portlet-form-label">Ações</legend>
+    	<ul style="margin-bottom: 0px; margin-top: 0px">
+    		<li>
+    			<a href="#" onclick="executeAction('ShowView');return false">Voltar</a>
+    		</li>
+    	</ul>
+    </fieldset>
+</div>

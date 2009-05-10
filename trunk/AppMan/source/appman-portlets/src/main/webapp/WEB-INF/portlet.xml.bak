@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+	<!--
+		Se for inserir "encoding" no descritor do xml, TEM QUE SER "UTF8" para o uPortal.
+		O correto seria "UTF-8", porque "UTF8" gera erro de validação no Eclipse.
+	-->
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:portlet="http://java.sun.com/xml/ns/portlet"
+xsi:noNamespaceSchemaLocation="http://java.sun.com/xml/ns/portlet" version="1.0">
+    <portlet>
+        <portlet-name>appman-jobsubmission</portlet-name>
+        <portlet-class>appman.portlets.jobsubmit.JobSubmitAction</portlet-class>
+        <init-param>
+            <name>org.apache.velocity.properties</name>
+            <value>/velocity.properties</value>
+        </init-param>
+        <init-param>
+            <name>default-view</name>
+            <value>xportlets-jobsubmit.vm</value>
+        </init-param>
+        <expiration-cache>0</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+            <portlet-mode>EDIT</portlet-mode>
+            <portlet-mode>HELP</portlet-mode>
+        </supports>
+        <portlet-preferences>
+            <preference>
+                <name>hostName</name>
+                <value>rainier.extreme.indiana.edu</value>
+            </preference>
+            <preference>
+                <name>port</name>
+                <value>2119</value>
+            </preference>
+            <preference>
+                <name>taskName</name>
+                <value>testtask</value>
+            </preference>
+            <preference>
+                <name>executable</name>
+                <value>/bin/ls</value>
+            </preference>
+            <preference>
+                <name>arguments</name>
+                <value>-ltr</value>
+            </preference>
+            <preference>
+                <name>session_only</name>
+                <value>checked</value>
+            </preference>
+        </portlet-preferences>
+        <portlet-info>
+            <title>JobSubmission Portlet</title>
+            <keywords>gram, job submit, grid, velocity, portlet</keywords>
+        </portlet-info>        
+        <resource-bundle>TheResources</resource-bundle>
+    </portlet>
+
+    <user-attribute>
+		<description>User Name</description>
+		<name>user.name</name>
+	</user-attribute>
+</portlet-app> 

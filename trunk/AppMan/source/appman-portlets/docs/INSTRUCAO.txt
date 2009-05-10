@@ -1,0 +1,7 @@
+GRIDSPHERE:
+
+criar arquivo sem conteudo em ~/.gridsphere/portlets/NOME_PORTLET.PRIORIDADE para fazer deploy
+
+REPO maven2 para portlets OGCE:
+http://www.collab-ogce.org/maven2/cog-common/jgss/1.0/
+

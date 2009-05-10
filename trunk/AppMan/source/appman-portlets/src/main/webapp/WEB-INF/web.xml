@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+	<display-name>AppMan Portlets</display-name>
+	<description>AppMan Portlets</description>
+	<servlet>
+		<servlet-name>WebAppDataSource</servlet-name>
+		<servlet-class>appman.portlets.WebAppDataSource</servlet-class>
+		<init-param>
+			<param-name>driverClassName</param-name>
+			<param-value>org.hsqldb.jdbcDriver</param-value>
+		</init-param>
+		<init-param>
+			<param-name>url</param-name>
+			<param-value>jdbc:hsqldb:hsql://localhost:8887</param-value>
+		</init-param>
+		<init-param>
+			<param-name>username</param-name>
+			<param-value>sa</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value></param-value>
+		</init-param>
+		<init-param>
+			<param-name>minIdle</param-name>
+			<param-value>1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxIdle</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxActive</param-name>
+			<param-value>16</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>AppManConfig</servlet-name>
+		<servlet-class>appman.portlets.AppManConfig</servlet-class>
+		<init-param>
+			<param-name>appman.home</param-name>
+			<param-value>${sys:user.home}/share/appman</param-value>
+		</init-param>
+		<init-param>
+			<param-name>exehda.home</param-name>
+			<param-value>${appman.home}/exehda</param-value>
+		</init-param>
+		<init-param>
+			<param-name>exehda.isam.run</param-name>
+			<param-value>${exehda.home}/bin/isam-run</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appman.isam.console</param-name>
+			<param-value>${appman.home}/bin/appman-console.isam</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appman.portlets.work.dir</param-name>
+			<param-value>${sys:user.home}/.appman-portlets</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appman.portlets.job.dir</param-name>
+			<param-value>${appman.portlets.work.dir}/job</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>AppManQueue</servlet-name>
+		<servlet-class>appman.portlets.jobsubmit.AppManQueueServlet</servlet-class>
+		<init-param>
+			<param-name>polling.time</param-name>
+			<param-value>10000</param-value>
+			<description>Tempo em milissegundos para realizar a pesquisa no LDAP e verificar se existem tarefas em execução</description>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>UploadDagFileServlet</servlet-name>
+		<servlet-class>appman.portlets.jobsubmit.UploadDagFileServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UploadDagFileServlet</servlet-name>
+		<url-pattern>/SubmitDAG</url-pattern>
+	</servlet-mapping>
+</web-app>

@@ -1,0 +1,21 @@
+<portlet-tabbed-pane>
+    <portlet-tab label="jobsubmit-portlet">
+        <title lang="en">jobsubmit-portlet</title>
+        <portlet-tabbed-pane style="sub-menu">
+            <portlet-tab label="jobsubmit-portlet">
+                <title lang="en">Job Submission Portlet</title>
+                <table-layout>
+                    <row-layout>
+                        <column-layout>
+                            <portlet-frame label="jobsubmit-PF">
+                                <portlet-class>jobsubmit-portlet#jobsubmit-portlet</portlet-class>
+                            </portlet-frame>
+                        </column-layout>
+                    </row-layout>
+                </table-layout>
+            </portlet-tab>
+        </portlet-tabbed-pane>
+    </portlet-tab>
+</portlet-tabbed-pane>
+
+

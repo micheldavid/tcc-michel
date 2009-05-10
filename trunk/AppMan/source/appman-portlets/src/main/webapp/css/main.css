@@ -1,0 +1,6 @@
+fieldset.appman {
+	margin: 0px 2px;
+	padding:4.6px 8.3px 10px 8.3px;
+	border: 2px groove rgb(212, 208, 200);
+}
+fieldset.appman legend { padding:0px 2px; font-weight: bold }
