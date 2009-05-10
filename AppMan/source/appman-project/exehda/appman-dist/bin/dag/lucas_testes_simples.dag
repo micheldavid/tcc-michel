@@ -1,0 +1,10 @@
+graph low-coupled
+
+TASK0="/bin/ls > ls1.out"
+TASK1="/bin/ls > ls2.out"
+INITIAL="/bin/echo teste > initial.out" 
+
+task initial -e ${INITIAL} -i http://www.inf.ufrgs.br/~lassantos/appman/star.tar.gz -o initial.out
+
+task task0 -e ${TASK0} -i initial.out -o ls1.out
+task task1 -e ${TASK1} -i ls1.out -o ls2.out

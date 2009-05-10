@@ -1,0 +1,2 @@
+graph independent
+task 0 -e "sleep 10m > t.out.0" -o t.out.0
