@@ -196,8 +196,6 @@ public class SubmissionManager implements SubmissionManagerRemote {
 				taskman = new TaskManager("taskman" + taskmanId);
 				taskmanId++; // novo id
 				tasksmanagerList.addElement(taskman);
-			} else {
-				log.error("\n\n\nHAHAHA LIMITOU!");
 			}
 
 			if (taskman != null) {
