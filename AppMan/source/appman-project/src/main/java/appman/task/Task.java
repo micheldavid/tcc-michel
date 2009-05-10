@@ -1,6 +1,7 @@
 package appman.task;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Vector;
 
 import appman.AppManUtil;
@@ -132,7 +133,7 @@ public abstract class Task implements Runnable, Serializable {
 		
 		Debug.debug("Task setting state: " + state.getName());
 		type = TaskType.TASK_TYPE_INTERMEDIATE;
-		timeInfo.setTimeTaskCreate(AppManUtil.getTime());// VDN:26/08
+		timeInfo.setTimeTaskCreated(new Date());// VDN:26/08
 
 		Debug.debug("Task [" + taskId + "] created.");
 	}
@@ -140,13 +141,13 @@ public abstract class Task implements Runnable, Serializable {
 	public void run() {
 		state = TaskState.getInstance(TaskState.TASK_EXECUTING);
 		Debug.debug("Task setting state: " + state.getName());
-		timeInfo.setTimeSubmited(AppManUtil.getTime());
+		timeInfo.setTimeSubmited(new Date());
 
 		Debug.debug("Task [" + taskId + "] retry[" + retryTimes + "] executing");
 		try {
 			execute();
-			timeInfo.setTimeEnd(System.currentTimeMillis());
-			timeInfo.setTimeTaskEnd();
+			timeInfo.setTimeEnd(new Date());
+			timeInfo.setTimeTaskEnd(new Date());
 		} catch (Exception e) {
 			analyzeFaultTolerance(e);
 		}

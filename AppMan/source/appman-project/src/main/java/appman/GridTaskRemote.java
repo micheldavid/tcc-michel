@@ -13,7 +13,6 @@ public interface GridTaskRemote extends Remote
 {
 	public void setRun(boolean b) throws RemoteException;
 
-    
         /**
          * Wait for task completion up to the specified timeout, returning true if the
          * task has completed, otherwise (timeout has expired prior to completion),

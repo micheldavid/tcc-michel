@@ -1,96 +1,95 @@
 package appman.task;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import appman.AppManUtil;
 import appman.log.Debug;
 
 public class TaskTimer implements Serializable {
 
 	private static final long serialVersionUID = -304386420026374881L;
-	private long downloadTimeOfFiles = 0;
-	private long timeEnd = 0;
-	private long timeStart = 0;
-	private String timeSubmited = "";
-	private String timeTaskCreated = "";
-	private String timeTaskEnd = "";
-	private String timeTaskStart = "";
-	
+	private long downloadTimeMillisOfFiles = 0;
+	private Date timeEnd;
+	private Date timeStart;
+	private Date timeSubmited;
+	private Date timeTaskCreated;
+	private Date timeTaskEnd;
+	private Date timeTaskStart;
 
 	public synchronized long getDownloadTimeOfFiles() {
-		return downloadTimeOfFiles;
-	}
-	
-	public long getTimeEnd() {
-		return timeEnd;
-	}
-
-	public long getTimeStart() {
-		return timeStart;
-	}
-
-	public String getTimeSubmit() {
-		return timeSubmited;
-	}
-
-	public String getTimeTaskCreated() { // VDN:26/08
-		return timeTaskCreated;
-	}
-
-	public String getTimeTaskEnd() {
-		return timeTaskEnd;
-	}
-	
-	public String getTimeTaskStart() {
-		return timeTaskStart;
+		return downloadTimeMillisOfFiles;
 	}
 
 	public synchronized void setDownloadTimeOfFiles(long time_download_files) {
 		Debug.debug("[TESTE] Download Time: " + time_download_files);
 		System.out.println("[TESTE] Download Time: " + time_download_files);
-		this.downloadTimeOfFiles = time_download_files;
+		this.downloadTimeMillisOfFiles = time_download_files;
 	}
 
-	public void setTimeEnd(long currentTimeMillis) {
-		timeEnd = currentTimeMillis;
-		
+	public Date getTimeEnd() {
+		return timeEnd;
 	}
 
-	public void setTimeStart(long t) {
-		timeStart = t;
+	public void setTimeEnd(Date timeEnd) {
+		this.timeEnd = timeEnd;
 	}
 
-	public void setTimeSubmited(String time) {
-		timeSubmited = time;
+	public Date getTimeStart() {
+		return timeStart;
 	}
 
-	public void setTimeTaskCreate(String time) {
-		timeTaskCreated = time;		
+	public void setTimeStart(Date timeStart) {
+		this.timeStart = timeStart;
 	}
 
-	public void setTimeTaskEnd() {
-		timeTaskEnd = AppManUtil.getTime();
+	public Date getTimeSubmited() {
+		return timeSubmited;
 	}
 
-	public void setTimeTaskStart() {
-		timeTaskStart = AppManUtil.getTime();
+	public void setTimeSubmited(Date timeSubmited) {
+		this.timeSubmited = timeSubmited;
+	}
+
+	public Date getTimeTaskCreated() {
+		return timeTaskCreated;
+	}
+
+	public void setTimeTaskCreated(Date timeTaskCreated) {
+		this.timeTaskCreated = timeTaskCreated;
+	}
+
+	public Date getTimeTaskEnd() {
+		return timeTaskEnd;
+	}
+
+	public void setTimeTaskEnd(Date timeTaskEnd) {
+		this.timeTaskEnd = timeTaskEnd;
+	}
+
+	public Date getTimeTaskStart() {
+		return timeTaskStart;
+	}
+
+	public void setTimeTaskStart(Date timeTaskStart) {
+		this.timeTaskStart = timeTaskStart;
 	}
 
 	public void printTraceInfo(Task task, String file_path) {
-		long time = timeEnd - timeStart;
-		Debug.debug("ApplicationManager task "+task.taskId+" submit time: " + getTimeSubmit());
+		long totalTime = timeEnd.getTime() - timeStart.getTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		Debug.debug("ApplicationManager task " + task.taskId + " submit time: " + sdf.format(getTimeSubmited()));
 
 		Debug.debugToFile("\n"+task.taskId +
 		                  "\t"+task.retryTimes+
-		                  "\t"+ (timeTaskCreated) +
-		                  "\t"+ (timeSubmited) +
-		                  "\t"+ (timeTaskStart)+
-		                  "\t"+ (timeTaskEnd) +
-		                  "\t"+(float)(time)+
-		                  "\t"+(float)(time/1000),
+		                  "\t"+ sdf.format(timeTaskCreated) +
+		                  "\t"+ sdf.format(timeSubmited) +
+		                  "\t"+ sdf.format(timeTaskStart)+
+		                  "\t"+ sdf.format(timeTaskEnd) +
+		                  "\t"+(totalTime)+
+		                  "\t"+(totalTime/1000f),
 		                  file_path, true);
 
 		Debug.debugToFile(task.submissionManagerContactAddress+"\n",file_path, true);
 	}
-
 }

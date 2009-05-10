@@ -1,7 +1,8 @@
 package appman;
 
-import java.util.Vector;
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +12,7 @@ import appman.task.Task;
 import appman.task.TaskManager;
 import appman.task.TaskState;
 
-public class SubmissionManager implements SubmissionManagerRemote, Runnable {
+public class SubmissionManager implements SubmissionManagerRemote {
 
 	private static final Log log = LogFactory.getLog(SubmissionManager.class);
     private String submissionmanagerId;
@@ -196,6 +197,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 				taskman = new TaskManager("taskman" + taskmanId);
 				taskmanId++; // novo id
 				tasksmanagerList.addElement(taskman);
+			} else {
+				log.error("\n\n\nHAHAHA LIMITOU!");
 			}
 
 			if (taskman != null) {
@@ -270,7 +273,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 						}
 					}
 
-				} catch (RemoteException e) {
+				} catch (IOException e) {
 					AppManUtil.exitApplication(
 						"Tolerancia a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e, e);
 				}
@@ -312,7 +315,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 									}
 								}
 							}
-						} catch (RemoteException e) {
+						} catch (IOException e) {
 							AppManUtil.exitApplication(
 								"Tolerância a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e, e);
 						}
@@ -388,7 +391,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 		return downloadTimeOfTasksManagers;
 	}
 
-	/*
+	/**
 	 * Set All TaskManagers Remote Grid Tasks to DIE
 	 */
 	public void setDieRemote() throws RemoteException {
@@ -406,7 +409,10 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 		end = true;
 	}
 
-    public void run() {
+    /**
+     * Nada de threads que ficam rodando remotamente de forma assincrona!!
+     */
+    public void runSubmissionManager() throws RemoteException {
 		Debug.debug("SubmissionManager  [" + this.getSubmissionManagerId() + "] thread run.");
 
 		float currentProgress = 0;
@@ -440,7 +446,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 			}
 			try {
 				Thread.sleep(5000);
-			} catch (Exception e) {
+			} catch (InterruptedException e) {
 				Debug.debug(e, e);
 			}
 		}// fim while
