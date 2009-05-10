@@ -1,0 +1,16 @@
+graph low-coupled
+
+POVTASK0="mkdir -p povtask0 && cp ./star-set.tar.gz povtask0 && cd povtask0 && /bin/tar -vzxf ./star-set.tar.gz && cd star && /usr/bin/povray Display=false ./star_0.ini && cp star_0.ppm* ../../star_0.ppm"
+
+POVTASK1="mkdir -p povtask1 && cp ./star-set.tar.gz povtask1 && cd povtask1 && /bin/tar -vzxf ./star-set.tar.gz && cd star && /usr/bin/povray Display=false ./star_1.ini && cp star_1.ppm* ../../star_1.ppm"
+
+POV-INITIAL="/bin/tar -vzxf ./star.tar.gz && cd star/ && ./povray-makeset star 2 80 60 && cd .. && /bin/tar -vzcf star-set.tar.gz star/"
+
+POV-COLLECT="/bin/tar -vzxf ./star.tar.gz && cp *.ppm star/ && cd star/ && ./povray-combineppm star 2 > star.ppm && cp star.ppm ../."
+
+task pov-initial ${POV-INITIAL} -i http://www.inf.ufrgs.br/~lassantos/appman/star.tar.gz -o star-set.tar.gz
+
+task pov0 ${POVTASK0} -i star-set.tar.gz -o star_0.ppm
+task pov1 ${POVTASK1} -i star-set.tar.gz -o star_1.ppm
+
+task pov-collect ${POV-COLLECT} -i http://www.inf.ufrgs.br/~lassantos/appman/star.tar.gz;star_0.ppm;star_1.ppm -o star.ppm
