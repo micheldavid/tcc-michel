@@ -20,7 +20,7 @@
 		</SERVICE>
 		<SERVICE name="bda" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-			<PROP name="docroot" value="/home/michel/share/appman/bda"/>
+			<PROP name="docroot" value="/home/michel/share/appman-project/exehda/bda"/>
 		</SERVICE>
 		<SERVICE name="avu" loadPolicy="demand">
 			<PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
