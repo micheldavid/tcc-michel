@@ -1,0 +1,5 @@
+A pasta .appman-portlets pode não aparecer para o desenvolvedor em certas ocasiões,
+mas ela está presente nesta pasta.
+
+Experimente:
+ls -a

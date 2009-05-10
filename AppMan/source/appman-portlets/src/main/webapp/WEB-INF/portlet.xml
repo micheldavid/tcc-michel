@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" version="1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	<portlet>
+		<description>
+			AppMan Job Submission Portlet
+		</description>
+		<description xml:lang="pt-BR">
+			Portlet de Submissão de Tarefas para o AppMan
+		</description>
+		<portlet-name>appman-jobsubmission</portlet-name>
+		<display-name>AppMan Job Submission</display-name>
+		<display-name xml:lang="pt-BR">AppMan - Submissão de tarefas</display-name>
+		<portlet-class>appman.portlets.jobsubmit.JobSubmitAction</portlet-class>
+		<init-param>
+			<name>org.apache.velocity.properties</name>
+			<value>/WEB-INF/classes/velocity.properties</value>
+		</init-param>
+		<init-param>
+			<name>org.apache.velocity.toolbox</name>
+			<value>/WEB-INF/classes/tools.properties</value>
+		</init-param>
+		<init-param>
+			<name>default-view</name>
+			<value>jobsubmit-view.vm</value>
+		</init-param>
+		<expiration-cache>60</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<supported-locale>pt_BR</supported-locale>
+
+		<portlet-info>
+			<title>AppMan Job Submission</title>
+			<short-title>jobsubmit</short-title>
+			<keywords>appman,job,submit,submission</keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<description>
+			AppMan File Browser Portlet
+		</description>
+		<description xml:lang="pt-BR">
+			Portlet de Navegação em Arquivos para o AppMan
+		</description>
+		<portlet-name>appman-filebrowser</portlet-name>
+		<display-name>AppMan File Browser</display-name>
+		<display-name xml:lang="pt-BR">AppMan - Navegador de Arquivos</display-name>
+		<portlet-class>appman.portlets.filebrowser.FileBrowserAction</portlet-class>
+		<init-param>
+			<name>org.apache.velocity.properties</name>
+			<value>/WEB-INF/classes/velocity.properties</value>
+		</init-param>
+		<init-param>
+			<name>org.apache.velocity.toolbox</name>
+			<value>/WEB-INF/classes/tools.properties</value>
+		</init-param>
+		<init-param>
+			<name>default-view</name>
+			<value>filebrowser-view.vm</value>
+		</init-param>
+		<expiration-cache>60</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<supported-locale>pt_BR</supported-locale>
+
+		<portlet-info>
+			<title>AppMan File Browser</title>
+			<short-title>filebrowser</short-title>
+			<keywords>appman,file,browser</keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<description xml:lang="en">
+			The classic Hello World example
+		</description>
+		<portlet-name>HelloPortlet</portlet-name>
+		<display-name xml:lang="en">Hello World</display-name>
+		<portlet-class>org.gridsphere.gsexamples.portlets.HelloWorld</portlet-class>
+		<expiration-cache>60</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>edit</portlet-mode>
+			<portlet-mode>help</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Hello World</title>
+			<short-title>Hello World</short-title>
+			<keywords>hello</keywords>
+		</portlet-info>
+	</portlet>
+
+	<user-attribute>
+		<description xml:lang="en">User Name</description>
+		<name>user.name</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">User Id</description>
+		<name>user.id</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">User Full Name</description>
+		<name>user.name.full</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">User E-Mail</description>
+		<name>user.email</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">Company Organization</description>
+		<name>user.organization</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">Last Login Time</description>
+		<name>user.lastlogintime</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">Timezone</description>
+		<name>user.timezone</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">Preferred Locale</description>
+		<name>user.locale</name>
+	</user-attribute>
+	<user-attribute>
+		<description xml:lang="en">Preferred Theme</description>
+		<name>user.theme</name>
+	</user-attribute>
+	<!--
+		<security-constraint> <portlet-collection> <portlet-name>TimeZoneClock</portlet-name> </portlet-collection>
+		<user-data-constraint> <transport-guarantee>CONFIDENTIAL</transport-guarantee> </user-data-constraint>
+		</security-constraint>
+	-->
+</portlet-app>

@@ -1,0 +1,32 @@
+<link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
+<script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/jobsubmit.js"></script>
+<form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
+
+<div class="portlet-font">
+#if($error)
+<div class="portlet-msg-error">
+Error: $error
+</div>
+<p></p>
+#end
+
+<fieldset class="appman"><legend class="portlet-form-label">Submissão de tarefas</legend>
+	<form id="appmanJobSubmitSubmitForm" action="${request.getContextPath()}/SubmitDAG" method="post" enctype="multipart/form-data" target="appmanjobsubmit_ifrm">
+		<input type="hidden" name="userName" value="$!{userName}"/>
+		Arquivo DAG<br><input type="file" name="file"/>
+		<input type="button" value="Enviar" onclick="appmanJobSubmitSubmitSubmit()"/>
+	</form>
+	<iframe name="appmanjobsubmit_ifrm" id="appmanjobsubmit_ifrm" src="javascript:''" style="display:none"></iframe>
+</fieldset>
+
+<fieldset class="appman">
+	<legend class="portlet-form-label">Ações</legend>
+	<ul style="margin-bottom: 0px; margin-top: 0px">
+		<li>
+			<a href="#" onclick="executeAction('ShowView');return false">Voltar</a>
+		</li>
+	</ul>
+</fieldset>
+
+</div>
