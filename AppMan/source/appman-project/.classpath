@@ -4,19 +4,5 @@
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="lib" path="exehda/lib/devel-cc.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/devel-gw.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/exehda-core.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/isam-util.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-avu.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-bda.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-cib.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-ctxm.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-ds.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-logger.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-oxm.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-primos.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-tips.jar"/>
-	<classpathentry kind="lib" path="exehda/lib/testing-worb.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
