@@ -16,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Debug {
 	private static final Log log = LogFactory.getLog(Debug.class);
-	private static final File file = new File("appman.log");
 
 	public static void newDebugFile(String str, String filepath) {
 		File file = new File(filepath);
