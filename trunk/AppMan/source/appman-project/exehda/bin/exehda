@@ -7,7 +7,7 @@ source `dirname $0`/exehda.env
 #
 function printHelp() 
 {
-     echo 'EXEHDA Launcher ($Revision: 271 $ $Date: 2006-11-28 23:39:33 -0200 (ter, 28 nov 2006) $)'
+     echo 'EXEHDA Launcher ($Revision: 271 $ $Date: 2006-11-28 23:39:33 -0200 (Tue, 28 Nov 2006) $)'
      echo "usage: ${0##*/} OPTS ARGS..."
      echo " "
      echo "  Where OPTS would be:"
