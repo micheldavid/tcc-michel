@@ -83,8 +83,29 @@
 		<servlet-name>UploadDagFileServlet</servlet-name>
 		<servlet-class>appman.portlets.jobsubmit.UploadDagFileServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>DownloadFileServlet</servlet-name>
+		<servlet-class>appman.portlets.filebrowser.DownloadFileServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>dwr-invoker</servlet-name>
+		<display-name>DWR Servlet</display-name>
+		<servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>UploadDagFileServlet</servlet-name>
 		<url-pattern>/SubmitDAG</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DownloadFileServlet</servlet-name>
+		<url-pattern>/download</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>dwr-invoker</servlet-name>
+		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>
 </web-app>
