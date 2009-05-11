@@ -184,6 +184,7 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 				if (!newtaskList.isEmpty()) continue;
 			}
 
+			if (dead) break;
 			log.warn("\n\n\n\nTM WAITING...");
 			synchronized (lockActionCount) {
 				try {
