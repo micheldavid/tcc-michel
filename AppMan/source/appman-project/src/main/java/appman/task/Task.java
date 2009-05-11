@@ -200,7 +200,7 @@ public abstract class Task implements Runnable, Serializable {
 
 	@Override
 	public String toString() {
-		return name;
+		return name + "(" + getState().getName() + ")";
 	}
 
 	public TaskFiles getFiles() {
