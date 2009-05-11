@@ -28,7 +28,6 @@ import appman.GridTaskRemote;
 import appman.ImproveDownload;
 import appman.SubmissionManager;
 import appman.SubmissionManagerRemote;
-import appman.log.Debug;
 
 //import org.isam.exehda.services.ObjectSeed.Activator;
 
@@ -212,11 +211,15 @@ public class MyTask extends Task implements Serializable {
 			for (int i = 0; i < results_datafile.length; i++) {
 				String filepath = results_datafile[i].getName();
 				log.debug("Transfering file: " + filepath);
-				byte[] fileData = gridfileservice.downloadFile(filepath);
-				if (fileData == null) {
-					log.error("ENVIANDO NULL PARA GRIDFILESERVICE");
+				try {
+					byte[] fileData = gridfileservice.downloadFile(filepath);
+					if (fileData == null) {
+						log.error("ENVIANDO NULL PARA GRIDFILESERVICE");
+					}
+					result_gridfileservice.uploadFile(fileData, filepath);
+				} catch (IOException e) {
+					log.error("enviando arquivos para fileservice: " + filepath, e);
 				}
-				result_gridfileservice.uploadFile(fileData, filepath);
 			}
 			log.debug("MyTask [" + this.getTaskId() + "] results transfered to user machine!");
 		}
