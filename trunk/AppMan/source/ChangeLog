@@ -1,3 +1,10 @@
+2009-05-11 20:30  michel.david@gmail.com
+  * Separadas pastas de projetos (appman-project, appman-portlets, exehda-test).
+      As libs necessárias para rodar o appman estão em appman-project/lib. 
+      A distribuição do exehda está em appman-project/exehda.
+  * Removidos alguns pollings, mas ainda temos um com os TM's
+  * Trava com chamadas bloqueantes, por isso os pollings terão de voltar. Motivo: exehda
+
 2006-12-06 17:43  rbrosinha
 
   * new code to allow task submission to PBS (see README_PBS_INTEGRATION.txt)
