@@ -1,6 +1,31 @@
+#macro(processDir $dirview)
+#set($path = $!{directoryViewTool.getPath($dirview)})
+	appmanFileBrowserAddDir("$path");
+#foreach($file in $dirview.files)
+	appmanFileBrowserAddFile("${path}", "${file}");
+#end
+#foreach($dir in $dirview.directories)
+	#processDir($dir)
+#end
+#end
 <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
+<link rel="stylesheet" type="text/css" href="${request.contextPath}/css/treeview/treeview.css" /> 
+<script type="text/javascript" src="${request.contextPath}/js/treeview/yahoo-dom-event.js"></script> 
+<script type="text/javascript" src="${request.contextPath}/js/treeview/treeview-min.js"></script> 
 <script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
 <script type="text/javascript" src="${request.contextPath}/js/filebrowser.js"></script>
+<script type="text/javascript">
+YAHOO.util.Event.onDOMReady(function () {
+	initAppmanFileBrowser("${request.contextPath}");
+
+	appmanPortlets.fileBrowserTrees = {};
+	appmanPortlets.fileBrowserTreeMap = {};
+	#foreach($dirview in $root)
+		#processDir($dirview)
+	#end
+	appmanFileBrowserSortTrees();
+});
+</script>
 <form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
 
 <div class="portlet-font">
@@ -11,46 +36,44 @@ Error: $error
 <p>
 #end
 
-<fieldset class="appman"><legend class="portlet-form-label">Tarefas</legend>
-	<table class="portlet-section-body">
-		<tr>
-			<th colspan="2"><input type="checkbox" id="appmanJobSubmitCheckAllJobIds" onclick="checkAppmanJobSubmitCheckAllJobIds()"> Identificador</th>
-			<th>Tarefa</th>
-			<th>Usuário que submeteu</th>
-			<th>Data de início</th>
-			<th>Data de término</th>
-			<th>Status</th>
-			<th>Sucesso</th>
-		</tr>
+<fieldset id="fldsetAppmanFileBrowserJobs" class="appman"><legend class="portlet-form-label">Tarefas</legend>
+	<table class="portlet-section-body" id="tblAppmanFileBrowser">
+		<tbody>
+    		<tr>
+    			<th>Identificador</th>
+    			<th>Tarefa</th>
+    			<th>Usuário que submeteu</th>
+    			<th>Data de início</th>
+    			<th>Data de término</th>
+    			<th>Status</th>
+    			<th>Sucesso</th>
+    		</tr>
 #foreach($job in $jobs)
-		<tr>
-			<td><input type="checkbox" name="jobId" value="$job.id" running="#if($job.dtStart && !$job.dtEnd)Y#end"/></td>
-			<td>$job.id</td>
-			<td>$job.file</td>
-			<td>$job.userName</td>
-			<td>$!{date.format('dd/MM/yyyy HH:mm:ss', $job.dtStart)}</td>
-			<td>$!{date.format('dd/MM/yyyy HH:mm:ss', $job.dtEnd)}</td>
-			<td>$!job.status</td>
-			<td>#if($job.success == "Y")Sim#elseif($job.success == "N")Não#end</td>
-		</tr>
+    		<tr jobId="${job.id}">
+    			<td>$job.id</td>
+    			<td>$job.file</td>
+    			<td>$job.userName</td>
+    			<td>$!{date.format('dd/MM/yyyy HH:mm:ss', $job.dtStart)}</td>
+    			<td>$!{date.format('dd/MM/yyyy HH:mm:ss', $job.dtEnd)}</td>
+    			<td>$!job.status</td>
+    			<td>#if($job.success == "Y")Sim#elseif($job.success == "N")Não#end</td>
+    		</tr>
 #end
+		</tbody>
 	</table>
 </fieldset>
-</form>
+<fieldset id="fldsetAppmanFileBrowserTree" class="appman" style="display:none">
+	<legend id="lgndAppmanFileBrowserTree" class="portlet-form-label">Tarefa</legend>
+	<div id="divAppmanFileBrowserTreeView" class="yui-skin-sam"></div>
+</fieldset>
 <fieldset class="appman">
 	<legend class="portlet-form-label">Ações</legend>
 	<ul style="margin-bottom: 0px; margin-top: 0px">
-		<li>
-			<a href="#" onclick="executeAction('NewJob');return false">Nova tarefa</a>
+		<li id="actAppmanFileBrowserShowJobs" style="display:none">
+			<a href="#" onclick="appmanFileBrowserShowJobs();return false">Voltar</a>
 		</li>
 		<li>
-			<a href="#" onclick="executeAction('ShowView');return false">Atualizar status</a>
-		</li>
-		<li>
-			<a href="#" onclick="appmanJobSubmitViewRemoveCheckedJobs();return false">Remover tarefas marcadas</a>
-		</li>
-		<li>
-			<a href="#" onclick="executeAction('ShowHelp');return false">Informações</a>
+			<a href="#" onclick="executeAction('ShowView');return false">Atualizar lista</a>
 		</li>
 	</ul>
 </fieldset>

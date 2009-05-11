@@ -204,6 +204,27 @@ public class AppManDBHelper {
 		}
 	}
 
+	public static ArrayList<AppManJob> searchRunningJobs() throws SQLException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = WebAppDataSource.getConnection();
+			stmt = conn.prepareStatement("SELECT JOB_ID FROM APPMAN_JOB WHERE DELETED = ?" +
+				" AND DTSTART IS NOT NULL AND DTEND IS NULL");
+			stmt.setString(1, "N");
+			rs = stmt.executeQuery();
+			ArrayList<AppManJob> jobs = new ArrayList<AppManJob>();
+			while (rs.next()) {
+				jobs.add(populateJob(rs));
+			}
+			return jobs;
+		} finally {
+			WebAppDataSource.closeHandlers(conn, stmt, rs);
+		}
+	}
+
 	public static boolean hasRunningJobs() throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;

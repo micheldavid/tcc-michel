@@ -80,22 +80,6 @@ public class AppManLdapHelper {
 		e.close();
 	}
 
-	public static void search() {
-		try {
-			LdapSession session = createSession();
-			NamingEnumeration<SearchResult> e = (NamingEnumeration<SearchResult>) session.search("",
-				"objectClass=exehdaApplication", new String[] { "xAppID", "xAttr" });
-			while (e.hasMore()) {
-				SearchResult o = (SearchResult) e.next();
-				System.out.println(o.getAttributes().get("xAttr"));
-			}
-			e.close();
-			session.close();
-		} catch (NamingException e) {
-			log.error("erro na sessão do ldap", e);
-		}
-	}
-
 	public static ArrayList<String> searchAppIDs() {
 		ArrayList<String> appIDs = new ArrayList<String>();
 		try {
