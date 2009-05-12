@@ -11,7 +11,7 @@ import appman.task.Task;
 import appman.task.TaskManager;
 import appman.task.TaskState;
 
-public class SubmissionManager implements SubmissionManagerRemote {
+public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 
 	private static final Log log = LogFactory.getLog(SubmissionManager.class);
     private String submissionmanagerId;
@@ -396,6 +396,14 @@ public class SubmissionManager implements SubmissionManagerRemote {
 		log.debug("[SM] Download Time: " + plus);
 		setDownloadTimeOfTasksManagers(plus);// VDN:27/1/2006
 		end = true;
+	}
+
+	public void run() {
+		try {
+			runSubmissionManager();
+		} catch (RemoteException ex) {
+			log.error("algo está MUITO errado, pois esta chamada é local", ex);
+		}
 	}
 
     /**

@@ -42,6 +42,14 @@ public class AppManConsole implements AppManConsoleRemote {
 			appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
 
 			appman.startApplicationManager();
+			while (appman.getApplicationStatePercentCompleted() < 1) {
+				log.debug(appman.getInfoRemote());
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					log.warn(e, e);
+				}
+			}
 		} catch (Exception ex) {
 			log.error(ex, ex);
 		}
@@ -83,6 +91,15 @@ public class AppManConsole implements AppManConsoleRemote {
 		} catch (Exception ex) {
 			success = false;
 			log.error("erro fatal", ex);
+		}
+		// MICHEL: blocking call - remover while abaixo
+		try {
+			while (!ApplicationManagerState.FINAL.equals(console.appman.getApplicationState())) {
+				Thread.sleep(5000);
+			}
+		} catch (InterruptedException ex) {
+			log.error("thread principal interrompida...", ex);
+			success = false;
 		}
 
 		if (jobId != null) {
