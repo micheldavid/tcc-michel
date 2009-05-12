@@ -138,6 +138,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		timeInfo.setTimeBegin(System.currentTimeMillis());
 		state = ApplicationManagerState.EXECUTING;
 
+		// MICHEL: blocking call
 		runApplicationManager();
 	}
 
@@ -403,6 +404,14 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		}
 	}
 
+	public void run() {
+		try {
+			runApplicationManager();
+		} catch (RemoteException ex) {
+			log.error("algo está MUITO errado, pois esta chamada é local", ex);
+		}
+	}
+	
 	/**
 	 * Main-thread. Stays in loop (2 steps) until the computation is completed:
 	 *
@@ -467,25 +476,26 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				log.debug("ApplicationManager Application graphs completed: "
 						+ getApplicationStatePercentCompleted());
 			}
-			if (percent_completed == 1f) continue;
 
-			log.warn("\n\n\n\nWAITING SM...");
-			synchronized (lockCompletedSM) {
-				try {
-					if (completedSM == 0) {
-						lockCompletedSM.wait();
-					}
-					completedSM = 0;
-				} catch (InterruptedException e) {
-					log.error("esperando sinal dos SMs", e);
-				}
-			}
-			log.warn("\n\n\n\nCONTINUING...");
-//			try {
-//				Thread.sleep(5000);
-//			} catch (InterruptedException e) {
-//				log.error("aguardando SMs", e);
+			// MICHEL: blocking call
+//			if (percent_completed == 1f) continue;
+//			log.warn("\n\n\n\nWAITING SM...");
+//			synchronized (lockCompletedSM) {
+//				try {
+//					if (completedSM == 0) {
+//						lockCompletedSM.wait();
+//					}
+//					completedSM = 0;
+//				} catch (InterruptedException e) {
+//					log.error("esperando sinal dos SMs", e);
+//				}
 //			}
+//			log.warn("\n\n\n\nCONTINUING...");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				log.error("aguardando SMs", e);
+			}
 
 		} // end while
 
@@ -685,11 +695,12 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 		stub.setMyObjectRemoteContactAddress(gactivator.getContactAddress(oxID, "SubmissionManagerRemote"));
 
-		synchronized (smRunning) {
-			SubmissionManagerExecuteThread thread = new SubmissionManagerExecuteThread(smId, stub, this);
-			smRunning.add(thread);
-			thread.start();
-		}
+		// MICHEL: blocking call
+//		synchronized (smRunning) {
+//			SubmissionManagerExecuteThread thread = new SubmissionManagerExecuteThread(smId, stub, this);
+//			smRunning.add(thread);
+//			thread.start();
+//		}
 		return stub;
 	}
 

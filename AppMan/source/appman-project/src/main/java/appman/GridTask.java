@@ -17,16 +17,18 @@ import appman.task.Task;
  * @author lucasa@gmail.com
  * 
  */
-public class GridTask extends GridFileService implements GridTaskRemote
+public class GridTask extends GridFileService implements Runnable, GridTaskRemote
 {
 	private static final long serialVersionUID = 94618337786246610L;
 	private static final Log log = LogFactory.getLog(GridTask.class);
 	private String command;
 	private Task mytask;
 
+	private boolean run = false;
 	private boolean die = false;
+	private boolean end = false;
 	private boolean sucess = true;
-	
+
 	private StringBuilder errorbuffer = null;
 
 	public GridTask(Task task, String cmd, String filepath_seed)
@@ -40,9 +42,10 @@ public class GridTask extends GridFileService implements GridTaskRemote
 		errorbuffer = new StringBuilder();
 	}
 	
-	public synchronized void setRun(boolean b) 
-	{		
-		log.debug("GridTask ["+mytask.getTaskId()+"] GOING TO RUN ");
+	public synchronized void setRun(boolean b) {
+		log.debug("GridTask [" + mytask.getTaskId() + "] GOING TO RUN ");
+		run = b;
+		notifyAll();
 	}
 
 
@@ -55,6 +58,7 @@ public class GridTask extends GridFileService implements GridTaskRemote
 
             synchronized (this) {
                 die = true;
+                setEnd(true);
             }
 		} catch (Exception e)
 		{
@@ -71,13 +75,15 @@ public class GridTask extends GridFileService implements GridTaskRemote
          * @param timeoutSeconds an <code>int</code> value
          * @return a <code>boolean</code> value
          */
-    public boolean getEnd(int timeoutSeconds)
+    public synchronized boolean getEnd(int timeoutSeconds)
     {
-    	run();
-    	return true;
+        try {
+            if ( !end ) wait(timeoutSeconds*1000);
+        }
+        catch (InterruptedException ie) { /* empty */}
+        return end;
     }
 
-    
         /**
          * returns the state of the job, if is ok or error
          * @return a <code>boolean</code> value
@@ -91,11 +97,24 @@ public class GridTask extends GridFileService implements GridTaskRemote
 	{
 		return errorbuffer.toString();
 	}
-	
 
-    
 	public void run()
 	{
+		try
+		{
+			// enquanto n?o for o momento de executar espera
+            synchronized (this) {
+                while (!run) wait();
+            }
+		} catch (Exception e)
+		{
+			log.error("[AppMan]\tError in run of GridTask thread, while waiting to run task", e);
+			errorbuffer.append(e.getMessage());
+			sucess = false;
+			setDie();
+			return;
+		}
+
 		try {
 			//VDN:25/08/05
 			//mytask.setTaskState(Task.TASK_EXECUTING);
@@ -113,7 +132,8 @@ public class GridTask extends GridFileService implements GridTaskRemote
 				sucess = false;				
 				log.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"] Error number return: " + v);
 			}
-			
+
+			setEnd(true);
 			return;			
 		} catch (Exception e)
 		{
@@ -192,6 +212,12 @@ public class GridTask extends GridFileService implements GridTaskRemote
     	for (int read; (read = reader.read(cbuff)) != -1;)
     		toAppend.append(cbuff, 0, read);
     	reader.close();
+    }
+
+    private final synchronized void setEnd(boolean isEnd)
+    {
+        this.end = isEnd;
+        notifyAll();
     }
 
     private final synchronized void checkDead() throws Exception

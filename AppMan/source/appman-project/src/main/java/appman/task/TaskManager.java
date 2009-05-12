@@ -43,8 +43,7 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 
 		log.debug("Taskmanager created.");
 
-		Thread thread = new Thread(this);
-		thread.start();
+		new Thread(this).start();
 	}
 
 	public synchronized int getTaskState(String taskId) {
@@ -109,25 +108,22 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 		addTaskToList(task);
 	}
 
-	public void addTaskToList(Task task) {
-		synchronized (newtaskList) {
-			newtaskList.addElement(task);
-		}
+	public synchronized void addTaskToList(Task task) {
+		newtaskList.addElement(task);
 		actionAdded();
 	}
 
-	public void addTaskToList(Vector t) {
-		synchronized (newtaskList) {
-			newtaskList.addAll(t);
-		}
+	public synchronized void addTaskToList(Vector t) {
+		newtaskList.addAll(t);
 		actionAdded();
 	}
-	
+
 	private void actionAdded() {
-		synchronized (lockActionCount) {
-			actionCount++;
-			lockActionCount.notify();
-		}
+		// MICHEL: blocking call
+//		synchronized (lockActionCount) {
+//			actionCount++;
+//			lockActionCount.notify();
+//		}
 	}
 
 	private boolean downloadInputTaskFiles(String taskId) {
@@ -180,28 +176,29 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 				}
 			}
 			
-			synchronized (newtaskList) {
-				if (!newtaskList.isEmpty()) continue;
-			}
-
-			if (dead) break;
-			log.warn("\n\n\n\nTM WAITING...");
-			synchronized (lockActionCount) {
-				try {
-					if (actionCount == 0) {
-						lockActionCount.wait();
-					}
-					actionCount = 0;
-				} catch (InterruptedException e) {
-					log.error("esperando ações", e);
-				}
-			}
-			log.warn("\n\n\n\nTM CONTINUING...");
-//			try {
-//				Thread.sleep(500);
-//			} catch (Exception e) {
-//				log.debug(e);
+			// MICHEL: blocking call
+//			synchronized (newtaskList) {
+//				if (!newtaskList.isEmpty()) continue;
 //			}
+//
+//			if (dead) break;
+//			log.warn("\n\n\n\nTM WAITING...");
+//			synchronized (lockActionCount) {
+//				try {
+//					if (actionCount == 0) {
+//						lockActionCount.wait();
+//					}
+//					actionCount = 0;
+//				} catch (InterruptedException e) {
+//					log.error("esperando ações", e);
+//				}
+//			}
+//			log.warn("\n\n\n\nTM CONTINUING...");
+			try {
+				Thread.sleep(500);
+			} catch (Exception e) {
+				log.debug(e);
+			}
 		}
 	}
 
