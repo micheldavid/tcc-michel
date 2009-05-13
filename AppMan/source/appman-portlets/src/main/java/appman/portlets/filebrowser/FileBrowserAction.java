@@ -63,7 +63,7 @@ public class FileBrowserAction extends VelocityTooledPortlet {
 
 				if (f.getName().equals(runningJobId)) {
 					view = mergeDirectories(view, loadDirectory(null, new File(AppManConfig.get().getString(
-						"appman.portlets.job.dir"))));
+						"exehda.log.dir"))));
 				}
 				root.add(view);
 			}
