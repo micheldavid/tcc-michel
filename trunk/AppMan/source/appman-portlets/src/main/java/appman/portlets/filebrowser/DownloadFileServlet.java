@@ -26,7 +26,15 @@ public class DownloadFileServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			execute(req, resp);
+		} catch (IOException ex) {
+			// tenta denovo se houve IOException -- pode estar movendo o arquivo para a nova pasta
+			execute(req, resp);
+		}
+	}
 
+	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String runningJobId = null;
 		try {
 			ArrayList<AppManJob> jobs = AppManDBHelper.searchRunningJobs();
@@ -38,11 +46,9 @@ public class DownloadFileServlet extends HttpServlet {
 		String file = req.getParameter("file");
 		if (file.contains("..")) throw new ServletException("falha de segurança");
 		boolean isRunningJob = runningJobId == null ? false : file.startsWith(runningJobId);
-		File toDownload;
-		if (isRunningJob) {
+		File toDownload = new File(AppManConfig.get().getString("appman.portlets.job.dir"), file);
+		if (isRunningJob && !toDownload.exists()) {
 			toDownload = new File(AppManConfig.get().getString("exehda.log.dir"), file.substring(file.indexOf('/')));
-		} else {
-			toDownload = new File(AppManConfig.get().getString("appman.portlets.job.dir"), file);
 		}
 		if (toDownload.isDirectory()) throw new ServletException("download de pastas não implementado");
 		resp.setContentType("application/octet-stream");
@@ -51,7 +57,7 @@ public class DownloadFileServlet extends HttpServlet {
 		if (isRunningJob) {
 			// para não atrapalhar o trabalho do appman, le tudo para a memória
 			FileInputStream fis = new FileInputStream(toDownload);
-			byte[] data = new byte[file.length()];
+			byte[] data = new byte[(int) toDownload.length()];
 			fis.read(data);
 			fis.close();
 			resp.getOutputStream().write(data);

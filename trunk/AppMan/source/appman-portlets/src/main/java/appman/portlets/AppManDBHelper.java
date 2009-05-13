@@ -217,7 +217,9 @@ public class AppManDBHelper {
 			rs = stmt.executeQuery();
 			ArrayList<AppManJob> jobs = new ArrayList<AppManJob>();
 			while (rs.next()) {
-				jobs.add(populateJob(rs));
+				AppManJob job = new AppManJob();
+				job.setId(rs.getInt("JOB_ID"));
+				jobs.add(job);
 			}
 			return jobs;
 		} finally {
