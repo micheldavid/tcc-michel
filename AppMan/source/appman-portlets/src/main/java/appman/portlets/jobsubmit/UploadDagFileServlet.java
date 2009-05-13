@@ -59,6 +59,7 @@ public class UploadDagFileServlet extends HttpServlet {
 		}
 
 		AppManHelper.setupJob((String) reqData.get("userName"), (FileItem) reqData.get("file"));
+		AppManQueueServlet.wakeUp();
 	}
 
 }

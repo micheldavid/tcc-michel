@@ -21,12 +21,19 @@ public class AppManQueueServlet extends HttpServlet implements Runnable {
 	private static final long serialVersionUID = 4657355264348463610L;
 
 	private static final Log log = LogFactory.getLog(AppManQueueServlet.class);
-
+	
+	private static final Object waitLock = new Object();
 	private long waitTime;
 
 	private LdapSession session = null;
 	private Thread verifier = null;
 
+	public static void wakeUp() {
+		synchronized (waitLock) {
+			waitLock.notify();
+		}
+	}
+	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -64,24 +71,39 @@ public class AppManQueueServlet extends HttpServlet implements Runnable {
 		}
 	}
 
+	public AppManJob preExecuteTest() throws Exception {
+		if (!AppManHelper.isExehdaRunning()) {
+			finishAllJobs();
+		} else {
+			AppManJob toRun = AppManDBHelper.findJobToRun();
+			if (toRun != null) {
+				// verifica se existem tarefas a serem executadas no BD
+				// se existir, verificar se existem tarefas rodando no LDAP
+				if (!AppManDBHelper.hasRunningJobs() && !AppManLdapHelper.hasRunningApps(session)) {
+					return toRun;
+				}
+			}
+		}
+		return null;
+	}
+
 	public void run() {
 		try {
+			AppManJob toRun = null;
 			while (!verifier.isInterrupted()) {
 				try {
-					if (!AppManHelper.isExehdaRunning()) {
-						finishAllJobs();
-					} else {
-						AppManJob toRun = AppManDBHelper.findJobToRun();
-						if (toRun != null) {
-							// verifica se existem tarefas a serem executadas no BD
-							// se existir, verificar se existem tarefas rodando no LDAP
-							if (!AppManDBHelper.hasRunningJobs() && !AppManLdapHelper.hasRunningApps(session)) {
-								AppManHelper.startJob(toRun);
-								while (!AppManDBHelper.isJobFinished(toRun.getId()))
-									Thread.sleep(waitTime);
-								AppManLdapHelper.finalizeApplication(session, AppManDBHelper.getAppId(toRun.getId()));
-								AppManHelper.organizeFinishedJob(toRun);
-							}
+					if (toRun != null) {
+						AppManHelper.startJob(toRun);
+						while (!AppManHelper.isJobFinished(toRun.getId()))
+							Thread.sleep(waitTime);
+						AppManLdapHelper.finalizeApplication(session, AppManDBHelper.getAppId(toRun.getId()));
+						AppManHelper.organizeFinishedJob(toRun);
+					}
+					synchronized (waitLock) {
+						toRun = preExecuteTest();
+						if (toRun == null) {
+							waitLock.wait(waitTime);
+							toRun = preExecuteTest();
 						}
 					}
 				} catch (InterruptedException ex) {
@@ -89,7 +111,6 @@ public class AppManQueueServlet extends HttpServlet implements Runnable {
 				} catch (Exception ex) {
 					log.error("verificando tarefas na lista", ex);
 				}
-				Thread.sleep(waitTime);
 			}
 		} catch (InterruptedException ex) {
 			log.error("esperando " + waitTime, ex);
