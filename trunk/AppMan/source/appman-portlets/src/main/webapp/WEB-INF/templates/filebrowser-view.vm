@@ -45,6 +45,7 @@ Error: $error
     			<th>Usuário que submeteu</th>
     			<th>Data de início</th>
     			<th>Data de término</th>
+    			<th>Duração</th>
     			<th>Status</th>
     			<th>Sucesso</th>
     		</tr>
@@ -55,6 +56,7 @@ Error: $error
     			<td>$job.userName</td>
     			<td>$!{date.format('dd/MM/yyyy HH:mm:ss', $job.dtStart)}</td>
     			<td>$!{date.format('dd/MM/yyyy HH:mm:ss', $job.dtEnd)}</td>
+    			<td>$!{date.format('mm:ss.SSS', $job.elapsedTime)}</td>
     			<td>$!job.status</td>
     			<td>#if($job.success == "Y")Sim#elseif($job.success == "N")Não#end</td>
     		</tr>

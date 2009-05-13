@@ -56,6 +56,10 @@ public class AppManJob {
 	public void setDtEnd(Date dtEnd) {
 		this.dtEnd = dtEnd;
 	}
+	public Date getElapsedTime() {
+		if (dtStart == null || dtEnd == null) return null;
+		return new Date(dtEnd.getTime() - dtStart.getTime());
+	}
 	public String getSuccess() {
 		return success;
 	}
