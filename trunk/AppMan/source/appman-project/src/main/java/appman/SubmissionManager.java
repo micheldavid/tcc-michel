@@ -398,6 +398,18 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 		end = true;
 	}
 
+	/**
+	 * @return true se executou com sucesso
+	 */
+	public boolean isSuccessful() throws RemoteException {
+		synchronized (tasksmanagerList) {
+			for (TaskManager t : tasksmanagerList) {
+				if (!t.isSuccessful()) return false;
+			}
+		}
+		return true;
+	}
+
 	public void run() {
 		try {
 			runSubmissionManager();

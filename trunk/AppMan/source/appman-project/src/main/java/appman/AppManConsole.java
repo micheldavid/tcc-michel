@@ -3,8 +3,12 @@
  */
 package appman;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,14 +46,14 @@ public class AppManConsole implements AppManConsoleRemote {
 			appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
 
 			appman.startApplicationManager();
-			while (appman.getApplicationStatePercentCompleted() < 1) {
-				log.debug(appman.getInfoRemote());
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					log.warn(e, e);
-				}
-			}
+//			while (appman.getApplicationStatePercentCompleted() < 1) {
+//				log.debug(appman.getInfoRemote());
+//				try {
+//					Thread.sleep(5000);
+//				} catch (InterruptedException e) {
+//					log.warn(e, e);
+//				}
+//			}
 		} catch (Exception ex) {
 			log.error(ex, ex);
 		}
@@ -72,12 +76,10 @@ public class AppManConsole implements AppManConsoleRemote {
 	}
 
 	public static void main(String[] args) throws Exception {
+		debugTempoExecucao("vindn " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
+
 		Integer jobId = null;
 		if (args.length >= 2) jobId = Integer.valueOf(args[1]);
-
-		FileWriter out = new FileWriter("tempoExecucao.txt");
-		out.write("vindn " + System.currentTimeMillis() + "\n");
-		out.close();
 
 		AppManConsole console = new AppManConsole();
 
@@ -92,25 +94,36 @@ public class AppManConsole implements AppManConsoleRemote {
 			success = false;
 			log.error("erro fatal", ex);
 		}
-		// MICHEL: blocking call - remover while abaixo
+		// MICHEL: blocking call
 		try {
 			while (!ApplicationManagerState.FINAL.equals(console.appman.getApplicationState())) {
 				Thread.sleep(5000);
 			}
+			//success = console.appman.isSuccessful();
 		} catch (InterruptedException ex) {
 			log.error("thread principal interrompida...", ex);
 			success = false;
 		}
 
-		if (jobId != null) {
-			DBHelper.registerAppEnd(jobId, success);
-		}
 		log.debug("\t ******************************************");
 		log.debug("\t *** EXECUÇÃO TERMINADA COM SUCESSO!!!! ***");
 		log.debug("\t ******************************************");
 
-		out = new FileWriter("tempoExecucao.txt");
-		out.write("vindn " + System.currentTimeMillis() + "\n");
+		if (jobId != null) {
+			DBHelper.registerAppEnd(jobId, success);
+		}
+
+		debugTempoExecucao("vindn " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
+
+		// tentando matar o timer que o exehda deixa rodando...
+		AppManUtil.exitApplication();
+	}
+	
+	private static void debugTempoExecucao(String str) throws IOException {
+		FileOutputStream fout = new FileOutputStream("tempoExecucao.txt", true);
+		PrintStream out = new PrintStream(fout);
+		out.println(str);
 		out.close();
+		fout.close();
 	}
 }
