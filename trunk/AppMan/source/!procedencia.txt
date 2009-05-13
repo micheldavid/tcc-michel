@@ -1,3 +1,0 @@
-Estes arquivos procedem do branch rbrosinha-pp-2006-2 do AppMan no repositório Sallon (https://saloon.inf.ufrgs.br/svn/appman/branches/rbrosinha-pp-2006-2/).
-
-Os fontes de ./src serão substituídos pelos fontes refatorados (visando coesão) de Wagner Nobres (http://tcmanager.googlecode.com/svn/trunk/appman-tc).
