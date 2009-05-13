@@ -107,7 +107,7 @@ public class AppManHelper {
 //		builder.redirectErrorStream(true);
 		Process proc = builder.start();
 		proc.waitFor();
-		
+
 		String out = readStreamData(proc.getInputStream());
 		if (out.length() != 0) writeToFile(out, new File(jobDir, "std.out"));
 
@@ -205,5 +205,34 @@ public class AppManHelper {
 	public static void stopApplication(LdapSession session, String appId) throws NamingException, SQLException {
 		AppManLdapHelper.finalizeApplication(session, appId);
 		AppManDBHelper.finalizeApplication(appId);
+	}
+
+	public static boolean isJobFinished(int id) throws SQLException {
+
+		boolean finished = AppManDBHelper.isJobFinished(id);
+		if (finished) return true;
+
+/*		File file = new File(AppManConfig.get().getString("exehda.log.dir")
+					+ "/appman_contact_adress.txt");
+		if (file.exists()) {
+			try {
+				RandomAccessFile fReader = new RandomAccessFile(file, "r");
+				String contact_address = fReader.readLine();
+				fReader.close();
+				try {
+					ApplicationManagerRemote appman = (ApplicationManagerRemote) AppManUtil.getWorb().lookupService(
+						contact_address, ApplicationManagerRemote.class);
+					appman.isAlive();
+					return false;
+
+				} catch (Exception e) {
+					log.error("verificando se processo está ativo", e);
+					return true;
+				}
+			} catch (IOException e) {
+				log.warn("abrindo arquivo para comunicação", e);
+			}
+		}
+*/		return false;
 	}
 }
