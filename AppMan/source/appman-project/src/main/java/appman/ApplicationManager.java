@@ -133,6 +133,18 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		return str;
 	}
 
+	/**
+	 * @return true se executou com sucesso
+	 */
+	public boolean isSuccessful() throws RemoteException {
+		synchronized (submissionmanagerList) {
+			for (SubmissionManagerRemote sub : submissionmanagerList) {
+				if (!sub.isSuccessful()) return false;
+			}
+		}
+		return true;
+	}
+
 	public void startApplicationManager() throws RemoteException {
 		timeInfo.setTimeExecution(System.currentTimeMillis());
 		timeInfo.setTimeBegin(System.currentTimeMillis());
@@ -385,7 +397,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 		timeInfo.setDownloadTimeOfSM(plus);
 	}
-
+	
 	public void computeApplicationExecutionTimes() {
 		String file_path = "tasks-execution-" + this.appmanId + ".trace";
 		Debug
@@ -717,5 +729,9 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		} else {
 			log.debug("SM " + thread.getSubmissionManagerId() + " terminou a execução", ex);
 		}
+	}
+	
+	public boolean isAlive() throws RemoteException {
+		return true;
 	}
 }

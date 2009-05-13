@@ -21,8 +21,8 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 	private String taskmanagerId;
 	private String description;
 
-	private java.util.Vector taskList;
-	private java.util.Vector newtaskList;
+	private java.util.Vector<Task> taskList;
+	private java.util.Vector<Task> newtaskList;
 
 	private Object lockActionCount = new Object();
 	private int actionCount = 0;
@@ -38,8 +38,8 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 	 */
 	public TaskManager(String id) {
 		taskmanagerId = id;
-		taskList = new Vector();
-		newtaskList = new Vector();
+		taskList = new Vector<Task>();
+		newtaskList = new Vector<Task>();
 
 		log.debug("Taskmanager created.");
 
@@ -94,6 +94,22 @@ public class TaskManager implements TaskManagerRemote, Runnable {
 		downloadTimeOfTasks = plus;// VDN:27/1/2006
 		dead = true;
 		actionAdded();
+	}
+
+	/**
+	 * Verifica se todas tarefas estão com tempo final, para decidir se executou com sucesso.
+	 * @return true se executou com sucesso
+	 */
+	public boolean isSuccessful() {
+		synchronized (taskList) {
+			for (Task t : taskList) {
+				TaskTimer times = t.getTimeInfo();
+				if (times.getTimeStart() == null || times.getTimeEnd() == null) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
