@@ -46,14 +46,14 @@ public class AppManConsole implements AppManConsoleRemote {
 			appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
 
 			appman.startApplicationManager();
-//			while (appman.getApplicationStatePercentCompleted() < 1) {
-//				log.debug(appman.getInfoRemote());
-//				try {
-//					Thread.sleep(5000);
-//				} catch (InterruptedException e) {
-//					log.warn(e, e);
-//				}
-//			}
+			while (appman.getApplicationStatePercentCompleted() < 1) {
+				log.debug(appman.getInfoRemote());
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					log.warn(e, e);
+				}
+			}
 		} catch (Exception ex) {
 			log.error(ex, ex);
 		}
@@ -116,7 +116,7 @@ public class AppManConsole implements AppManConsoleRemote {
 		debugTempoExecucao("vindn " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
 
 		// tentando matar o timer que o exehda deixa rodando...
-		AppManUtil.exitApplication();
+//		AppManUtil.exitApplication();
 	}
 	
 	private static void debugTempoExecucao(String str) throws IOException {
