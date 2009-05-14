@@ -130,24 +130,20 @@ public class MyTask extends Task implements Serializable {
             }
 			
 			// remote execution finished, check if there were any errors
-			boolean success = false;
 			// caso ocorra algum erro de rede, tenta novamente
 			for (;;) try {
-				success = gridtaskremote.getSuccess();
+				if (!gridtaskremote.getSuccess()) {
+					gridtaskremote.setDie();
+					continue;
+				}
 				break;
 			} catch (Exception e) {
 				log.warn("Tentando obter novamente o gridtaskremote.getSuccess()", e);
 			}
 
-			if (!success) {
-				throw new RemoteException("MyTask [" + this.getTaskId() + "] RETRY [" + this.getRetryTimes()
-					+ "] - GridTask Job failed: " + gridtaskremote.getErrorMessage());
-			} else {
-
-				transferOutputFiles();
-				// VDN 2006/01/13 - include statement bellow
-				// gridtaskremote.setDie();
-			}
+			transferOutputFiles();
+			// VDN 2006/01/13 - include statement bellow
+			// gridtaskremote.setDie();
 		} catch (IOException ex) {
 			if (gridtaskremote != null) try {
 				gridtaskremote.setDie();
