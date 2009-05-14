@@ -1,12 +1,11 @@
 graph independent
-task 0 -e "pwd > t.out.0" -o t.out.0
-task 1 -e "pwd > t.out.1" -o t.out.1
-task 2 -e "pwd > t.out.2" -o t.out.2
-task 3 -e "pwd > t.out.3" -o t.out.3
-task 4 -e "pwd > t.out.4" -o t.out.4
-task 5 -e "pwd > t.out.5" -o t.out.5
-task 6 -e "pwd > t.out.6" -o t.out.6
-task 7 -e "pwd > t.out.7" -o t.out.7
-task 8 -e "pwd > t.out.8" -o t.out.8
-task 9 -e "pwd > t.out.9" -o t.out.9
-
+task 0 -e "pwd > t.out.0" -i http://www.google.com/images/firefox/bee.png -o t.out.0
+task 1 -e "pwd > t.out.1" -i http://www.google.com/images/firefox/bee.png -o t.out.1
+task 2 -e "pwd > t.out.2" -i http://www.google.com/images/firefox/bee.png -o t.out.2
+task 3 -e "pwd > t.out.3" -i http://www.google.com/images/firefox/bee.png -o t.out.3
+task 4 -e "pwd > t.out.4" -i http://www.google.com/images/firefox/bee.png -o t.out.4
+task 5 -e "pwd > t.out.5" -i http://www.google.com/images/firefox/bee.png -o t.out.5
+task 6 -e "pwd > t.out.6" -i http://www.google.com/images/firefox/bee.png -o t.out.6
+task 7 -e "pwd > t.out.7" -i http://www.google.com/images/firefox/bee.png -o t.out.7
+task 8 -e "pwd > t.out.8" -i http://www.google.com/images/firefox/bee.png -o t.out.8
+task 9 -e "pwd > t.out.9" -i http://www.google.com/images/firefox/bee.png -o t.out.9
