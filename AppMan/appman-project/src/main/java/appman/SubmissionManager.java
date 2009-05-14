@@ -218,7 +218,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 		for (int i = 0; i < alltasks.size(); i++) {
 			Task t = (Task) alltasks.elementAt(i);
 
-			if (g.getTask(t.getTaskId()) == null && !isTaskFromHere(t.getTaskId())) {
+			if (g.getTask(t.getTaskId()) == null) if (!isTaskFromHere(t.getTaskId())) {
 				// the task is from another submissiom manager
 				try {
 					if (t.getState().getCode() == TaskState.TASK_DEPENDENT) {
@@ -427,13 +427,12 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 		float currentProgress = 0;
 		while (!end) {
 			if (graphs.size() > 0) {
-				boolean keepGoing = false;
 				for (int i = 0; i < graphs.size(); i++) {
 					// se o grafo está pronto para ser executado, então execute-o
 					Graph g = (Graph) graphs.elementAt(i);
 					if (g.getStatePercentCompleted() < 1) // if the graph is not complete
 					{
-						keepGoing = true;
+						end = false;
 						if (g.getState() == Graph.GRAPH_READY || g.getState() == Graph.GRAPH_EXECUTING) {
 							// executa o grafo
 							log.debug("***[VINDN] executeGraph() GRAPHID: " + g.getGraphId());
@@ -447,10 +446,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable {
 							+ g.getGraphId() + "] complete status: " + pc);
 						currentProgress = pc;
 					}
-				}
-				if (!keepGoing) {
-					end = true;
-					break;
 				}
 			}
 			try {
