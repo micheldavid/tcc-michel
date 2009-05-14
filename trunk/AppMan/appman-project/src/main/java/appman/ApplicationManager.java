@@ -33,7 +33,7 @@ import edu.berkeley.guir.prefusex.force.SpringForce;
 /**
  * @author lucasa@gmail.com
  */
-public class ApplicationManager implements ApplicationManagerRemote, Serializable, SubmissionManagerExecuteHandler {
+public class ApplicationManager implements Runnable, ApplicationManagerRemote, Serializable, SubmissionManagerExecuteHandler {
 
 	private static final long serialVersionUID = 440529620112600733L;
 	private static final Log log = LogFactory.getLog(ApplicationManager.class);
@@ -51,6 +51,8 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	private Vector graphs;
 	/** List of graphs yet to be scheduled tom some SM */
 	private Vector newgraphs;
+
+	private boolean runsystem;
 
 	/** Current status of the execution, either READY, EXECUTING or FINAL */
 	private ApplicationManagerState state = ApplicationManagerState.READY;
@@ -82,6 +84,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 	public ApplicationManager() {
 		initialize("Default",null);
+		new Thread(this).run();
 	}
 
 	private void initialize(String id, ApplicationId appid) {
@@ -97,6 +100,8 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 
 		graphs = new Vector();
 		newgraphs = new Vector();
+
+		runsystem = false;
 
 		state = ApplicationManagerState.READY;
 		
@@ -150,6 +155,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		timeInfo.setTimeBegin(System.currentTimeMillis());
 		state = ApplicationManagerState.EXECUTING;
 
+		runsystem = true;
 		// MICHEL: blocking call
 		runApplicationManager();
 	}
@@ -441,44 +447,46 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		float percent_completed = 0;
 
 		while (this.getApplicationStatePercentCompleted() < 1) {
-			// schedule graphs pending in the newgraphs queue
-			schedulePendingGraphs();
-			// atualiza os dados dos grafos, baixando o grafo atualizado do submission manager remoto
-			for (int i = 0; i < graphs.size(); i++) {
-				Graph local = (Graph) graphs.elementAt(i);
-				if (local.getStatePercentCompleted() < 1) {
+			if (runsystem == true) {
+				// schedule graphs pending in the newgraphs queue
+				schedulePendingGraphs();
+				// atualiza os dados dos grafos, baixando o grafo atualizado do submission manager remoto
+				for (int i = 0; i < graphs.size(); i++) {
+					Graph local = (Graph) graphs.elementAt(i);
+					if (local.getStatePercentCompleted() < 1) {
 
-					SubmissionManagerRemote subman = null;
-					Graph remote = null;
-					try {
-						subman = this.getSubmissionManagerRemote(local.getSubmissionManagerId());
-						log.debug("ApplicationManager contacting SubmissionManager ["
-							+ subman.getSubmissionManagerIdRemote() + "] to update remote graph: "
-							+ local.getGraphId());
-						remote = subman.getGraphRemote(local.getGraphId());
-					} catch (IOException e) {
-						// Tolerância a Falhas
-						// Se o Submission Manager não responder então remove o grafo da lista e adiciona o
-						// grafo novamente no Application Manager com um novo SubMan escalonado
-						log.warn("Tolerância a Falhas - " + e, e);
+						SubmissionManagerRemote subman = null;
+						Graph remote = null;
 						try {
-							subman = scheduleSubmissionManager();
+							subman = this.getSubmissionManagerRemote(local.getSubmissionManagerId());
+							log.debug("ApplicationManager contacting SubmissionManager ["
+								+ subman.getSubmissionManagerIdRemote() + "] to update remote graph: "
+								+ local.getGraphId());
+							remote = subman.getGraphRemote(local.getGraphId());
+						} catch (IOException e) {
+							// Tolerância a Falhas
+							// Se o Submission Manager não responder então remove o grafo da lista e adiciona o
+							// grafo novamente no Application Manager com um novo SubMan escalonado
+							log.warn("Tolerância a Falhas - " + e, e);
+							try {
+								subman = scheduleSubmissionManager();
 
-							local.setSubmissionManagerId(subman.getSubmissionManagerIdRemote());
-							graphs.remove(i);
-							i--;
-							this.addGraph(local);
-						} catch (Exception e2) {
-							AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e2);
+								local.setSubmissionManagerId(subman.getSubmissionManagerIdRemote());
+								graphs.remove(i);
+//								i--;
+								this.addGraph(local);
+							} catch (Exception e2) {
+								AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e2);
+							}
 						}
-					}
 
-					// update local graph copy with the new state grabbed from the remote SM
-					if (remote != null) {
-						local.copy(remote);
+						// update local graph copy with the new state grabbed from the remote SM
+						if (remote != null) {
+							local.copy(remote);
 
-						__debug__("local graph [" + local.getGraphId() + "] UPDATED, percent completed="
-							+ local.getStatePercentCompleted());
+							__debug__("local graph [" + local.getGraphId() + "] UPDATED, percent completed="
+								+ local.getStatePercentCompleted());
+						}
 					}
 				}
 			}
