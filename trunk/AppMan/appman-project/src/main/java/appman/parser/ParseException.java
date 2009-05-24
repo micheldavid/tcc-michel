@@ -149,7 +149,7 @@ public String getMessage() {
    * string literal.
    */
   protected String add_escapes(String str) {
-      StringBuffer retval = new StringBuffer();
+	  StringBuilder retval = new StringBuilder();
       char ch;
       for (int i = 0; i < str.length(); i++) {
         switch (str.charAt(i))

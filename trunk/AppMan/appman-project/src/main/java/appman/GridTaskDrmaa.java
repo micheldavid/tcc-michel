@@ -34,14 +34,14 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 
 	private boolean sucess = true;
 
-	private StringBuffer errorbuffer = null;
+	private StringBuilder errorbuffer = null;
 
 	public GridTaskDrmaa(Task task, String cmd, String filepath_seed) {
 		super(filepath_seed);
 		mytask = task;
 		command = cmd;
 		log.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] cmd: " + cmd);
-		errorbuffer = new StringBuffer();
+		errorbuffer = new StringBuilder();
 	}
 
 	public synchronized void setRun(boolean b) {

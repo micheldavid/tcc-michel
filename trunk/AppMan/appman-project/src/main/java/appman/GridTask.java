@@ -28,7 +28,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 	private boolean end = false;
 	private boolean sucess = true;
 	
-	private StringBuffer errorbuffer = null;
+	private StringBuilder errorbuffer = null;
 
 	
 	public GridTask(Task task, String cmd, String filepath_seed)
@@ -39,7 +39,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		
 		log.debug("\tGRIDTASK ["+mytask.getTaskId()+"] cmd: "+ cmd);
 		
-		errorbuffer = new StringBuffer();
+		errorbuffer = new StringBuilder();
 	}
 	
 	public synchronized void setRun(boolean b) 
@@ -202,11 +202,11 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
         checkDie();
 			
         Process proc = Runtime.getRuntime().exec(cmd);
-        StringBuffer inBuffer = new StringBuffer();
+        StringBuilder inBuffer = new StringBuilder();
         InputStream inStream = proc.getInputStream();
         new InputStreamHandler( inBuffer, inStream );
 
-        errorbuffer = new StringBuffer();
+        errorbuffer = new StringBuilder();
         InputStream errStream = proc.getErrorStream();
         new InputStreamHandler( errorbuffer , errStream );
 			
