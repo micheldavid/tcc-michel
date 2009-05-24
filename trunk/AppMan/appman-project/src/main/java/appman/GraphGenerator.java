@@ -348,7 +348,7 @@ public class GraphGenerator extends GraphLib
 						 }
 					  }
 					
-					  if(found == false) // se o arquivo de entrada � output da aplica��o, ou seja nao possui uma tarefa que gera o arquivo
+					  if(found == false) // se o arquivo de entrada é output da aplicação, ou seja nao possui uma tarefa que gera o arquivo
 					  {
 					  	String filename = outfile;
 						String to_name = t.getTaskName();

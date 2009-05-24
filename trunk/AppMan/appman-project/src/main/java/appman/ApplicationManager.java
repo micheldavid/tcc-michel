@@ -215,7 +215,7 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 	}
 
 	/*
-	 * Retorna uma refer�ncia remota do servi�o de transfer�ncia de arquivos de uma tarefa
+	 * Retorna uma referência remota do serviço de transferência de arquivos de uma tarefa
 	 */
 	public String getTaskGridFileServiceContactAddressRemote(String taskId)
 	throws RemoteException {
@@ -382,7 +382,7 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 		Debug
 		.debug("ApplicationManager add a new ApplicationDescription",
 				true);
-		// cria um grafo default rand�mico
+		// cria um grafo default randômico
 		Graph g = new Graph(graphId, clusterId, appdesc);
 		addGraph(g);
 	}
@@ -478,11 +478,11 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 								remote = subman.getGraphRemote(local
 										.getGraphId());
 							} catch (RemoteException e) {
-								// Toler�ncia a Falhas
-								// Se o Submission Manager n�o responder ent�o
+								// Tolerância a Falhas
+								// Se o Submission Manager não responder então
 								// remove o grafo da lista
 								// adiciona o grafo novamente no Application Manager com um novo SubMan escalonado									
-								Debug.debug("Toler�ncia a Falhas - " + e, true);
+								Debug.debug("Tolerância a Falhas - " + e, true);
 								e.printStackTrace();
 								//System.exit(0);
 								try {
@@ -495,7 +495,7 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 								} catch (Exception e2) {
 									AppManUtil
 									.exitApplication(
-											"Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO",
+											"Tolerância a Falhas: ERRO FATAL NÃO TOLERADO",
 											e2);
 								}
 							}

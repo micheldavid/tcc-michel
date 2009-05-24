@@ -370,10 +370,10 @@ public class SandBox
             {
                 byte[] buffer = null;
                 
-                    // se a tarefa for estrangeira (de outro grafo) ent�o baixe o arquivo
-                    // usando a refer�ncia remota do servi�o de arquivos do grid task
+                    // se a tarefa for estrangeira (de outro grafo) então baixe o arquivo
+                    // usando a referência remota do serviço de arquivos do grid task
                 if (remote_task.getState().getCode() == TaskState.TASK_FOREIGN_FINAL) {
-                        // esta refer�ncia remota foi atualizada pelo
+                        // esta referência remota foi atualizada pelo
                         // submission manager <-- application manager
                         // <-- task <-- grid task
                     String contact_address_remote = remote_task
@@ -391,7 +391,7 @@ public class SandBox
                     buffer = smr.downloadFileFromGridTask(
                         remote_task.getTaskId(), filename);
                 }
-                else { // sen�o baixe o arquivo de forma convencional
+                else { // senão baixe o arquivo de forma convencional
                     GridFileServiceRemote gfs = remote_task.getRemoteGridTaskFileService();
                     if ( gfs == null ) {
                         throw new RemoteException("Remote grid file service not found!");

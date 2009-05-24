@@ -59,7 +59,7 @@ public abstract class Task implements Runnable, Serializable {
 
 	private void analyzeFaultTolerance(Exception e) {
 		// Tolerancia a Falhas - Task
-		Debug.debug("Tolerancia a Falhas na execu��o de tarefa ["
+		Debug.debug("Tolerancia a Falhas na execução de tarefa ["
 				+ taskId + "]" + e, true);
 		Debug
 				.debug(
