@@ -304,16 +304,16 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 		private InputStream m_stream;
 
 		/**
-		 * The StringBuffer holding the captured output
+		 * The StringBuilder holding the captured output
 		 */
-		private StringBuffer m_captureBuffer;
+		private StringBuilder m_captureBuffer;
 
 		/**
 		 * Constructor.
 		 * 
 		 * @param
 		 */
-		InputStreamHandler(StringBuffer captureBuffer, InputStream stream) {
+		InputStreamHandler(StringBuilder captureBuffer, InputStream stream) {
 			m_stream = stream;
 			m_captureBuffer = captureBuffer;
 			start();

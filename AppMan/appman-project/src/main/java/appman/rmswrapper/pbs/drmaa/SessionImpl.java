@@ -24,11 +24,11 @@ public class SessionImpl implements Session {
 
 		private boolean done;
 
-		private StringBuffer m_captureBuffer;
+		private StringBuilder m_captureBuffer;
 
 		private InputStream m_stream;
 
-		InputStreamHandler(StringBuffer captureBuffer, InputStream stream) {
+		InputStreamHandler(StringBuilder captureBuffer, InputStream stream) {
 			m_stream = stream;
 			m_captureBuffer = captureBuffer;
 			done = false;
@@ -64,11 +64,11 @@ public class SessionImpl implements Session {
 
 						Process process = Runtime.getRuntime().exec(qStatCommand);
 						InputStream inStream = process.getInputStream();
-						StringBuffer inBuffer = new StringBuffer();
+						StringBuilder inBuffer = new StringBuilder();
 						InputStreamHandler inStreamHandler = new InputStreamHandler(inBuffer, inStream);
 
 						InputStream errStream = process.getErrorStream();
-						StringBuffer errBuffer = new StringBuffer();
+						StringBuilder errBuffer = new StringBuilder();
 						InputStreamHandler errStreamHandler = new InputStreamHandler(errBuffer, errStream);
 
 						int exitValue = process.waitFor();
@@ -166,7 +166,7 @@ public class SessionImpl implements Session {
 	}
 
 	private String buildQStatCommand(List jobTemplates) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append(resourceDescriptor.getExecutablesPath() + "qstat ");
 		for (Iterator iter = jobTemplates.iterator(); iter.hasNext();) {
 			JobTemplate jobTemplate = (JobTemplate) iter.next();
@@ -329,11 +329,11 @@ public class SessionImpl implements Session {
 			Process process = Runtime.getRuntime().exec(qSubCommand);
 
 			InputStream inStream = process.getInputStream();
-			StringBuffer inBuffer = new StringBuffer();
+			StringBuilder inBuffer = new StringBuilder();
 			InputStreamHandler inStreamHandler = new InputStreamHandler(inBuffer, inStream);
 
 			InputStream errStream = process.getErrorStream();
-			StringBuffer errBuffer = new StringBuffer();
+			StringBuilder errBuffer = new StringBuilder();
 			InputStreamHandler errStreamHandler = new InputStreamHandler(errBuffer, errStream);
 
 			exitValue = process.waitFor();

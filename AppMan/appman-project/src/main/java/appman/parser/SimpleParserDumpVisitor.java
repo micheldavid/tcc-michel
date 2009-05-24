@@ -30,7 +30,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
    }
 
    private String indentString() {
-     StringBuffer sb = new StringBuffer();
+	   StringBuilder sb = new StringBuilder();
      for (int i = 0; i < indent; ++i) {
        sb.append(" ");
      }
