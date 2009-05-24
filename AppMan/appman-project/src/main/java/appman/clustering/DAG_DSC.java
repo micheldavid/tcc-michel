@@ -85,7 +85,7 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 
 		dn.nodeName = name;
 		
-		if( name.compareTo("") == 0){
+		if( name.length() == 0){
 			dn.nodeName = "task"+dagNodes.size();
 		}
 

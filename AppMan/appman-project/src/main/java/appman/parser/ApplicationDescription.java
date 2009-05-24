@@ -97,7 +97,7 @@ import appman.clustering.*;
        numberOfTasks++;
        
        
-       if( taskName.compareTo("") == 0 ){
+       if( taskName.length() == 0 ){
 			taskName = "task"+(numberOfTasks-1);
 			//System.out.println("VAZIOOOOOOOOOOO!!!!");
        }
