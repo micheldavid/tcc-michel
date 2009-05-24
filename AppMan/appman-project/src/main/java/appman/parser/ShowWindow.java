@@ -95,7 +95,7 @@ public class ShowWindow
 
 	frame = new DemoFrame(graph);
 
-	frame.show();
+	frame.setVisible(true);
 	
 	//////////// Codigo vindn
 	/*
@@ -148,7 +148,7 @@ public class ShowWindow
 		});
 
 	    JScrollPane jsp = new JScrollPane();
-	    jsp.getViewport().setBackingStoreEnabled(true);
+	    jsp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
 	    gp = new GrappaPanel(graph);
 	    gp.addGrappaListener(new GrappaAdapter());

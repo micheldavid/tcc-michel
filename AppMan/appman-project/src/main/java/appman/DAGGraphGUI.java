@@ -200,7 +200,7 @@ public class DAGGraphGUI extends javax.swing.JFrame
 		Debug.debug("This program is going to test the AppMan package", true);
 		DAGGraphGUI daggui = new DAGGraphGUI();
 		daggui.pack();
-		daggui.show();
+		daggui.setVisible(true);
     }
     
     

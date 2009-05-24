@@ -130,7 +130,7 @@ public class ShowWindow
 
 	if (frame == null) {
 		frame = new DemoFrame(graph);
-		frame.show();
+		frame.setVisible(true);
 	}
 	
 	
@@ -184,7 +184,7 @@ public class ShowWindow
 		});
 
 	    JScrollPane jsp = new JScrollPane();
-	    jsp.getViewport().setBackingStoreEnabled(true);
+	    jsp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
 	    gp = new GrappaPanel(graph);
 	    gp.addGrappaListener(new GrappaAdapter());
