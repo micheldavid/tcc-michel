@@ -41,6 +41,8 @@ import appman.task.Task;
 public class DataFile implements Serializable {
 	/* {src_lang=Java} */
 
+	private static final long serialVersionUID = 2586879788018644561L;
+
 	/** which task owns this datafile */
 	private Task fromtask;
 

@@ -31,6 +31,8 @@ import appman.parser.ApplicationDescription;
 
 public class Reader implements Serializable {
 
+	private static final long serialVersionUID = -2142446295103918750L;
+
 	protected static String inputFilePath = new String(
 			"/home/SO/dalto/eclipse/workspace/appman-mgc/grappaOut.txt");
 

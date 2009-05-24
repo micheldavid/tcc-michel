@@ -26,7 +26,9 @@ import att.grappa.*;
 public class ShowWindow
 	implements GrappaConstants, Serializable
 {
-    public DemoFrame  frame  = null;
+	private static final long serialVersionUID = 8556936168377636198L;
+
+	public DemoFrame  frame  = null;
 
     public final static String SCRIPT = "formatDemo";
     
@@ -155,6 +157,7 @@ public class ShowWindow
 
     class DemoFrame extends JFrame implements ActionListener
     {
+		private static final long serialVersionUID = -6483034901552340694L;
 	GrappaPanel gp;
 	Graph graph = null;
 

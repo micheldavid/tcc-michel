@@ -1,6 +1,5 @@
 /*
  * Created on 28/05/2004
- * 
  */
 package appman;
 
@@ -28,10 +27,11 @@ import edu.berkeley.guir.prefusex.force.SpringForce;
 
 /**
  * @author lucasa@gmail.com
- *
  */
-public class ApplicationManager implements Runnable, ApplicationManagerRemote,
-Serializable {
+public class ApplicationManager implements Runnable, ApplicationManagerRemote, Serializable {
+
+	private static final long serialVersionUID = 440529620112600733L;
+
 	private String appmanId; // id
 
 	/** List of available SMs */

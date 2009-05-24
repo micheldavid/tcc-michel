@@ -19,6 +19,7 @@ import edu.berkeley.guir.prefuse.graph.DefaultNode;
  */
 public class GraphNode extends DefaultNode implements Serializable
 {
+	private static final long serialVersionUID = 5719908628990596356L;
 	private Object nodedata;
 	public GraphNode(Object data)
 	{

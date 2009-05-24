@@ -15,6 +15,7 @@ import appman.task.Task;
  */
 public class GridTask extends GridFileService implements Runnable, GridTaskRemote
 {
+	private static final long serialVersionUID = 94618337786246610L;
 	private String command;
 	private Task mytask;
 

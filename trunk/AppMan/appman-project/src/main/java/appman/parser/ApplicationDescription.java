@@ -18,7 +18,8 @@ import appman.clustering.*;
    */
   public class  ApplicationDescription implements Serializable
   {
-    private static int INDEP = 0; // graph=independent
+	private static final long serialVersionUID = -3554750829219220099L;
+	private static int INDEP = 0; // graph=independent
     private static int LOW   = 1; // graph=loosely-coupled
     private static int HIGH  = 2; // graph=tightly-coupled
     private static int DEFAULT_GRAPH  = LOW; 

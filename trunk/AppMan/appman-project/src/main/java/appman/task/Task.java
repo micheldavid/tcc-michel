@@ -19,6 +19,8 @@ import appman.log.Debug;
  */
 public abstract class Task implements Runnable, Serializable {
 
+	private static final long serialVersionUID = -5101143107805590612L;
+
 	public static final int MAX_RETRY_TIMES = 5;
 
 	String taskId;
