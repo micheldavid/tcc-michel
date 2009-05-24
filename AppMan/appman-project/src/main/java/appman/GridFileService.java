@@ -1,8 +1,5 @@
 /*
  * Created on 08/06/2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
@@ -24,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author lucasa
- *  
  */
 public class GridFileService implements GridFileServiceRemote, Serializable {
 

@@ -11,7 +11,6 @@ public class JobInfoImpl extends JobInfo {
 	private static final long serialVersionUID = 1870231605912138603L;
 
 	public int getExitStatus() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -24,17 +23,14 @@ public class JobInfoImpl extends JobInfo {
 	}
 
 	public boolean hasExited() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean hasSignaled() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean wasAborted() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

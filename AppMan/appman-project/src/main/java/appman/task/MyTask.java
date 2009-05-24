@@ -1,8 +1,5 @@
 /*
  * Created on 13/05/2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman.task;
 
@@ -30,13 +27,10 @@ import appman.GridTaskRemote;
 import appman.SubmissionManager;
 import appman.SubmissionManagerRemote;
 
-//import org.isam.exehda.services.ObjectSeed.Activator;
-
 /**
  * Refactored in 2006/01/10 by VDN and PKVM
  * 
  * @author lucasa
- *  
  */
 public class MyTask extends Task implements Serializable {
 	private static final Log log = LogFactory.getLog(MyTask.class);
@@ -67,11 +61,6 @@ public class MyTask extends Task implements Serializable {
 
 	transient GridFileServiceRemote gridfileservice = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see appman.Task#execute()
-	 */
 	public void execute() throws Exception {
 		String where = "grid.targetHosts.localscheduler";
 

@@ -5,7 +5,6 @@ package appman.task;
  * User: wagnervox
  * Date: Jun 17, 2008
  * Time: 10:04:27 PM
- * To change this template use File | Settings | File Templates.
  */
 public class TaskType {
 
