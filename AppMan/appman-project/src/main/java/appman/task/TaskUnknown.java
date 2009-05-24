@@ -2,8 +2,6 @@ package appman.task;
 
 public class TaskUnknown extends TaskState {
 
-	private static final long serialVersionUID = 5845953326286695890L;
-
 	@Override
 	public int getCode() {
 		return TaskState.TASK_DONT_KNOW;

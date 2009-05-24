@@ -3,10 +3,10 @@
 package appman;
 
 import java.awt.Window;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.Exehda;
 import org.isam.exehda.services.CellInformationBase;
@@ -15,9 +15,12 @@ import org.isam.exehda.services.Executor;
 import org.isam.exehda.services.OXManager;
 import org.isam.exehda.services.Worb;
 
-public class AppManUtil {
-    private static final Vector<Window> frames = new Vector<Window>();
-    private static final Log log = LogFactory.getLog(AppManUtil.class);
+import appman.log.Debug;
+
+
+public class AppManUtil
+{
+    private static Vector frames = new Vector();
 
     public static Executor getExecutor()
         {
@@ -60,41 +63,61 @@ public class AppManUtil {
             return (CellInformationBase) Exehda.getService(CellInformationBase.SERVICE_NAME);
         }
 
-    public static void exitApplication() {
-		exitApplication(null, null);
-	}
+    public static void exitApplication()
+        {
+//             (new Throwable()).printStackTrace();
+            
+                // ensure all application frames are disposed 
+            for (int i=0; i<frames.size(); i++) {
+                Window w = (Window) frames.elementAt(i);
 
-	public static void exitApplication(String msg, Throwable t) {
-		log.warn(msg, t);
+                try { w.dispose(); }
+                catch (Exception e) { /* empty */ }
+            }
 
-		// ensure all application frames are disposed
-		for (Window w : frames) {
-			try {
-				w.dispose();
-			} catch (Exception e) {}
-		}
+            
+            ((Executor) Exehda.getService(Executor.SERVICE_NAME))
+                .exitApplication();
+        }
 
-		((Executor) Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
-	}
+    public static void exitApplication(String msg, Throwable t)
+        {
+            if ( msg != null ) {
+                Debug.debug(msg, true);
+            }
+            
+            if ( t != null ) {
+                Debug.debug(t, true);
+                t.printStackTrace();
+            }
 
+            exitApplication();
+        }
+
+    
         /**
          * Registers a window (tipically a Frame or JFrame) to be automatically disposed
          * up on application exit);
          *
          * @param w a <code>java.awt.Window</code> value
          */
-    public static void registerWindow(java.awt.Window w) {
-		if (w != null && !frames.contains(w)) {
-			frames.add(w);
-		}
-	}
+    public static void registerWindow(java.awt.Window w)
+        {
+            if ( w != null && !frames.contains(w) ) {
+                frames.add(w);
+            }
+        }
 
-    public static void runAssynchronousAction(final ApplicationId appId, final Runnable action) {
-		(new Thread() {
-			@Override
-			public void run() {
-				getExecutor().runAction(appId, action);
-			}
-		}).start();
-	}
+    public static void runAssynchronousAction(ApplicationId appId, Runnable action)
+        {
+            final ApplicationId aid = appId;
+            final Runnable a = action;
+            
+            (new Thread() {
+                @Override
+				public void run() {
+                    getExecutor().runAction(aid, a);
+                }
+                }).start();
+        }
 }

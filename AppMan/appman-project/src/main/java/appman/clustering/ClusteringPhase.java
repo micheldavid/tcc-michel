@@ -2,18 +2,12 @@
  * @author vindn
  */
 package appman.clustering;
-import java.io.Serializable;
-import java.util.Vector;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.*;
+import java.io.*;
 
 
 public class ClusteringPhase implements Serializable{
 	
-	private static final long serialVersionUID = 499369438336117595L;
-	private static final Log log = LogFactory.getLog(ClusteringPhase.class);
-
 	//protected DAG_DSC dag_dsc;
 	protected DAG_DSC nodes;
 	protected Vector cluster;
@@ -26,7 +20,8 @@ public class ClusteringPhase implements Serializable{
 		try {
 		   nodes = (DAG_DSC)dag_dsc.clone();
 		} catch (Exception e) {
-		   log.error("[GRAND]\tError while partitioning - error cloning DAG", e);
+		   System.out.println("[GRAND]\tError while partitioning - error cloning DAG");
+		   System.out.println(e);
 		   System.exit(1);
 		}
 		cluster = new Vector();
@@ -56,16 +51,16 @@ public class ClusteringPhase implements Serializable{
 			while( (i < nodesWithoutPred.length) && (nodesWithoutPred[i] != null) ){
 
 				newLevel.add( nodesWithoutPred[i] );
-				//log.debug("NODOOOOO"+nodesWithoutPred[i]);
+				//System.out.println("NODOOOOO"+nodesWithoutPred[i]);
 				nodes.removeNode( nodesWithoutPred[i] );
 				i++;
 				counter++;
 				if ((counter == CLUSTER_SIZE_LIMIT) && (i<nodesWithoutPred.length) ) {
 					if( (newLevel != null) && (nodesWithoutPred.length != 0) ){
 						cluster.add( newLevel );
-						log.debug("DEBUG: cluster created = "+cluster.size());
+						System.out.println("DEBUG: cluster created = "+cluster.size());
 					} else {
-						log.debug("ASSERT: newLevel="+newLevel+" nodesWithoutPred.length "+nodesWithoutPred.length);
+						System.out.println("ASSERT: newLevel="+newLevel+" nodesWithoutPred.length "+nodesWithoutPred.length);
 					}
 					newLevel = new Vector();
 					counter = 0;					
@@ -76,12 +71,21 @@ public class ClusteringPhase implements Serializable{
 			
 			if( (newLevel != null) && (nodesWithoutPred.length != 0) ){
 				cluster.add( newLevel );
-				log.debug("DEBUG: cluster created = "+cluster.size());
+				System.out.println("DEBUG: cluster created = "+cluster.size());
 			} else {
-				log.debug("ASSERT: newLevel="+newLevel+" nodesWithoutPred.length "+nodesWithoutPred.length);
+				System.out.println("ASSERT: newLevel="+newLevel+" nodesWithoutPred.length "+nodesWithoutPred.length);
 			}
 		}
 		
+		/*
+		for(int i=0; i < cluster.size(); i++ ){
+			System.out.print("Level "+i+" ");
+			for(int j=0; j < ((Vector)(cluster.get(i))).size(); j++  ){
+				System.out.print(((Vector)(cluster.get(i))).get(j) + " " );
+			}
+			System.out.print("\n");
+		}
+		*/
 		numberOfLevels = cluster.size();
 		return cluster;
 		

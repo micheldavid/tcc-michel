@@ -4,6 +4,7 @@
  */
 package appman;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -11,8 +12,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import appman.log.Debug;
 
 /**
  * @author lucasa
@@ -20,40 +20,45 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GridRemoteHostsFileProperties extends Properties implements Serializable
 {
-	private static final long serialVersionUID = -4809139501645717731L;
-	private static final Log log = LogFactory.getLog(GridRemoteHostsFileProperties.class);
 	private String propertiesFileName;
 	private String propertiesFileSection;
 	
-	public GridRemoteHostsFileProperties(String filename, String filesection) {
-		super();
-		try {
-			propertiesFileName = filename;
-			propertiesFileSection = filesection;
-			// log.debug("Load Properties File: " + propertiesFileName);
-			InputStream fis = getClass().getClassLoader().getResourceAsStream(propertiesFileName);
-			// log.debug(fis);
-			load(fis);
-			fis.close();
-		} catch (IOException ex) {
-			log.warn(ex, ex);
-			System.exit(0);
-		}
+	public GridRemoteHostsFileProperties(String filename, String filesection)
+	{
+			super();
+			try
+			{
+					propertiesFileName = filename;
+					propertiesFileSection = filesection;
+					//Debug.debug("Load Properties File: " + propertiesFileName);
+					InputStream fis = this.getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+					//Debug.debug(fis);
+					this.load(fis);					
+			} catch (FileNotFoundException fnfe)
+			   {
+					Debug.debug(fnfe);
+					fnfe.printStackTrace();
+					System.exit(0);
+				} catch (IOException ioe)
+				{
+					ioe.printStackTrace();
+					System.exit(0);
+				}
 	}
 	
 	public ArrayList getTargetHosts()
 	{
 		ArrayList targetHosts = new ArrayList();
 		String hosts = this.getProperty(propertiesFileSection);
-		log.debug("GridRemoteHostsFileProperties hosts loaded from file: " + propertiesFileName + " - section: " + propertiesFileSection + " - ["+hosts+"]");
-		StringTokenizer st = new StringTokenizer(hosts, ";");
+		Debug.debug("GridRemoteHostsFileProperties hosts loaded from file: " + propertiesFileName + " - section: " + propertiesFileSection + " - ["+hosts+"]", true);
+		StringTokenizer st = new StringTokenizer(hosts, ";", true);
 		while (st.hasMoreTokens())
 		{
 			String str = st.nextToken();
 			if(!str.equals(";"))
 			{
 				targetHosts.add(str);
-				log.debug(str);
+				Debug.debug(" " + str, false);
 			}
 		}
 		

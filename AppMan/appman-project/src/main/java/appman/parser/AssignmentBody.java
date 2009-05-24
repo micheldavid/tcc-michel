@@ -7,14 +7,9 @@
 
 package appman.parser;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.*;
 
 public class  AssignmentBody {
-	private static final Log log = LogFactory.getLog(AssignmentBody.class);
    // possible variable types
    public static final int STRING   = 0;
    public static final int CONSTANT = 1;
@@ -77,7 +72,7 @@ public class  AssignmentBody {
       // position in the list.
       ListIterator l = value.listIterator(0);
       Node n = (Node) l.next(); 
-      ///log.debug("\tFirst element in the assignment: "+n.value);
+      ///System.out.println("\tFirst element in the assignment: "+n.value);
 
       switch (this.type) {
         case STRING:
@@ -100,7 +95,7 @@ public class  AssignmentBody {
               firstOp = this.calculate(firstOp, secondOp, operator, symbolTable);
               evaluatedValue = firstOp.value;
 	    }
-            log.debug("\tAssigment: "+evaluatedValue);
+            System.out.println("\tAssigment: "+evaluatedValue);
             return evaluatedValue;
       }
 
@@ -171,7 +166,7 @@ public class  AssignmentBody {
       }
 
       private String toStringWithoutQuotationMark(String s) {
-         ///log.debug ("\t\tstring: "+s);
+         ///System.out.println ("\t\tstring: "+s);
       	 if (s.length()==0) return s;
       	 
          if ((s.charAt(0) != '\"') && (s.charAt(s.length()-1) != '\"')) {
@@ -179,7 +174,7 @@ public class  AssignmentBody {
 	    return s;
          } else{
             String value = s.substring(1,s.length() -1);
-	    ///log.debug ("\t\tsubstring: "+value);
+	    ///System.out.println ("\t\tsubstring: "+value);
             return value;
          }
 

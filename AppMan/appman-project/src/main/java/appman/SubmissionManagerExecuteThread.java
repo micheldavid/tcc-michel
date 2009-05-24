@@ -21,7 +21,7 @@ public class SubmissionManagerExecuteThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			submissionManagerRemote.runSubmissionManager();
+//			submissionManagerRemote.runSubmissionManager();
 			handler.runSubmissionManagerFinished(this, null);
 		} catch (Exception e) {
 			handler.runSubmissionManagerFinished(this, e);

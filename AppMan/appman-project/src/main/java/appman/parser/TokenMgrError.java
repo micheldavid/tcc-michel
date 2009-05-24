@@ -4,11 +4,9 @@ package appman.parser;
 
 public class TokenMgrError extends Error
 {
-	private static final long serialVersionUID = 848201746955708175L;
    /*
     * Ordinals for various reasons why an Error of this type can be thrown.
     */
-
 
    /**
     * Lexical error occured.

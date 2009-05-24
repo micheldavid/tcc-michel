@@ -19,9 +19,7 @@ import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import appman.log.Debug;
 import appman.task.Task;
 import appman.task.TaskState;
 
@@ -34,9 +32,12 @@ import appman.task.TaskState;
  * own  sandbox. This checking, although, is not yet implemented.
  *
  * <p>TO DO: implement access constraints
+ *
+ * @author last modified by $Author$
+ * @version $Id$
  */
-public class SandBox {
-	private static final Log log = LogFactory.getLog(SandBox.class);
+public class SandBox
+{
     private static final String SYSPROP_TMPDIR  = "java.io.tmpdir";
     private static final String SYSPROP_USER    = "user.name";
     private static final String SLASH           = File.pathSeparator;
@@ -90,7 +91,7 @@ public class SandBox {
             else root = null;
         }
         catch (Exception e) {
-            log.error(e, e);
+            e.printStackTrace();
             root = null;
         }
         finally {
@@ -265,14 +266,15 @@ public class SandBox {
             return dir.delete();
         }
 
-	/**
-	 * Facility for logging of debugging messages.
-	 *
-	 * @param msg a <code>String</code> value
-	 */
-	private static final void __debug__(String msg) {
-		log.debug("[SANDBOX] " + msg);
-	}
+        /**
+         * Facility for logging of debugging messages.
+         *
+         * @param msg a <code>String</code> value
+         */
+    private static final void __debug__(String msg)
+        {
+            Debug.debug("[SANDBOX] "+ msg, true);
+        }
     
     @Override
 	protected void finalize()
@@ -368,10 +370,10 @@ public class SandBox {
             {
                 byte[] buffer = null;
                 
-                    // se a tarefa for estrangeira (de outro grafo) então baixe o arquivo
-                    // usando a referência remota do serviço de arquivos do grid task
+                    // se a tarefa for estrangeira (de outro grafo) ent�o baixe o arquivo
+                    // usando a refer�ncia remota do servi�o de arquivos do grid task
                 if (remote_task.getState().getCode() == TaskState.TASK_FOREIGN_FINAL) {
-                        // esta referência remota foi atualizada pelo
+                        // esta refer�ncia remota foi atualizada pelo
                         // submission manager <-- application manager
                         // <-- task <-- grid task
                     String contact_address_remote = remote_task
@@ -389,7 +391,7 @@ public class SandBox {
                     buffer = smr.downloadFileFromGridTask(
                         remote_task.getTaskId(), filename);
                 }
-                else { // senão baixe o arquivo de forma convencional
+                else { // sen�o baixe o arquivo de forma convencional
                     GridFileServiceRemote gfs = remote_task.getRemoteGridTaskFileService();
                     if ( gfs == null ) {
                         throw new RemoteException("Remote grid file service not found!");
@@ -408,14 +410,16 @@ public class SandBox {
         
             /**
              * Creates a file at the specified path in the local filesystem, filling it
-             * with the data provided in the byte buffer <code>contents</code>.
+             * withthe data provided in the byte buffer <code>contents</code>.
              *
-             * @param path target location in the local file-system
+             * @param path target localtion in the local file-system
              * @param contents data used to initialize the file
              */
         private final void createLocalFile(File path, byte[] contents) throws IOException
             {
-                    // experimental: using the NIO API
+                    //
+                    // XXX: experimental stuff: using the NIO API
+                    //
                 ByteBuffer buff = ByteBuffer.wrap(contents);
 
                 FileOutputStream out = new FileOutputStream(path);
@@ -439,7 +443,9 @@ public class SandBox {
             throws IOException
             {
                 File dst = new File(dstDir, src.getName());
-                    // experimental: the NIO API
+                    //
+                    // XXX: experimental stuff: using the NIO API
+                    //
                 FileChannel sch = new FileInputStream(src).getChannel();
                 FileChannel dch = new FileOutputStream(dst).getChannel();
                     // Copy file contents from source to destination

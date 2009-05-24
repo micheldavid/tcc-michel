@@ -5,7 +5,6 @@ import java.util.*;
 
 public class DAGNode implements Cloneable, Serializable{
 	
-	private static final long serialVersionUID = 6517054966199226876L;
 	public String nodeName;
 	public int nodeIndex;
 	public double weight;
@@ -52,7 +51,7 @@ public class DAGNode implements Cloneable, Serializable{
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		DAGNode copy = new DAGNode();
-		copy.nodeName = this.nodeName;
+		copy.nodeName = new String(this.nodeName);
 		copy.weight = this.weight;
 		copy.nodeIndex = this.nodeIndex;
 		//copy.edges = (Vector) this.edges.clone();

@@ -1,9 +1,13 @@
 package appman.db;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
@@ -16,18 +20,35 @@ public class AppDataSource {
 
 	private static BasicDataSource ds;
 
-	static {
+	private static void init() throws IOException {
+
+		URL dbconfig = AppDataSource.class.getResource("/db.properties");
+
+		InputStream is = dbconfig.openStream();
+		Properties props = new Properties();
+		props.load(is);
+		is.close();
+
 		ds = new BasicDataSource();
-		ds.setDriverClassName("org.hsqldb.jdbcDriver");
-		ds.setUrl("jdbc:hsqldb:hsql://localhost:8887");
-		ds.setUsername("sa");
-		ds.setPassword("");
-		ds.setMinIdle(1);
-		ds.setMaxIdle(2);
-		ds.setMaxActive(16);
+		ds.setDriverClassName(props.getProperty("appman.db.driver"));
+		ds.setUrl(props.getProperty("appman.db.url"));
+		ds.setUsername(props.getProperty("appman.db.username"));
+		ds.setPassword(props.getProperty("appman.db.password"));
+		ds.setMinIdle(Integer.parseInt(props
+				.getProperty("appman.db.ds.minIdle")));
+		ds.setMaxIdle(Integer.parseInt(props
+				.getProperty("appman.db.ds.maxIdle")));
+		ds.setMaxActive(Integer.parseInt(props
+				.getProperty("appman.db.ds.maxActive")));
 	}
 
 	public static Connection getConnection() throws SQLException {
+		if (ds == null)
+			try {
+				init();
+			} catch (IOException e) {
+				throw new Error(e);
+			}
 		return ds.getConnection();
 	}
 

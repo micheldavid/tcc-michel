@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import appman.clustering.DAGEdge;
 import appman.clustering.DAGNode;
 import appman.clustering.DAG_DSC;
@@ -22,8 +19,7 @@ import appman.parser.SimpleParser;
 import appman.parser.TaskDescription;
 
 public class OutputXML{
-
-	private static final Log log = LogFactory.getLog(OutputXML.class);
+	
 	protected transient BufferedWriter manifest;
 	protected transient BufferedWriter clusters;
 	protected transient BufferedWriter edges;
@@ -35,19 +31,20 @@ public class OutputXML{
 	
 	
 	public OutputXML(){
-		filenameManifest = "manifest.xml";
-		filenameTasks = "tasks.xml";
-		filenameEdges = "edges.xml";
-		filenameClusters = "clusters.xml";
+		filenameManifest = new String("manifest.xml");
+		filenameTasks = new String("tasks.xml");
+		filenameEdges = new String("edges.xml");
+		filenameClusters = new String("clusters.xml");
 	}
 	
 	public void createManifest(){
-
+				
 		try {
 			manifest = new BufferedWriter(new FileWriter(filenameManifest));
 		} catch (IOException e) {
-			log.debug("[GRAND]\tError creating file "+filenameManifest);
-			log.error("[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameManifest);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -58,8 +55,9 @@ public class OutputXML{
 		try {
 			tasks = new BufferedWriter(new FileWriter(filenameTasks));
 		} catch (IOException e) {
-			log.debug("[GRAND]\tError creating file "+filenameTasks);
-			log.error("[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameTasks);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -70,8 +68,9 @@ public class OutputXML{
 		try {
 			edges = new BufferedWriter(new FileWriter(filenameEdges));
 		} catch (IOException e) {
-			log.debug("[GRAND]\tError creating file "+filenameEdges);
-			log.error("[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameEdges);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -82,8 +81,9 @@ public class OutputXML{
 		try {
 			clusters = new BufferedWriter(new FileWriter(filenameClusters));
 		} catch (IOException e) {
-			log.debug("[GRAND]\tError creating file "+filenameClusters);
-			log.debug("[GRAND]\tExecution graph cannot be created - aborting execution...", e);
+			System.out.println("[GRAND]\tError creating file "+filenameClusters);
+			System.out.println("[GRAND]\tExecution graph cannot be created - aborting execution...");
+			System.out.println(e);
 			System.exit(0);
 		}
 		
@@ -102,18 +102,18 @@ public class OutputXML{
 			manifest.write("</m:Manifest>\n");
 			
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in first writing to file "+filenameManifest, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameManifest);
 		}
 		
 	}
 	
-	public void writeTasks() {
-
+	public void writeTasks(){
+		
 		ApplicationDescription appDesc = SimpleParser.appDescription;
 //		DAG_DSC dag = appDesc.getDAG();
 		Vector listOfTasks = appDesc.getListOfTasks();
 		 String jobName = new String();
-		 String jobID = new String();
+		 String jobID = new String(); 
 		 String jobWeight = new String();
 		 String appName = new String();
 		 String executable = new String();
@@ -125,7 +125,7 @@ public class OutputXML{
 			tasks.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 			tasks.write("<jsdl:JobDefinition xmlns:jsdl-posix=\"http://schemas.ggf.org/jsdl/2005/04/jsdl-posix\" xmlns:jsdl=\"http://schemas.ggf.org/jsdl/2005/04/jsdl\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:jsdl-grand=\"http://www.cos.ufrj.br/~grand/2005/06/jsdl-grand\" xsi:schemaLocation=\"http://schemas.ggf.org/jsdl/2005/04/jsdl http://schemas.ggf.org/jsdl/2005/04/jsdl/jsdl.xsd http://schemas.ggf.org/jsdl/2005/04/jsdl-posix http://schemas.ggf.org/jsdl/2005/04/jsdl-posix/jsdl-posix.xsd http://www.cos.ufrj.br/~grand/2005/06/jsdl-grand http://www.cos.ufrj.br/~grand/2005/06/jsdl-grand/jsdl-grand.xsd\">\n");
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in first writing to file "+filenameTasks, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 		}
 
 		for (int i=0; i< listOfTasks.size();i++) {
@@ -136,8 +136,8 @@ public class OutputXML{
 			
 			appName = node.getExecutable(); 
 
-			// FIXME: BUG: o código abaixo falha para comandos composts ou quando existe manipulação de diretórios (ver
-			// aplicação povray)
+			// BUG: o c�digo abaixo falha para comandos composts ou quando existe 
+                        // manipula��o de diret�rios (ver aplica��o povray)
 
 			// pegar o nome sem caminho
 			int barra = appName.lastIndexOf('/')+1;
@@ -165,25 +165,23 @@ public class OutputXML{
 				tasks.write("\t\t\t\t<jsdl-posix:Executable>"+executable+"</jsdl-posix:Executable>\n");
 				tasks.write("\t\t\t\t<jsdl-posix:Argument>"+argument+"</jsdl-posix:Argument>\n");
 			} catch (IOException e) { 
-				log.error("[GRAND]\tError in first writing to file "+filenameTasks, e);
+				System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 			}
 			
 			//FALTA VARRER O VETOR DE ENTRADAS E SAIDAS!!!!!!!!
 			input = node.getInputFiles();
 			output = node.getOutputFiles();
 			//input =   //Vector inputFiles = node.getInputFiles();
-
+			
+			
+			
 			try {
-				if (input != null) {
-					for (String inFileName : (Vector<String>) input)
-						tasks.write("\t\t\t\t<jsdl-posix:Input>" + inFileName + "</jsdl-posix:Input>\n");
-				}
-				if (output != null) {
-					for (String outFileName : (Vector<String>) output)
-						tasks.write("\t\t\t\t<jsdl-posix:Output>" + outFileName + "</jsdl-posix:Output>\n");
-				}
+				for(int j=0; j < input.size(); j++)
+					tasks.write("\t\t\t\t<jsdl-posix:Input>"+input.get(j)+"</jsdl-posix:Input>\n");
+				for(int j=0; j < output.size(); j++)
+					tasks.write("\t\t\t\t<jsdl-posix:Output>"+output.get(j)+"</jsdl-posix:Output>\n");
 			} catch (IOException e) { 
-				log.error("[GRAND]\tError in first writing to file "+filenameTasks, e);
+				System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 			}
 			
 			try {
@@ -192,7 +190,7 @@ public class OutputXML{
 				tasks.write("\t</jsdl:JobDescription>\n");
 				//fim varredura
 			} catch (IOException e) { 
-				log.error("[GRAND]\tError in first writing to file "+filenameTasks, e);
+				System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 			}
 			
 		}
@@ -200,7 +198,7 @@ public class OutputXML{
 	    try {
 			tasks.write("</jsdl:JobDefinition>\n");
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in first writing to file "+filenameTasks, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameTasks);
 		}
 		
 	}
@@ -221,8 +219,8 @@ public class OutputXML{
 			for (int i = 0; i < nodesList.size(); i++) {
 				dn = (DAGNode) nodesList.get(i);
 				pred = dn.getPRED();
-				if (pred != null) {
-
+				if ((pred != null) || !pred.isEmpty()) {
+					
 					for(int j=0; j < pred.size(); j++){
 						//1.0 é o peso da aresta
 						de = (DAGEdge)pred.get(j);
@@ -236,7 +234,7 @@ public class OutputXML{
 			
 			edges.write("</ge:DAGDefinition>");
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in first writing to file "+filenameEdges, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameEdges);
 		}
 		
 	}
@@ -273,8 +271,8 @@ public class OutputXML{
 	}
 	
 	public void writeClusters(){
-		String clusterID = "";
-		String jobID = "";
+		String clusterID = new String();
+		String jobID = new String();
 		ApplicationDescription appDesc = SimpleParser.appDescription;
 		Vector listOfTasks = appDesc.getListOfTasks();
 		Vector tasks = new Vector();
@@ -300,7 +298,7 @@ public class OutputXML{
 			////////////////////////////////
 			clusters.write("</gc:ClusterSet>\n");
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in first writing to file "+filenameClusters, e);
+			System.out.println("[GRAND]\tError in first writing to file "+filenameClusters);
 		}
 		
 	}
@@ -313,7 +311,7 @@ public class OutputXML{
 			manifest.close();
 			
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in closing to file "+filenameManifest, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameManifest);
 		}
 		
 	}
@@ -323,7 +321,7 @@ public class OutputXML{
 			tasks.close();
 			
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in closing to file "+filenameTasks, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameTasks);
 		}
 		
 	}
@@ -333,7 +331,7 @@ public class OutputXML{
 			edges.close();
 			
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in closing to file "+filenameEdges, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameEdges);
 		}
 		
 	}
@@ -343,7 +341,7 @@ public class OutputXML{
 			clusters.close();
 			
 		} catch (IOException e) { 
-			log.error("[GRAND]\tError in closing to file "+filenameClusters, e);
+			System.out.println("[GRAND]\tError in closing to file "+filenameClusters);
 		}
 		
 	}

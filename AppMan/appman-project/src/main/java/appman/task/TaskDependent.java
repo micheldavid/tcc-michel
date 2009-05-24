@@ -2,8 +2,6 @@ package appman.task;
 
 public class TaskDependent extends TaskState {
 
-	private static final long serialVersionUID = -478926358882172932L;
-
 	@Override
 	public int getCode() {
 		return TaskState.TASK_DEPENDENT;

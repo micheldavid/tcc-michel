@@ -6,18 +6,16 @@
 
 package appman;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 
 import appman.clustering.ClusteringPhase;
+import appman.log.Debug;
 import appman.parser.ApplicationDescription;
 import appman.parser.SimpleParser;
 
@@ -27,9 +25,7 @@ import appman.parser.SimpleParser;
  */
 public class DAGGraphGUI extends javax.swing.JFrame
 {
-	private static final long serialVersionUID = -548735690290363468L;
-	private static final Log log = LogFactory.getLog(DAGGraphGUI.class);
-
+	
 	ApplicationManagerRemote appman;
 	final ApplicationId appId;
     
@@ -165,14 +161,14 @@ public class DAGGraphGUI extends javax.swing.JFrame
                                         appman.startAppGUIRemote(graph_name[j]);					
                                     }
                                     appman.startApplicationManager();
-                                    while(!ApplicationManagerState.FINAL.equals(appman.getApplicationState()))
+                                    while(appman.getApplicationState() != ApplicationManager.ApplicationManager_FINAL)
                                     {
                                         Thread.sleep(5000);						
                                     }
                                 }
-                            }catch (IOException e1)
+                            }catch (RemoteException e1)
                             {
-                                AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO: ", e1);
+                                AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO: ", e1);
                             }
                             catch (Exception e2)
                             {
@@ -200,10 +196,10 @@ public class DAGGraphGUI extends javax.swing.JFrame
      */
     public static void main(String args[]) throws Exception
     {
-    	log.debug("This program is going to test the AppMan package");
+		Debug.debug("This program is going to test the AppMan package", true);
 		DAGGraphGUI daggui = new DAGGraphGUI();
 		daggui.pack();
-		daggui.setVisible(true);
+		daggui.show();
     }
     
     
@@ -261,13 +257,13 @@ public class DAGGraphGUI extends javax.swing.JFrame
                             
                 //stub.setStubRemote(stub);
             String contact = activator.getContactAddress(0);
-// 							log.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!");
+// 							Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
             stub.setMyObjectContactAddressRemote(contact);
             return stub ;
 							
         }catch (Exception e)
         {
-            AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
+            AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e);
         }
 		return null;
     }
