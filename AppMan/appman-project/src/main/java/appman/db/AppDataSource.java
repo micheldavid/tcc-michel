@@ -20,35 +20,29 @@ public class AppDataSource {
 
 	private static BasicDataSource ds;
 
-	private static void init() throws IOException {
-
+	private static void init() {
 		URL dbconfig = AppDataSource.class.getResource("/db.properties");
+		try {
+			InputStream is = dbconfig.openStream();
+			Properties props = new Properties();
+			props.load(is);
+			is.close();
 
-		InputStream is = dbconfig.openStream();
-		Properties props = new Properties();
-		props.load(is);
-		is.close();
-
-		ds = new BasicDataSource();
-		ds.setDriverClassName(props.getProperty("appman.db.driver"));
-		ds.setUrl(props.getProperty("appman.db.url"));
-		ds.setUsername(props.getProperty("appman.db.username"));
-		ds.setPassword(props.getProperty("appman.db.password"));
-		ds.setMinIdle(Integer.parseInt(props
-				.getProperty("appman.db.ds.minIdle")));
-		ds.setMaxIdle(Integer.parseInt(props
-				.getProperty("appman.db.ds.maxIdle")));
-		ds.setMaxActive(Integer.parseInt(props
-				.getProperty("appman.db.ds.maxActive")));
+			ds = new BasicDataSource();
+			ds.setDriverClassName(props.getProperty("appman.db.driver"));
+			ds.setUrl(props.getProperty("appman.db.url"));
+			ds.setUsername(props.getProperty("appman.db.username"));
+			ds.setPassword(props.getProperty("appman.db.password"));
+			ds.setMinIdle(Integer.parseInt(props.getProperty("appman.db.ds.minIdle")));
+			ds.setMaxIdle(Integer.parseInt(props.getProperty("appman.db.ds.maxIdle")));
+			ds.setMaxActive(Integer.parseInt(props.getProperty("appman.db.ds.maxActive")));
+		} catch (IOException ex) {
+			throw new Error("impossível ler " + dbconfig, ex);
+		}
 	}
 
 	public static Connection getConnection() throws SQLException {
-		if (ds == null)
-			try {
-				init();
-			} catch (IOException e) {
-				throw new Error(e);
-			}
+		if (ds == null) init();
 		return ds.getConnection();
 	}
 
