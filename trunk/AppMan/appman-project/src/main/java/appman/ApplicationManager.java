@@ -87,7 +87,7 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 	}
 
 	private void initialize(String id, ApplicationId appid) {
-		appmanId = new String(id);
+		appmanId = id;
 		submissionmanagerList = new Vector();
 		timeInfo = new ApplicationManagerTimer();
 		if (appid!=null) {

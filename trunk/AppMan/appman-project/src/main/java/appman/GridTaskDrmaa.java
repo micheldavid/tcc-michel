@@ -41,7 +41,7 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 		mytask = task;
 		command = cmd;
 		log.debug("GridTaskDrmaa [" + mytask.getTaskId() + "] cmd: " + cmd);
-		errorbuffer = new StringBuffer("");
+		errorbuffer = new StringBuffer();
 	}
 
 	public synchronized void setRun(boolean b) {

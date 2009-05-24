@@ -598,8 +598,8 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		String node;
 		String adj;
 		List list;
-		String color = new String("red");
-		String filename = new String("graphiz.dot");
+		String color = "red";
+		String filename = "graphiz.dot";
 
 		try {
 			out = new BufferedWriter(new FileWriter(filename));

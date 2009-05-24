@@ -36,7 +36,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		
 		Debug.debug("\tGRIDTASK ["+mytask.getTaskId()+"] cmd: "+ cmd, true);
 		
-		errorbuffer = new StringBuffer("");
+		errorbuffer = new StringBuffer();
 	}
 	
 	public synchronized void setRun(boolean b) 

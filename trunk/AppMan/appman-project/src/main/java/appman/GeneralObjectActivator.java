@@ -133,7 +133,7 @@ public class GeneralObjectActivator implements Activator {
 		if (remote_interface.compareTo("ApplicationManagerRemote") == 0) {
 			FileWriter file;
 
-			String path = new String("appman_contact_adress.txt");
+			String path = "appman_contact_adress.txt";
 
 			try {
 				file = new FileWriter(path);
@@ -148,7 +148,7 @@ public class GeneralObjectActivator implements Activator {
 		//VDN
 		if (remote_interface.compareTo("SubmissionManagerRemote") == 0) {
 			FileWriter file;
-			String path = new String("hosts.txt");
+			String path = "hosts.txt";
 			String str;
 			try {
 				str = contact.substring(contact.indexOf("hostid:") + 7, contact
@@ -161,7 +161,7 @@ public class GeneralObjectActivator implements Activator {
 				e.printStackTrace();
 			}
 		}/*GridTaskID
-		  * else{ FileWriter file; String path = new String("hosts.txt");
+		  * else{ FileWriter file; String path = "hosts.txt";
 		  * 
 		  * try{
 		  * 

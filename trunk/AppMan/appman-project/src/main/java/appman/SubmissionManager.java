@@ -37,7 +37,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     
     public SubmissionManager(String id, String contact_address)
         {
-            setSubmissionManagerId(new String(id));
+            setSubmissionManagerId(id);
             graphs = new Vector();
             tasksmanagerList = new Vector();
             //ID  = new ImproveDownload();

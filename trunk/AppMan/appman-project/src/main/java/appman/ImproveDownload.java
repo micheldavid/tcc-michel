@@ -37,7 +37,7 @@ public class ImproveDownload {
 	public synchronized void setLastURLFilePath(String URLpath, String localPath){
 
 		Debug.debug("ImproveDownload: add file info ("+URLpath+", "+localPath+").",true);
-        hashPaths.put(URLpath, new String(localPath));
+        hashPaths.put(URLpath, localPath);
 	}
 	
 	

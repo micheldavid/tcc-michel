@@ -181,15 +181,9 @@ public class MyTask extends Task implements Serializable {
 		// if the task type is FINAL, then transfer the output files to
 		// the user machine, to get the results
 		if (this.getTaskType() == TaskType.TASK_TYPE_FINAL) {
-			where = new String("grid.targetHosts.host-final-results"); // all
-																	   // grid
-																	   // resources
-			Debug
-					.debug(
-							"MyTask ["
-									+ this.getTaskId()
-									+ "] create remote GridFileService in Cell to transfer the results",
-							true);
+			where = "grid.targetHosts.host-final-results"; // all grid resources
+			Debug.debug("MyTask [" + this.getTaskId()
+				+ "] create remote GridFileService in Cell to transfer the results", true);
 
 			activator = new GeneralObjectActivator("GridFileService",
 					new Class[] { GridFileServiceRemote.class },
@@ -266,7 +260,7 @@ public class MyTask extends Task implements Serializable {
 		// precisaria transferir se estiver no NFS
 		DataFile[] datafile = this.getFiles().getInputFiles();
 		int numDowloads = 0;
-		String lastFilePath = new String(); //VDN
+		String lastFilePath = ""; //VDN
 		for (int i = 0; i < datafile.length; i++) {
 			String filepath = datafile[i].getName();
 			Debug.debug("File path: " + filepath);

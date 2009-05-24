@@ -42,8 +42,8 @@ public class GraphGenerator extends GraphLib
 		public GraphGenerator(String subid)
 		{
 			//Debug.debug("GraphGenerator loading submisson manager Id:");
-			submanid = new String(subid);
-			listsubmanid = new String[]{new String(submanid)};
+			submanid = subid;
+			listsubmanid = new String[]{submanid};
 		}
 		
 		public GraphGenerator(String[] subid)
@@ -100,7 +100,7 @@ public class GraphGenerator extends GraphLib
 			
 			Random rand = new Random();
 			int r = Math.abs(rand.nextInt()%listsubmanid.length);
-			String random_submanid = new String(listsubmanid[r]);
+			String random_submanid = listsubmanid[r];
 			Debug.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
 			//Node child = new DefaultTreeNode(); // create root
 			GraphNode child = new GraphNode(createDefaultTask(String.valueOf(taskid),random_submanid,"/bin/echo ["+ String.valueOf(taskid)+"]  > ./file["+String.valueOf(taskid)+"].txt"));			
@@ -168,7 +168,7 @@ public class GraphGenerator extends GraphLib
 		{
 			// random choose the sumbmanid from the list
 			int r = Math.abs(rand.nextInt()%listsubmanid.length); 
-			String random_submanid = new String(listsubmanid[r]);
+			String random_submanid = listsubmanid[r];
 			Debug.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
 			GraphNode nn = new GraphNode(createDefaultTask(String.valueOf(taskid), random_submanid,"/bin/echo ["+ String.valueOf(taskid)+"]  > ./file["+String.valueOf(taskid)+"].txt"));				
 			nn.setAttribute("label",((Task)nn.getNodeData()).getTaskId());
@@ -381,7 +381,7 @@ public class GraphGenerator extends GraphLib
 				for(int i=0; i < n; i++)
 				{
 					int r = Math.abs(rand.nextInt()%clusterId.length); 
-					String id = new String(clusterId[r]);
+					String id = clusterId[r];
 					tasks[i].setClusterId(id);
 				}
 			}
@@ -395,7 +395,7 @@ public class GraphGenerator extends GraphLib
 				int n = appdesc.getNumberOfTasks();
 				List taskList = appdesc.getListOfTasks();
 				TaskDescription[] tasks = (TaskDescription[])taskList.toArray(new TaskDescription[0]);
-				String taskName = new String();
+				String taskName = "";
 				
 				
 				for(int i=0; i < cluster.size(); i++)//i equivale ao nivel
@@ -410,7 +410,7 @@ public class GraphGenerator extends GraphLib
 							
 							if( taskName.compareTo(tasks[k].getTaskName()) == 0 )
 							{
-								String id = new String(clusterId[i]);
+								String id = clusterId[i];
 								tasks[k].setClusterId( id );
 								System.out.print("\n 1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id+"\n");
 								break;

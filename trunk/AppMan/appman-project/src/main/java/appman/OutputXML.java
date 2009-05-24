@@ -31,10 +31,10 @@ public class OutputXML{
 	
 	
 	public OutputXML(){
-		filenameManifest = new String("manifest.xml");
-		filenameTasks = new String("tasks.xml");
-		filenameEdges = new String("edges.xml");
-		filenameClusters = new String("clusters.xml");
+		filenameManifest = "manifest.xml";
+		filenameTasks = "tasks.xml";
+		filenameEdges = "edges.xml";
+		filenameClusters = "clusters.xml";
 	}
 	
 	public void createManifest(){
@@ -112,12 +112,12 @@ public class OutputXML{
 		ApplicationDescription appDesc = SimpleParser.appDescription;
 //		DAG_DSC dag = appDesc.getDAG();
 		Vector listOfTasks = appDesc.getListOfTasks();
-		 String jobName = new String();
-		 String jobID = new String(); 
-		 String jobWeight = new String();
-		 String appName = new String();
-		 String executable = new String();
-		 String argument = new String();
+		 String jobName = "";
+		 String jobID = ""; 
+		 String jobWeight = "";
+		 String appName = "";
+		 String executable = "";
+		 String argument = "";
 		 Vector input = new Vector();
 		 Vector output = new Vector();
 
@@ -271,8 +271,8 @@ public class OutputXML{
 	}
 	
 	public void writeClusters(){
-		String clusterID = new String();
-		String jobID = new String();
+		String clusterID = "";
+		String jobID = "";
 		ApplicationDescription appDesc = SimpleParser.appDescription;
 		Vector listOfTasks = appDesc.getListOfTasks();
 		Vector tasks = new Vector();

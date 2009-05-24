@@ -62,7 +62,7 @@ public class  TaskDescription implements Serializable
     
    public void setClusterId(String id)
    {
-   		myClusterId = new String(id);
+   		myClusterId = id;
    }
    
    public String getClusterId()
