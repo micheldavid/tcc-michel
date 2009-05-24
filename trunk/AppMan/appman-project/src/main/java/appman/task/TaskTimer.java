@@ -93,10 +93,10 @@ public class TaskTimer implements Serializable {
 		                  "\t"+ (timeTaskEnd == null ? "-" : sdf.format(timeTaskEnd)) +
 		                  "\t"+(totalTime)+
 		                  "\t"+(totalTime/1000f),
-		                  file_path, true);
+		                  file_path);
 
 		if (task.submissionManagerContactAddress != null) {
-			Debug.debugToFile(task.submissionManagerContactAddress,file_path, true);
+			Debug.debugToFile(task.submissionManagerContactAddress,file_path);
 		}
 	}
 }

@@ -10,12 +10,13 @@ import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 
 import appman.clustering.ClusteringPhase;
-import appman.log.Debug;
 import appman.parser.ApplicationDescription;
 import appman.parser.SimpleParser;
 
@@ -25,6 +26,7 @@ import appman.parser.SimpleParser;
  */
 public class DAGGraphGUI extends javax.swing.JFrame
 {
+	private static final Log log = LogFactory.getLog(DAGGraphGUI.class);
 	
 	private static final long serialVersionUID = -548735690290363468L;
 	ApplicationManagerRemote appman;
@@ -197,7 +199,7 @@ public class DAGGraphGUI extends javax.swing.JFrame
      */
     public static void main(String args[]) throws Exception
     {
-		Debug.debug("This program is going to test the AppMan package", true);
+		log.debug("This program is going to test the AppMan package");
 		DAGGraphGUI daggui = new DAGGraphGUI();
 		daggui.pack();
 		daggui.setVisible(true);

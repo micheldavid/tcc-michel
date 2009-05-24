@@ -18,7 +18,6 @@ import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 
 import appman.db.DBHelper;
-import appman.log.Debug;
 
 /**
  * @author lucasa
@@ -54,7 +53,7 @@ public class AppManConsole implements AppManConsoleRemote
 						System.out.println("Wagner Iniciando Appman");
 						while(appman.getApplicationStatePercentCompleted() < 1)
 						{
-							Debug.debug(appman.getInfoRemote(), true);
+							log.debug(appman.getInfoRemote());
 							try
 							{		
 								Thread.sleep(5000);
@@ -165,6 +164,8 @@ public class AppManConsole implements AppManConsoleRemote
 
 		// tentando matar o timer que o exehda deixa rodando...
 //		AppManUtil.exitApplication();
+
+		LogFactory.releaseAll();
 	}
 
 	private static String formatTimeSpan(long timeMillis) {
