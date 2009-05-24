@@ -85,7 +85,7 @@ public class MyTask extends Task implements Serializable {
 			//String contact_address = activator.getContactAddress(h,
 			// "GridFileServiceRemote");
 			//setRemoteGridFileServiceContactAddress(contact_address); //
-			// guarda a refer�ncia do objeto remoto numa vari�vel da classe
+			// guarda a referência do objeto remoto numa variável da classe
 
 			Debug.debug("MyTask [" + this.getTaskId()
 					+ "] remote GridTask created", true);
@@ -202,9 +202,9 @@ public class MyTask extends Task implements Serializable {
 			h = AppManUtil.getExecutor().createObject(
 					GridFileService.class, new Object[] {}, // a seed
 															// para o
-															// servi�o
+															// serviço
 															// GridFileService
-															// � o nome
+															// é o nome
 															// da tarefa
 					activator, where);
 
@@ -280,10 +280,10 @@ public class MyTask extends Task implements Serializable {
 						Debug.debug("MyTask [" + this.getTaskId()
 								+ "] try to install input files", true);
 						// se a tarefa for estrangeira (de outro grafo)
-						// ent�o baixe o arquivo usando a refer�ncia remota
-						// do servi�o de arquivos do grid task
+						// então baixe o arquivo usando a referência remota
+						// do serviço de arquivos do grid task
 						if (remote_task.getState().getCode() == TaskState.TASK_FOREIGN_FINAL) {
-							// esta refer�ncia remota foi atualizada pelo
+							// esta referência remota foi atualizada pelo
 							// submission manager <-- application manager
 							// <-- task <-- grid task
 							String contact_address_remote = remote_task
@@ -302,7 +302,7 @@ public class MyTask extends Task implements Serializable {
 													+ "]: " + smr, true);
 							buffer = smr.downloadFileFromGridTask(
 									remote_task.getTaskId(), filepath);
-						} else // sen�o baixe o arquivo de forma
+						} else // senão baixe o arquivo de forma
 							   // convencional
 						{
 							buffer = remote_task.downloadFile(filepath);
@@ -407,7 +407,7 @@ public class MyTask extends Task implements Serializable {
 					.lastIndexOf("/") + 1);
 			// TODO: Alterar aqui - fazer os downloads passarem
 			// pela maquina de submissao
-			// com otimiza��o de arquivos j� baixados
+			// com otimização de arquivos já baixados
 			gridfileservice.installURLFile(filepath, localfile,
 					false);
 			//numDowloads++;
@@ -467,7 +467,7 @@ public class MyTask extends Task implements Serializable {
 					.lastIndexOf("/") + 1);
 			// TODO: Alterar aqui - fazer os downloads passarem
 			// pela maquina de submissao
-			// com otimiza��o de arquivos j� baixados
+			// com otimização de arquivos já baixados
 			gridfileservice.installURLFile(filepath, localfile,
 					false);
 			//numDowloads++;
@@ -522,14 +522,14 @@ public class MyTask extends Task implements Serializable {
 		if (retry > 10) // tenta 10 vezes no maximo
 		{
 			/*
-			 * Toler�ncia a Falhas Se a tarefa remota que
-			 * possui o arquivo de depend�ncia falhar, ent�o
-			 * aborta esta execu��o e seta a tarefa que
+			 * Tolerância a Falhas Se a tarefa remota que
+			 * possui o arquivo de dependência falhar, então
+			 * aborta esta execução e seta a tarefa que
 			 * falhou como DEPENDENT e seta o estado dos
-			 * arquivos da tarefa que falhou como n�o
+			 * arquivos da tarefa que falhou como não
 			 * existentes
 			 */
-			Debug.debug("Toler�ncia a Falhas - " + e, true);
+			Debug.debug("Tolerância a Falhas - " + e, true);
 			e.printStackTrace();
 			remote_task.getFiles().setAllOutputFileAsNotExist();
 			remote_task.setState(TaskState.getInstance(TaskState.TASK_DEPENDENT));
@@ -597,8 +597,8 @@ public class MyTask extends Task implements Serializable {
 		ObjectId h = AppManUtil.getExecutor().createObject(
 				GridTask.class,
 				new Object[] { (Task) this, this.getCommandLine(),
-						this.getName() }, // a seed para o servi�o
-										  // GridFileService � o nome da
+						this.getName() }, // a seed para o serviço
+										  // GridFileService é o nome da
 										  // tarefa
 				activator, where);
 
@@ -640,10 +640,10 @@ public class MyTask extends Task implements Serializable {
 	}
 
 	/*
-	 * Esta implementa�ao do downloadFile � necess�ria para efetuar o correto
-	 * download dos arquivos presentes na m�quina remota, onde o objeto GridTask
-	 * foi criado Assim, os arquivos s�o baixados da m�quina remota, para a
-	 * m�quina de submiss�o por RMI
+	 * Esta implementaçao do downloadFile é necessária para efetuar o correto
+	 * download dos arquivos presentes na máquina remota, onde o objeto GridTask
+	 * foi criado Assim, os arquivos são baixados da máquina remota, para a
+	 * máquina de submissão por RMI
 	 */
 	public byte[] downloadFile(String filepath) throws RemoteException {
 		try {

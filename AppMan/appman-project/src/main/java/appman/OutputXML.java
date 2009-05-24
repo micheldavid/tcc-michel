@@ -136,8 +136,8 @@ public class OutputXML{
 			
 			appName = node.getExecutable(); 
 
-			// BUG: o c�digo abaixo falha para comandos composts ou quando existe 
-                        // manipula��o de diret�rios (ver aplica��o povray)
+			// BUG: o código abaixo falha para comandos composts ou quando existe 
+                        // manipulação de diretórios (ver aplicação povray)
 
 			// pegar o nome sem caminho
 			int barra = appName.lastIndexOf('/')+1;

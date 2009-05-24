@@ -70,7 +70,7 @@ public class AppManConsole implements AppManConsoleRemote
 				{
 					e1.printStackTrace(System.out);
 					//VDN
-                    //AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e1);
+                    //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e1);
 				}
 				catch (Exception e2)
 				{
@@ -111,15 +111,15 @@ public class AppManConsole implements AppManConsoleRemote
             
                 //stub.setStubRemote(stub);
             String contact = activator.getContactAddress(0);
-//            Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+//            Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
             stub.setMyObjectContactAddressRemote(contact);
             return stub ;
 							
         }catch (Exception e)
         {
         	//VDN
-            //AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e);
-//             Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+            //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
+//             Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
 //             Debug.debug(e, true);
 //             e.printStackTrace();
 //             System.exit(0);

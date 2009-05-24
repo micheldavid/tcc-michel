@@ -52,7 +52,7 @@ public class TaskFiles implements java.io.Serializable {
 	}
 
 	public synchronized void updateOutputFilesState() {
-		// atualiza o status dos arquivos de sa�da
+		// atualiza o status dos arquivos de saída
 		for (int i = 0; i < outputFiles.size(); i++) {
 			Debug.debug("Task FINAL set output file exists: "
 					+ ((DataFile) outputFiles.elementAt(i)).getName(), true);
@@ -61,7 +61,7 @@ public class TaskFiles implements java.io.Serializable {
 	}
 	
 	public synchronized void setAllOutputFileAsNotExist() {
-		// atualiza o status dos arquivos de sa�da
+		// atualiza o status dos arquivos de saída
 		for (int i = 0; i < outputFiles.size(); i++) {
 			((DataFile) outputFiles.elementAt(i)).setDataFileExist(false);
 		}
