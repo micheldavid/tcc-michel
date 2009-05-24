@@ -239,10 +239,10 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
             jj_consume_token(-1);
             throw new ParseException();
           }
-          taskName = ""+t.image;
+          taskName = String.valueOf(t.image);
         } else if (jj_2_13(2)) {
           t = jj_consume_token(var);
-          taskName = ""+t.image;
+          taskName = String.valueOf(t.image);
         } else {
           jj_consume_token(-1);
           throw new ParseException();
@@ -363,7 +363,7 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
         jj_consume_token(-1);
         throw new ParseException();
       }
-          file=file+""+t.image;
+          file+=t.image;
     } else if (jj_2_28(2)) {
       label_4:
       while (true) {
@@ -371,10 +371,10 @@ public class SimpleParser/*@bgen(jjtree)*/implements SimpleParserTreeConstants, 
           t = jj_consume_token(string);
             // pkvm 2005/07/18: changed to exclude " from string
             String s = (t.image);
-            file=file+""+s.substring(1,(s.length()-1));
+            file+=s.substring(1,(s.length()-1));
         } else if (jj_2_25(2)) {
           t = jj_consume_token(var);
-            file=file+""+t.image;
+            file+=t.image;
         } else {
           jj_consume_token(-1);
           throw new ParseException();
@@ -471,7 +471,7 @@ Vector listElements;
 
        listElements = new Vector();
        for (int i = n_begin; i<=n_end; i++) {
-          listElements.addElement(""+i);
+          listElements.addElement(String.valueOf(i));
        }
        {if (true) return  listElements;}
     } else if (jj_2_30(2)) {
@@ -495,15 +495,15 @@ Vector listElements;
   AssignmentBody value;
     try {
       t_var = jj_consume_token(constant);
-      symbolTable.putVariable(""+t_var.image,"");
-      jjtn000.setVariableName(""+t_var.image);
+      symbolTable.putVariable(String.valueOf(t_var.image),"");
+      jjtn000.setVariableName(String.valueOf(t_var.image));
       jj_consume_token(31);
       value = assignmentBody();
      jjtree.closeNodeScope(jjtn000, true);
      jjtc000 = false;
      // changed: instead of including in the symbolTable, 
      // includes in the Assignment node
-     //  symbolTable.putVariable(""+t_var.image,value);
+     //  symbolTable.putVariable(String.valueOf(t_var.image),value);
      jjtn000.setAssignmentBody(value);
     } catch (Throwable jjte000) {
      if (jjtc000) {
@@ -540,11 +540,11 @@ Vector listElements;
       if (jj_2_31(2)) {
         t = jj_consume_token(var);
        value.setAsVariable();
-       value.addValue(AssignmentBody.VARIABLE,""+t.image);
+       value.addValue(AssignmentBody.VARIABLE,String.valueOf(t.image));
       } else if (jj_2_32(2)) {
         t = jj_consume_token(number);
        value.setAsConstant();
-       value.addValue(AssignmentBody.CONSTANT,""+t.image);
+       value.addValue(AssignmentBody.CONSTANT,String.valueOf(t.image));
       } else {
         jj_consume_token(-1);
         throw new ParseException();
@@ -568,17 +568,17 @@ Vector listElements;
             throw new ParseException();
           }
           value.setAsOperation();
-          value.addValue(AssignmentBody.OPERATION,""+t_op.image);
+          value.addValue(AssignmentBody.OPERATION,String.valueOf(t_op.image));
           if (jj_2_37(2)) {
             t = jj_consume_token(var);
-          value.addValue(AssignmentBody.VARIABLE,""+t.image);
+          value.addValue(AssignmentBody.VARIABLE,String.valueOf(t.image));
           } else if (jj_2_38(2)) {
             t = jj_consume_token(number);
           } else {
             jj_consume_token(-1);
             throw new ParseException();
           }
-          value.addValue(AssignmentBody.CONSTANT,""+t.image);
+          value.addValue(AssignmentBody.CONSTANT,String.valueOf(t.image));
         } else if (jj_2_45(2)) {
           if (jj_2_39(2)) {
             t_op = jj_consume_token(35);
@@ -589,19 +589,19 @@ Vector listElements;
             throw new ParseException();
           }
           value.setAsOperation();
-          value.addValue(AssignmentBody.OPERATION,""+t_op.image);
+          value.addValue(AssignmentBody.OPERATION,String.valueOf(t_op.image));
           if (jj_2_41(2)) {
             t = jj_consume_token(string);
             // pkvm 2005/07/20: changed to exclude " from string
             String s = (t.image);
             s=s.substring(1,(s.length()-1));
-            value.addValue(AssignmentBody.STRING,""+s);
+            value.addValue(AssignmentBody.STRING,String.valueOf(s));
           } else if (jj_2_42(2)) {
             t = jj_consume_token(var);
-          value.addValue(AssignmentBody.VARIABLE,""+t.image);
+          value.addValue(AssignmentBody.VARIABLE,String.valueOf(t.image));
           } else if (jj_2_43(2)) {
             t = jj_consume_token(number);
-          value.addValue(AssignmentBody.CONSTANT,""+t.image);
+          value.addValue(AssignmentBody.CONSTANT,String.valueOf(t.image));
           } else {
             jj_consume_token(-1);
             throw new ParseException();
@@ -618,7 +618,7 @@ Vector listElements;
        // pkvm 2005/07/20: changed to exclude " from string
        String s2 = (t.image);
        s2=s2.substring(1,(s2.length()-1));
-       value.addValue(AssignmentBody.STRING,""+s2);
+       value.addValue(AssignmentBody.STRING,String.valueOf(s2));
       label_6:
       while (true) {
         if (jj_2_46(2)) {
@@ -635,29 +635,29 @@ Vector listElements;
           throw new ParseException();
         }
           value.setAsOperation();
-          value.addValue(AssignmentBody.OPERATION,""+t_op.image);
+          value.addValue(AssignmentBody.OPERATION,String.valueOf(t_op.image));
         if (jj_2_49(2)) {
           t = jj_consume_token(string);
             // pkvm 2005/07/20: changed to exclude " from string
             String s = (t.image);
             s=s.substring(1,(s.length()-1));
-          value.addValue(AssignmentBody.STRING,""+s);
+          value.addValue(AssignmentBody.STRING,String.valueOf(s));
         } else if (jj_2_50(2)) {
           t = jj_consume_token(var);
-          value.addValue(AssignmentBody.VARIABLE,""+t.image);
+          value.addValue(AssignmentBody.VARIABLE,String.valueOf(t.image));
         } else if (jj_2_51(2)) {
           t = jj_consume_token(number);
         } else {
           jj_consume_token(-1);
           throw new ParseException();
         }
-          value.addValue(AssignmentBody.CONSTANT,""+t.image);
+          value.addValue(AssignmentBody.CONSTANT,String.valueOf(t.image));
       }
           {if (true) return value;}
     } else if (jj_2_54(2)) {
       l = list();
        value.setAsList();
-       value.addValue(AssignmentBody.LIST,""+l);
+       value.addValue(AssignmentBody.LIST,String.valueOf(l));
        {if (true) return value;}
     } else {
       jj_consume_token(-1);
@@ -697,15 +697,15 @@ Vector listElements;
     if (jj_2_60(2)) {
       t = jj_consume_token(constant);
       listContent=new Vector(10);
-      listContent.addElement(""+t.image);
+      listContent.addElement(String.valueOf(t.image));
     } else if (jj_2_61(2)) {
       t = jj_consume_token(number);
       listContent=new Vector(10);
-      listContent.addElement(""+t.image);
+      listContent.addElement(String.valueOf(t.image));
     } else if (jj_2_62(2)) {
       t = jj_consume_token(string);
       listContent=new Vector(10);
-      listContent.addElement(""+t.image);
+      listContent.addElement(String.valueOf(t.image));
     } else {
       jj_consume_token(-1);
       throw new ParseException();
@@ -720,13 +720,13 @@ Vector listElements;
       jj_consume_token(38);
       if (jj_2_64(2)) {
         t = jj_consume_token(constant);
-            listContent.addElement(""+t.image);
+            listContent.addElement(String.valueOf(t.image));
       } else if (jj_2_65(2)) {
         t = jj_consume_token(number);
-            listContent.addElement(""+t.image);
+            listContent.addElement(String.valueOf(t.image));
       } else if (jj_2_66(2)) {
         t = jj_consume_token(string);
-            listContent.addElement(""+t.image);
+            listContent.addElement(String.valueOf(t.image));
       } else {
         jj_consume_token(-1);
         throw new ParseException();

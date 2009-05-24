@@ -82,7 +82,7 @@ public class  AssignmentBody {
         case LIST:
 	    return n.value;
         case VARIABLE:
-            return symbolTable.getVariable(""+n.value);
+            return symbolTable.getVariable(String.valueOf(n.value));
         case OPERATION:
             Object evaluatedValue = new Object();
             Node firstOp = n;
@@ -107,17 +107,17 @@ public class  AssignmentBody {
        if ((firstOp.type == STRING) || (secondOp.type == STRING)) {
           if ((operator.value).equals("+")) {
 	     result.type = STRING;             
-             result.value = ""+firstOp.getValueAsString(symbolTable)+
+             result.value = String.valueOf(firstOp.getValueAsString(symbolTable))+
                                secondOp.getValueAsString(symbolTable);
 	  }
        } else if ((firstOp.type == VARIABLE) && (secondOp.type == VARIABLE)) {
 	     result.type = STRING;             
-             result.value = ""+firstOp.getValueAsString(symbolTable)+
+             result.value = String.valueOf(firstOp.getValueAsString(symbolTable))+
                                secondOp.getValueAsString(symbolTable);
 	     /*
        } else if ((firstOp.type == CONSTANT) || (secondOp.type == CONSTANT)) {
 	     result.type = CONSTANT;             
-             result.value = ""+firstOp.getValueAsString(symbolTable)+
+             result.value = String.valueOf(firstOp.getValueAsString(symbolTable))+
                                secondOp.getValueAsString(symbolTable);
 	     */
        }
@@ -154,13 +154,13 @@ public class  AssignmentBody {
       public String getValueAsString(SymbolTable symbolTable) {
 	 switch (this.type) {
 	 case STRING: 
-	    return toStringWithoutQuotationMark(""+this.value);
+	    return toStringWithoutQuotationMark(String.valueOf(this.value));
            case CONSTANT:
-	    return ""+this.value;
+	    return String.valueOf(this.value);
            case OPERATION:
-            return ""+this.value;
+            return String.valueOf(this.value);
            case VARIABLE:
-            return toStringWithoutQuotationMark(""+symbolTable.getVariable(""+this.value));
+            return toStringWithoutQuotationMark(String.valueOf(symbolTable.getVariable(String.valueOf(this.value))));
 	 }
          return ""; // error!
       }
