@@ -104,7 +104,6 @@ public class MyTask extends Task implements Serializable {
 			long finalTime = System.currentTimeMillis();
 			
 			timeInfo.setDownloadTimeOfFiles( finalTime - initialTime );
-			System.out.println("[VINDN] Download Time: "+(finalTime - initialTime));
 			log.debug("[VINDN] Download Time: "+(finalTime - initialTime));
 			
 			log.debug("Mytask [" + this.getTaskId()
@@ -344,8 +343,7 @@ public class MyTask extends Task implements Serializable {
 						
 					
 					} else {
-//						System.out.println("Download de Arquivo ja Feito, copiando de "+SubmissionManager.ID.getLocalPathFromURL(filepath));
-//						Debug.debug("Download de Arquivo ja Feito, copiando de "+SubmissionManager.ID.getLocalPathFromURL(filepath), true);
+//						log.debug("Download de Arquivo ja Feito, copiando de "+SubmissionManager.ID.getLocalPathFromURL(filepath));
 						if (copyFileFromDir(SubmissionManager.ID.getLocalPathFromURL(filepath)))
 							break;
 					}
@@ -403,7 +401,7 @@ public class MyTask extends Task implements Serializable {
 			gridfileservice.installURLFile(filepath, localfile,
 					false);
 			//numDowloads++;
-			//System.out.println("\t[VIND]NUMERO DE DOWNLOADS: "
+			//log.debug("\t[VIND]NUMERO DE DOWNLOADS: "
 			//		+ numDowloads);
 			log.debug("Mytask [" + this.getTaskId()
 					+ "] GridTask installURLFile Sucess OK: "
@@ -460,7 +458,7 @@ public class MyTask extends Task implements Serializable {
 			gridfileservice.installURLFile(filepath, localfile,
 					false);
 			//numDowloads++;
-			//System.out.println("\t[VIND]NUMERO DE DOWNLOADS: "
+			//log.debug("\t[VIND]NUMERO DE DOWNLOADS: "
 			//		+ numDowloads);
 			log.debug("Mytask [" + this.getTaskId()
 					+ "] GridTask installURLFile Sucess OK: "

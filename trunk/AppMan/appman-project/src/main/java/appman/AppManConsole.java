@@ -50,7 +50,7 @@ public class AppManConsole implements AppManConsoleRemote
 						GridFileService fileservice = new GridFileService("AppManConsole");
 						appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
 						appman.startApplicationManager();
-						System.out.println("Wagner Iniciando Appman");
+						log.debug("Wagner Iniciando Appman");
 						while(appman.getApplicationStatePercentCompleted() < 1)
 						{
 							log.debug(appman.getInfoRemote());
@@ -59,28 +59,28 @@ public class AppManConsole implements AppManConsoleRemote
 								Thread.sleep(5000);
 							} catch (Exception e)
 							{
-								e.printStackTrace(System.out);
+								log.error(e, e);
 								//VDN
                                 //AppManUtil.exitApplication(null, e); 
 							}
 						}	
-						System.out.println("Wagner terminando Appman");
+						log.debug("Wagner terminando Appman");
 				}catch (RemoteException e1)
 				{
-					e1.printStackTrace(System.out);
+					log.error(e1, e1);
 					//VDN
                     //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e1);
 				}
 				catch (Exception e2)
 				{
-					e2.printStackTrace(System.out);
+					log.error(e2, e2);
 					//VDN
                     //AppManUtil.exitApplication(null, e2);
 				}
 			
 
 				
-				//System.out.println("\tAKIII DEVERIA TERMINAR!!!!!!!!\n");
+				//log.debug("\tAKIII DEVERIA TERMINAR!!!!!!!!\n");
 	}	
 	private ApplicationManagerRemote createApplicationManager(String appmanId)
         {

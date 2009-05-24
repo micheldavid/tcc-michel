@@ -16,6 +16,9 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.GraphGenerator;
 
 import edu.berkeley.guir.prefuse.Display;
@@ -57,6 +60,7 @@ import edu.berkeley.guir.prefusex.layout.ForceDirectedLayout;
  */
 public class ForceDemo extends Display
 {
+	private static final Log log = LogFactory.getLog(ForceDemo.class);
 	private static final long serialVersionUID = 8283579653465683782L;
 	private JFrame     frame;
     private ForcePanel fpanel;
@@ -182,7 +186,7 @@ public class ForceDemo extends Display
 		GraphGenerator generator = new GraphGenerator("subman1");
 		g = generator.getRandomTreeDirected(3, 3, (float)0.7);
 
-        System.out.println("Visualizing Graph: "
+		log.debug("Visualizing Graph: "
             +g.getNodeCount()+" nodes, "+g.getEdgeCount()+" edges");
         
         ForceSimulator fsim = new ForceSimulator();

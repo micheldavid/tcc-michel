@@ -5,7 +5,8 @@
 package appman.parser;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * stores info obtained during the 
@@ -28,7 +29,7 @@ public class  TaskDescription implements Serializable
     public TaskDescription (String taskName, String executable) {
        this.taskName = taskName;
        this.executable = executable;
-       ///System.out.println("[GRAND]\tNew TaskDescription: name["+taskName+"], executable["+executable+"]");
+       ///log.debug("[GRAND]\tNew TaskDescription: name["+taskName+"], executable["+executable+"]");
     }
     /**
      *

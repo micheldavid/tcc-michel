@@ -58,7 +58,7 @@ public class GridRemoteHostsProperties
 /*	
 	public void updateHostsProperties()
 	{
-		//System.out.println("GridRemoteHostProperties - updateHostsProperties");
+		//log.debug("GridRemoteHostProperties - updateHostsProperties");
 		for(int i = 0; i < hosts.size(); i++)
 		{
 			try
@@ -86,8 +86,7 @@ public class GridRemoteHostsProperties
 			targetHost = HostId.parseId(host);
 		} catch (Exception e)
 		{
-			System.out.println(e);
-			e.printStackTrace();
+			log.error(e, e);
 			System.exit(0);
 		}
 				
@@ -112,8 +111,7 @@ public class GridRemoteHostsProperties
 			String host =  "hostid:"+first;
 			targetHost = HostId.parseId(host);
 		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
+			log.error(e, e);
 			System.exit(0);
 
 		}
@@ -140,8 +138,7 @@ public class GridRemoteHostsProperties
 			String host =  "hostid:"+first;
 			targetHost = HostId.parseId(host);
 		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
+			log.error(e, e);
 			System.exit(0);
 
 		}
@@ -161,16 +158,15 @@ public class GridRemoteHostsProperties
 		}
 		HostId targetHost = null;
 		String first = (String)queueAllMachines.get(0);
-		System.out.println("getRoundRobin first "+first);
+		log.debug("getRoundRobin first "+first);
 		queueAllMachines.remove(0);
 		queueAllMachines.add(first);
 
 		try {
-			//System.out.println("getRoundRobin host "+host);
+			//log.debug("getRoundRobin host "+host);
 			targetHost = HostId.parseId("hostid:"+first+"."+HostId.getLocalHost().getCell().getName());
 		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
+			log.error(e, e);
 			System.exit(0);
 
 		}
@@ -202,8 +198,7 @@ public class GridRemoteHostsProperties
 			targetHost = targetHost = HostId.getByName((String)hosts.get(i));
 		} catch (Exception e)
 		{
-			System.out.println(e);
-			e.printStackTrace();
+			log.error(e, e);
 			System.exit(0);
 		}
 		return targetHost;
@@ -216,8 +211,7 @@ public class GridRemoteHostsProperties
 			targetHost = HostId.getByName((String) hosts.get(0));
 		} catch (Exception e)
 		{
-			System.out.println(e);
-			e.printStackTrace();
+			log.error(e, e);
 			System.exit(0);
 		}
 			

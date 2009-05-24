@@ -403,11 +403,11 @@ public class GraphGenerator extends GraphLib
 				
 				for(int i=0; i < cluster.size(); i++)//i equivale ao nivel
 				{
-					System.out.print("Level "+i+" ");
+					log.debug("Level "+i);
 					for(int j=0; j < ((Vector)cluster.get(i)).size(); j++)//j equivale as tarefas q estao no nivel i
 					{
 						taskName = ((String)((Vector)cluster.get(i)).get(j)); //nome da tarefa
-						System.out.print(((Vector)(cluster.get(i))).get(j) + " " );
+						log.debug(((Vector)(cluster.get(i))).get(j) + " ");
 						for(int k=0; k < tasks.length; k++)//tenho q buscar o nome da tarefa. arggg!!
 						{
 							
@@ -415,14 +415,13 @@ public class GraphGenerator extends GraphLib
 							{
 								String id = clusterId[i];
 								tasks[k].setClusterId( id );
-								System.out.print("\n 1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id+"\n");
+								log.debug("1: "+taskName+" 2: "+tasks[k].getTaskName()+" cluster "+id);
 								break;
 							}
 						}
 					}
-					System.out.print("\n");
 				}
-				System.out.print("SAIU!\n");
+				log.debug("SAIU!");
 				
 			}
 			
