@@ -14,6 +14,7 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 public class LdapSession {
 
@@ -141,7 +142,8 @@ public class LdapSession {
 		dirCtx.bind(dn, o);
 	}
 
-	public NamingEnumeration<?> search(String subtree, String filter, String attributesToReturn[]) throws NamingException {
+	public NamingEnumeration<SearchResult> search(String subtree, String filter, String attributesToReturn[])
+		throws NamingException {
 		if (subtree == null) {
 			subtree = "";
 		}

@@ -11,6 +11,11 @@
 
 	<repositories>
 		<repository>
+			<id>ibiblio.org</id>
+			<name>ibiblio.org</name>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>
+		<repository>
 			<id>collab-ogce</id>
 			<name>collab-ogce</name>
 			<url>http://www.collab-ogce.org/maven2</url>
@@ -299,8 +304,10 @@
 						<phase>pre-integration-test</phase>
 						<configuration>
 							<tasks>
+							<!-- 
 								<copy file="${project.build.directory}/${project.build.finalName}.war"
 									tofile="Z:/${project.build.finalName}.war" verbose="true"/>
+									 -->
 							</tasks>
 						</configuration>
 						<goals>

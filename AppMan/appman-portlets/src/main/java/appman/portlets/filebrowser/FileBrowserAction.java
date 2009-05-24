@@ -55,17 +55,19 @@ public class FileBrowserAction extends VelocityTooledPortlet {
 		}
 
 		ArrayList<DirectoryView> root = new ArrayList<DirectoryView>();
-		File jobs = new File(AppManConfig.get().getString("appman.portlets.job.dir"));
-		for (File f : jobs.listFiles()) {
-			if (f.isDirectory()) {
-				DirectoryView view = loadDirectory(null, f);
-				if (view == null) continue;
+		File[] jobs = new File(AppManConfig.get().getString("appman.portlets.job.dir")).listFiles();
+		if (jobs != null) {
+			for (File f : jobs) {
+				if (f.isDirectory()) {
+					DirectoryView view = loadDirectory(null, f);
+					if (view == null) continue;
 
-				if (f.getName().equals(runningJobId)) {
-					view = mergeDirectories(view, loadDirectory(null, new File(AppManConfig.get().getString(
-						"exehda.log.dir"))));
+					if (f.getName().equals(runningJobId)) {
+						view = mergeDirectories(view, loadDirectory(null, new File(AppManConfig.get().getString(
+							"exehda.log.dir"))));
+					}
+					root.add(view);
 				}
-				root.add(view);
 			}
 		}
 		return root;
