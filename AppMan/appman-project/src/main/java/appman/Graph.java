@@ -36,8 +36,8 @@ public class Graph implements Serializable
 	
 	public Graph(String graphid, String subid, ApplicationDescription appdesc)
 	{
-		graphId = new String(graphid);
-		mysubmanId = new String(subid);
+		graphId = graphid;
+		mysubmanId = subid;
 		datafileList = new Vector();
 		taskList = new Vector();
 		GraphGenerator generator = new GraphGenerator(subid);
@@ -54,8 +54,8 @@ public class Graph implements Serializable
 	
 	public Graph(String graphid, String subid)
 	{
-		graphId = new String(graphid);
-		mysubmanId = new String(subid);
+		graphId = graphid;
+		mysubmanId = subid;
 		//graph = new edu.berkeley.guir.prefuse.graph.DefaultGraph(true);		
 		datafileList = new Vector();
 		taskList = new Vector();		
@@ -70,8 +70,8 @@ public class Graph implements Serializable
 	}
 	public Graph(String graphid, String subid, String subidother)
 	{
-		graphId = new String(graphid);
-		mysubmanId = new String(subid);
+		graphId = graphid;
+		mysubmanId = subid;
 		//graph = new edu.berkeley.guir.prefuse.graph.DefaultGraph(true);		
 		datafileList = new Vector();
 		taskList = new Vector();		
@@ -86,8 +86,8 @@ public class Graph implements Serializable
 	}
 	public Graph(String graphid, String subid, boolean empty)
 	{
-		graphId = new String(graphid);
-		mysubmanId = new String(subid);
+		graphId = graphid;
+		mysubmanId = subid;
 		graph = null;		
 		datafileList = new Vector();
 		taskList = new Vector();

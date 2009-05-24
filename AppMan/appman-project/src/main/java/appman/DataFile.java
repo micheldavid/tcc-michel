@@ -53,8 +53,8 @@ public class DataFile implements Serializable {
 	private boolean exist;
 
 	public DataFile(String str, String id, Task task) {
-		name = new String(str);
-		datafileId = new String(id);
+		name = str;
+		datafileId = id;
 		exist = false;
 		fromtask = task;
 	}
