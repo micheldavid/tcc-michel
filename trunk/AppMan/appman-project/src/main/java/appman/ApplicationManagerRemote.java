@@ -1,5 +1,8 @@
 /*
  * Created on 17/11/2004
+ *
+ * To change the template for this generated file go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
@@ -12,6 +15,9 @@ import edu.berkeley.guir.prefuse.Display;
 
 /**
  * @author lucasa
+ *
+ * To change the template for this generated type comment go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public interface ApplicationManagerRemote extends Remote
 {
@@ -24,12 +30,10 @@ public interface ApplicationManagerRemote extends Remote
 	public Display startAppGUIRemote(String graphId) throws RemoteException;
 	public void addApplicationDescriptionRemote(String graphId, String clusterId, ApplicationDescription appdesc) throws RemoteException;
 	public void setMyObjectContactAddressRemote(String contact) throws RemoteException;
-	public boolean isSuccessful() throws RemoteException;
 	public void startApplicationManager() throws RemoteException;
 	public float getApplicationStatePercentCompleted() throws RemoteException;
-	public ApplicationManagerState getApplicationState() throws RemoteException;
+	public int getApplicationState() throws RemoteException;
 	public void addApplicationDescriptionRemote(byte[] filedata) throws RemoteException;
 	public ApplicationDescription getApplicationDescription() throws RemoteException;
-	public boolean isAlive() throws RemoteException;
 
 }

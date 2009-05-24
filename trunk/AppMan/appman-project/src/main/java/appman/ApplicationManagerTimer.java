@@ -4,12 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ApplicationManagerTimer {
-
-	private static final Log log = LogFactory.getLog(ApplicationManagerTimer.class);
 
 	long downloadTimeOfSM = 0;
 	long time_begin = 0;
@@ -79,7 +74,7 @@ public class ApplicationManagerTimer {
 				parserOut.close();
 		     
 		}catch( IOException e){
-			log.error("[APPMAN-ApplicationManager.java]", e);
+		        System.out.println("[APPMAN-ApplicationManager.java]: "+e);
 		}
 	}	
 

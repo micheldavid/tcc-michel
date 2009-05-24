@@ -4,8 +4,6 @@
 package appman;
 
 // import org.isam.exehda.Exehda;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.services.Collector;
 import org.isam.exehda.services.Collector.ConsumerId;
 import org.isam.exehda.services.Collector.MonitoringConsumer;
@@ -20,8 +18,6 @@ import appman.log.Debug;
  */
 public class GridResourceMonitor extends Thread implements MonitoringConsumer
 {
-	private static final Log log = LogFactory.getLog(GridResourceMonitor.class);
-
 	private String name = "";
 	private String earlyhistory = "";
 	private String history = "";
@@ -49,11 +45,11 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 			this.sensor = collector.getSensor("CPU_OCCUP_USER");
 			collector.setSensorEnabled(this.id,sensor,true);			
 		    average_list = new float[average_max];
-		    log.debug("GridResourceMonitor ["+name+"] created");
+			Debug.debug("GridResourceMonitor ["+name+"] created", true);
 			load = true;
 		} catch (Exception e)
 		{
-			log.error("GridResourceMonitor ["+name+"] creation FAILED", e);
+			Debug.debug("GridResourceMonitor ["+name+"] creation FAILED", true);
 		}
 	}
 	public void endMonitor()
@@ -67,7 +63,7 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 			this.start();
 			end = false;
 			Debug.newDebugFile("#GridResourceMonitor Data: " + name, "subman-"+name+"-monitor.data");
-			Debug.debugToFile("#TIME\tData: Load CPU", "subman-"+name+"-monitor.data", true);
+			Debug.debugToFile("\n#TIME\tData: Load CPU", "subman-"+name+"-monitor.data", true);
 		}
 	}
 	private float calcAverage(float values[])
@@ -97,7 +93,7 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 			if ( data[i] != null )
 			{
 				s+= "\n";
-				s+= data[i].getSensorName().getSimpleName();
+				s+= data[i].getSensor().getSimpleName();
 				s+= " \t= ";
 				s+= data[i].getString();
 				String value = data[i].getString();
@@ -106,8 +102,8 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 				if(average_num == average_max)
 				{
 					float avg = calcAverage(average_list);
-					s+= " \nAverage ["+data[i].getSensorName().getSimpleName()+"] in " + average_max +" values: " + avg;
-					Debug.debugToFile(time + "\t" + avg, "subman-"+name+"-monitor.data", true);	
+					s+= " \nAverage ["+data[i].getSensor().getSimpleName()+"] in " + average_max +" values: " + avg;
+					Debug.debugToFile("\n" + time + "\t" + avg, "subman-"+name+"-monitor.data", true);	
 				}
 				average_num = average_num % average_max;
 			}
@@ -123,7 +119,7 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 	@Override
 	public void run()
 	{
-		log.debug("GridResourceMonitor ["+name+"] thread run.");
+		Debug.debug("GridResourceMonitor ["+name+"] thread run.", true);
 		while(!end)
 		{
 			history+= earlyhistory; 
@@ -132,10 +128,11 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 			{				
 				Thread.sleep(5000);
 			} catch (Exception e) {
-				log.warn(e, e);
+				Debug.debug(e);
+				e.printStackTrace();
 				System.exit(0);
-			}
-			log.debug(earlyhistory);
+			}			
+			Debug.debug(earlyhistory, false);
 		}
 	}
 

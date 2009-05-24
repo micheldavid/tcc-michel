@@ -2,15 +2,11 @@ package appman.task;
 
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import appman.DataFile;
+import appman.log.Debug;
 
 public class TaskFiles implements java.io.Serializable {
 
-	private static final long serialVersionUID = -1155977077422538783L;
-	private static final Log log = LogFactory.getLog(TaskFiles.class);
 	private java.util.Vector inputFiles;
 	private java.util.Vector outputFiles;
 
@@ -55,16 +51,16 @@ public class TaskFiles implements java.io.Serializable {
 	}
 
 	public synchronized void updateOutputFilesState() {
-		// atualiza o status dos arquivos de saída
+		// atualiza o status dos arquivos de sa�da
 		for (int i = 0; i < outputFiles.size(); i++) {
-			log.debug("Task FINAL set output file exists: "
-					+ ((DataFile) outputFiles.elementAt(i)).getName());
+			Debug.debug("Task FINAL set output file exists: "
+					+ ((DataFile) outputFiles.elementAt(i)).getName(), true);
 			((DataFile) outputFiles.elementAt(i)).setDataFileExist(true);
 		}
 	}
 	
 	public synchronized void setAllOutputFileAsNotExist() {
-		// atualiza o status dos arquivos de saída
+		// atualiza o status dos arquivos de sa�da
 		for (int i = 0; i < outputFiles.size(); i++) {
 			((DataFile) outputFiles.elementAt(i)).setDataFileExist(false);
 		}

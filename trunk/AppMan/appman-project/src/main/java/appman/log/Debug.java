@@ -17,6 +17,22 @@ import org.apache.commons.logging.LogFactory;
 public class Debug {
 	private static final Log log = LogFactory.getLog(Debug.class);
 
+	public static void debug(Object str) {
+		debug(str, false);
+	}
+
+	public static void debug(Object str, boolean bool) {
+		log.debug(str);
+	}
+
+	public static void debug(Throwable thr) {
+		debug(thr, false);
+	}
+
+	public static void debug(Throwable thr, boolean bool) {
+		log.warn("error", thr);
+	}
+	
 	public static void newDebugFile(String str, String filepath) {
 		File file = new File(filepath);
 		if (file.exists()) file.delete();

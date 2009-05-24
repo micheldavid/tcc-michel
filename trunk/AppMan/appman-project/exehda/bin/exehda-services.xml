@@ -11,16 +11,16 @@
 		</SERVICE>
 		<SERVICE name="cib" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.cib.CibImpl"/>
-			<PROP name="neighborhood" value="worb:tcp://server1:1980/cib"/>
+			<PROP name="neighborhood" value="worb:tcp://10.30.5.145:1980/cib"/>
 			<PROP name="backEnd.impl" value="org.isam.exehda.services.cib.backend.ldap.LdapBackEnd"/>
-			<PROP name="backEnd.ldap.server" value="server1"/>
+			<PROP name="backEnd.ldap.server" value="10.30.5.145"/>
 			<PROP name="backEnd.ldap.rootDn" value="dc=exehda"/>
 			<PROP name="backEnd.ldap.user" value="cn=admin,dc=exehda"/>
 			<PROP name="backEnd.ldap.passwd" value="1234"/>
 		</SERVICE>
 		<SERVICE name="bda" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImpl"/>
-			<PROP name="docroot" value="/home/michel/share/appman-project/exehda/bda"/>
+			<PROP name="docroot" value="/home/aluno/Desktop/TCC/AppMan/appman-project/exehda/bda"/>
 		</SERVICE>
 		<SERVICE name="avu" loadPolicy="demand">
 			<PROP name="impl" value="org.isam.exehda.services.avu.AvuImpl"/>
@@ -46,26 +46,26 @@
 		</SERVICE>
 		<SERVICE name="discoverer" loadPolicy="demand">
 			<PROP name="impl" value="org.isam.exehda.services.discoverer.DiscovererImpl"/>
-			<PROP name="contactAddress" value="worb:tcp://server1:1980/discoverer" />
+			<PROP name="contactAddress" value="worb:tcp://10.30.5.145:1980/discoverer" />
 		</SERVICE>
 	</PROFILE>
-	<PROFILE name="nodo1">
+	<PROFILE name="noh1">
 		<PROP name="localhost.id" value="1"/>
 		<PROP name="localhost.cell" value="home"/>
 		<SERVICE name="logger" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-			<PROP name="logLevel" value="5000"/>
+			<PROP name="logLevel" value="4000"/>
 		</SERVICE>
 		<SERVICE name="worb" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
 		</SERVICE>
 		<SERVICE name="cib" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
-			<PROP name="contactAddress" value="worb:tcp://server1:1980/cib"/>
+			<PROP name="contactAddress" value="worb:tcp://10.30.5.145:1980/cib"/>
 		</SERVICE>
 		<SERVICE name="bda" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
-			<PROP name="bdaHost" value="server1" />
+			<PROP name="bdaHost" value="10.30.5.145" />
 		</SERVICE>
 		<SERVICE name="executor" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
@@ -83,23 +83,125 @@
 			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
 		</SERVICE>
 	</PROFILE>
-	<PROFILE name="nodo2">
+	<PROFILE name="noh2">
 		<PROP name="localhost.id" value="2"/>
 		<PROP name="localhost.cell" value="home"/>
 		<SERVICE name="logger" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
-			<PROP name="logLevel" value="5000"/>
+			<PROP name="logLevel" value="4000"/>
 		</SERVICE>
 		<SERVICE name="worb" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
 		</SERVICE>
 		<SERVICE name="cib" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
-			<PROP name="contactAddress" value="worb:tcp://server1:1980/cib"/>
+			<PROP name="contactAddress" value="worb:tcp://10.30.5.145:1980/cib"/>
 		</SERVICE>
 		<SERVICE name="bda" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
-			<PROP name="bdaHost" value="server1" />
+			<PROP name="bdaHost" value="10.30.5.145" />
+		</SERVICE>
+		<SERVICE name="executor" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+		</SERVICE>
+		<SERVICE name="oxmanager" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
+		</SERVICE>
+		<SERVICE name="gatekeeper" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+		</SERVICE>
+		<SERVICE name="objectseed" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+		</SERVICE>
+		<SERVICE name="collector" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
+		</SERVICE>
+	</PROFILE>
+	<PROFILE name="noh3">
+		<PROP name="localhost.id" value="3"/>
+		<PROP name="localhost.cell" value="home"/>
+		<SERVICE name="logger" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+			<PROP name="logLevel" value="4000"/>
+		</SERVICE>
+		<SERVICE name="worb" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+		</SERVICE>
+		<SERVICE name="cib" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
+			<PROP name="contactAddress" value="worb:tcp://10.30.5.145:1980/cib"/>
+		</SERVICE>
+		<SERVICE name="bda" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+			<PROP name="bdaHost" value="10.30.5.145" />
+		</SERVICE>
+		<SERVICE name="executor" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+		</SERVICE>
+		<SERVICE name="oxmanager" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
+		</SERVICE>
+		<SERVICE name="gatekeeper" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+		</SERVICE>
+		<SERVICE name="objectseed" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+		</SERVICE>
+		<SERVICE name="collector" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
+		</SERVICE>
+	</PROFILE>
+	<PROFILE name="noh4">
+		<PROP name="localhost.id" value="4"/>
+		<PROP name="localhost.cell" value="home"/>
+		<SERVICE name="logger" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+			<PROP name="logLevel" value="4000"/>
+		</SERVICE>
+		<SERVICE name="worb" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+		</SERVICE>
+		<SERVICE name="cib" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
+			<PROP name="contactAddress" value="worb:tcp://10.30.5.145:1980/cib"/>
+		</SERVICE>
+		<SERVICE name="bda" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+			<PROP name="bdaHost" value="10.30.5.145" />
+		</SERVICE>
+		<SERVICE name="executor" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>
+		</SERVICE>
+		<SERVICE name="oxmanager" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.oxm.OXManagerNode"/>
+		</SERVICE>
+		<SERVICE name="gatekeeper" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.GatekeeperService"/>
+		</SERVICE>
+		<SERVICE name="objectseed" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.primos.objseed.ObjectSeedImpl"/>
+		</SERVICE>
+		<SERVICE name="collector" loadPolicy="demand">
+			<PROP name="impl" value="org.isam.exehda.services.primos.CollectorImplNode"/>
+		</SERVICE>
+	</PROFILE>
+	<PROFILE name="noh5">
+		<PROP name="localhost.id" value="5"/>
+		<PROP name="localhost.cell" value="home"/>
+		<SERVICE name="logger" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.logging.BasicLogger"/>
+			<PROP name="logLevel" value="4000"/>
+		</SERVICE>
+		<SERVICE name="worb" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.worb.WorbImpl"/>
+		</SERVICE>
+		<SERVICE name="cib" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.cib.CibImplClient"/>
+			<PROP name="contactAddress" value="worb:tcp://10.30.5.145:1980/cib"/>
+		</SERVICE>
+		<SERVICE name="bda" loadPolicy="boot">
+			<PROP name="impl" value="org.isam.exehda.services.bda.BdaImplClient"/>
+			<PROP name="bdaHost" value="10.30.5.145" />
 		</SERVICE>
 		<SERVICE name="executor" loadPolicy="boot">
 			<PROP name="impl" value="org.isam.exehda.services.primos.exec.ExecutorImpl"/>

@@ -1,5 +1,8 @@
 /*
  * Created on 01/06/2004
+ *
+ * To change the template for this generated file go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package appman;
 
@@ -8,11 +11,15 @@ import java.rmi.RemoteException;
 
 /**
  * @author lucasa
+ *
+ * To change the template for this generated type comment go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public interface GridTaskRemote extends Remote
 {
 	public void setRun(boolean b) throws RemoteException;
 
+    
         /**
          * Wait for task completion up to the specified timeout, returning true if the
          * task has completed, otherwise (timeout has expired prior to completion),

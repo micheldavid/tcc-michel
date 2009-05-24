@@ -3,6 +3,8 @@ package appman.parser;
 
 public class SimpleParserTokenManager implements SimpleParserConstants
 {
+  public static  java.io.PrintStream debugStream = System.out;
+  public static  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
 private static final int jjStopStringLiteralDfa_0(int pos, long active0)
 {
    switch (pos)

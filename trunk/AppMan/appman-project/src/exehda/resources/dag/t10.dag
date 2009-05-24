@@ -1,11 +1,11 @@
 graph independent
-task 0 -e "pwd > t.out.0" -i http://www.google.com/images/firefox/bee.png -o t.out.0
-task 1 -e "pwd > t.out.1" -i http://www.google.com/images/firefox/bee.png -o t.out.1
-task 2 -e "pwd > t.out.2" -i http://www.google.com/images/firefox/bee.png -o t.out.2
-task 3 -e "pwd > t.out.3" -i http://www.google.com/images/firefox/bee.png -o t.out.3
-task 4 -e "pwd > t.out.4" -i http://www.google.com/images/firefox/bee.png -o t.out.4
-task 5 -e "pwd > t.out.5" -i http://www.google.com/images/firefox/bee.png -o t.out.5
-task 6 -e "pwd > t.out.6" -i http://www.google.com/images/firefox/bee.png -o t.out.6
-task 7 -e "pwd > t.out.7" -i http://www.google.com/images/firefox/bee.png -o t.out.7
-task 8 -e "pwd > t.out.8" -i http://www.google.com/images/firefox/bee.png -o t.out.8
-task 9 -e "pwd > t.out.9" -i http://www.google.com/images/firefox/bee.png -o t.out.9
+task 0 -e "sleep 1 > t.out.0" -i file:/var/log/messages -o t.out.0
+task 1 -e "sleep 1 > t.out.1" -i file:/var/log/messages -o t.out.1
+task 2 -e "sleep 1 > t.out.2" -i file:/var/log/messages -o t.out.2
+task 3 -e "sleep 1 > t.out.3" -i file:/var/log/messages -o t.out.3
+task 4 -e "sleep 1 > t.out.4" -i file:/var/log/messages -o t.out.4
+task 5 -e "sleep 1 > t.out.5" -i file:/var/log/messages -o t.out.5
+task 6 -e "sleep 1 > t.out.6" -i file:/var/log/messages -o t.out.6
+task 7 -e "sleep 1 > t.out.7" -i file:/var/log/messages -o t.out.7
+task 8 -e "sleep 1 > t.out.8" -i file:/var/log/messages -o t.out.8
+task 9 -e "sleep 1 > t.out.9" -i file:/var/log/messages -o t.out.9

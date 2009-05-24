@@ -3,6 +3,7 @@
  */
 package appman;
 
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -17,72 +18,125 @@ import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 
 import appman.db.DBHelper;
+import appman.log.Debug;
 
 /**
  * @author lucasa
  */
-public class AppManConsole implements AppManConsoleRemote {
-
+public class AppManConsole implements AppManConsoleRemote
+{
 	private static final Log log = LogFactory.getLog(AppManConsole.class);
-
 	private ApplicationManagerRemote appman = null;
 	private ApplicationId aid = null;
 
 	/**
-	 * Este método obtém e guarda localmente o identificador EXEHDA da aplicação. Esse identificador é usado
-	 * posteriormente com a chamada Executor.runAction(...), para garantir que a ação a ser executada o seja dentro do
-	 * contexto de execução correto (basicamente, classloader correto, permissões).
+	 *
+	 * Este método obtém e guarda localmente o identificador EXEHDA da aplicação. 
+	 * Esse identificador é usado posteriormente com a chamada
+	 * Executor.runAction(...), para garantir que a ação a ser executada o seja
+	 * dentro do contexto de execução correto (basicamente, classloader
+	 * correto, permissões).
+	 *
 	 */
-	public AppManConsole() {
-		aid = AppManUtil.getExecutor().currentApplication();
-		log.debug("AppManConsole Application: " + aid);
-	}
-
-	public void runApplicationManagerRemote(String filepath) throws RemoteException {
-		try {
-			appman = this.createApplicationManager("appman");
-
-			GridFileService fileservice = new GridFileService("AppManConsole");
-			appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
-
-			appman.startApplicationManager();
-			while (appman.getApplicationStatePercentCompleted() < 1) {
-				log.debug(appman.getInfoRemote());
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					log.warn(e, e);
+	public AppManConsole()
+        {
+            aid = AppManUtil.getExecutor().currentApplication();
+    		log.debug("AppManConsole Application: " + aid);
+        }	
+	public void runApplicationManagerRemote(String filepath) throws RemoteException
+	{				
+				try
+				{					
+						appman = this.createApplicationManager("appman");
+						GridFileService fileservice = new GridFileService("AppManConsole");
+						appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
+						appman.startApplicationManager();
+						System.out.println("Wagner Iniciando Appman");
+						while(appman.getApplicationStatePercentCompleted() < 1)
+						{
+							Debug.debug(appman.getInfoRemote(), true);
+							try
+							{		
+								Thread.sleep(5000);
+							} catch (Exception e)
+							{
+								e.printStackTrace(System.out);
+								//VDN
+                                //AppManUtil.exitApplication(null, e); 
+							}
+						}	
+						System.out.println("Wagner terminando Appman");
+				}catch (RemoteException e1)
+				{
+					e1.printStackTrace(System.out);
+					//VDN
+                    //AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e1);
 				}
-			}
-		} catch (Exception ex) {
-			log.error(ex, ex);
-		}
-	}
+				catch (Exception e2)
+				{
+					e2.printStackTrace(System.out);
+					//VDN
+                    //AppManUtil.exitApplication(null, e2);
+				}
+			
 
-	private ApplicationManagerRemote createApplicationManager(String appmanId) throws RemoteException {
+				
+				//System.out.println("\tAKIII DEVERIA TERMINAR!!!!!!!!\n");
+	}	
+	private ApplicationManagerRemote createApplicationManager(String appmanId)
+        {
+            try
+            {
+					
+                GeneralObjectActivator activator = new GeneralObjectActivator("ApplicationManager",
+                                                                              new Class[] {ApplicationManagerRemote.class},
+                                                                              new String[] {"ApplicationManagerRemote"},
+                                                                              true);
+						
+                ObjectId h = AppManUtil.getExecutor().createObject(ApplicationManager.class,
+                                                                   new Object[] {appmanId},
+                                                                   activator,
+                                                                   HostId.getLocalHost());
+												 
+                    // if h is null, so get some error in the remote object
+                if(h == null)
+                {
+                    RemoteException e = new RemoteException("Host falhou");
+                    throw e;
+                }
+							
+                    //ApplicationManagerRemote stub = (ApplicationManagerRemote)h.getStub();
+                ApplicationManagerRemote stub = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(
+                    h, ApplicationManagerRemote.class, "ApplicationManagerRemote");
+            
+                //stub.setStubRemote(stub);
+            String contact = activator.getContactAddress(0);
+//            Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+            stub.setMyObjectContactAddressRemote(contact);
+            return stub ;
+							
+        }catch (Exception e)
+        {
+        	//VDN
+            //AppManUtil.exitApplication("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO", e);
+//             Debug.debug("Toler�ncia a Falhas: ERRO FATAL N�O TOLERADO!", true);
+//             Debug.debug(e, true);
+//             e.printStackTrace();
+//             System.exit(0);
+            }
+            return null;
+        }
 
-		GeneralObjectActivator activator = new GeneralObjectActivator("ApplicationManager",
-			new Class[] { ApplicationManagerRemote.class }, new String[] { "ApplicationManagerRemote" }, true);
-
-		ObjectId h = AppManUtil.getExecutor().createObject(ApplicationManager.class, new Object[] { appmanId },
-			activator, HostId.getLocalHost());
-
-		ApplicationManagerRemote stub = (ApplicationManagerRemote) GeneralObjectActivator.getRemoteObjectReference(h,
-			ApplicationManagerRemote.class, "ApplicationManagerRemote");
-
-		String contact = activator.getContactAddress(0);
-		stub.setMyObjectContactAddressRemote(contact);
-		return stub;
-	}
-
-	public static void main(String[] args) throws Exception {
-		debugTempoExecucao("vindn " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
+	public static void main(String[] args) throws Exception
+	{
+		long startupTime = System.currentTimeMillis();
+		debugTempoExecucao("Início da execução (" + System.currentTimeMillis()
+				+ "): " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
 
 		Integer jobId = null;
 		if (args.length >= 2) jobId = Integer.valueOf(args[1]);
 
 		AppManConsole console = new AppManConsole();
-
 		if (jobId != null) {
 			DBHelper.registerAppId(console.aid.toResourceName().getSimpleName(), jobId);
 		}
@@ -90,40 +144,43 @@ public class AppManConsole implements AppManConsoleRemote {
 		boolean success = true;
 		try {
 			console.runApplicationManagerRemote(args[0]);
+			boolean isFinal = console.appman.getApplicationState() == ApplicationManager.ApplicationManager_FINAL;
+			log.info("AppState == FINAL? " + isFinal);
+			log.info("EXECUÇÃO TERMINADA COM SUCESSO");
+
 		} catch (Exception ex) {
 			success = false;
-			log.error("erro fatal", ex);
+			log.error("EXECUÇÃO TERMINADA COM ERRO", ex);
 		}
-		// MICHEL: blocking call
-		try {
-			while (!ApplicationManagerState.FINAL.equals(console.appman.getApplicationState())) {
-				Thread.sleep(5000);
-			}
-			//success = console.appman.isSuccessful();
-		} catch (InterruptedException ex) {
-			log.error("thread principal interrompida...", ex);
-			success = false;
-		}
-
-		log.debug("\t ******************************************");
-		log.debug("\t *** EXECUÇÃO TERMINADA COM SUCESSO!!!! ***");
-		log.debug("\t ******************************************");
 
 		if (jobId != null) {
 			DBHelper.registerAppEnd(jobId, success);
 		}
 
-		debugTempoExecucao("vindn " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
+		long endTime = System.currentTimeMillis();
+		debugTempoExecucao("Fim da execução (" + endTime
+				+ "): " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date(endTime)));
+		debugTempoExecucao("Tempo de execução: " + (endTime - startupTime)
+				+ " - " + formatTimeSpan(endTime - startupTime));
 
 		// tentando matar o timer que o exehda deixa rodando...
 //		AppManUtil.exitApplication();
 	}
-	
+
+	private static String formatTimeSpan(long timeMillis) {
+		String time = "." + (timeMillis % 1000);
+		long secs = (long) Math.floor(timeMillis / 1000);
+		long mins = secs / 60;
+		secs = secs % 60;
+		return mins + ":" + (secs < 10 ? "0" : "") + secs + time;
+	}
+
 	private static void debugTempoExecucao(String str) throws IOException {
 		FileOutputStream fout = new FileOutputStream("tempoExecucao.txt", true);
 		PrintStream out = new PrintStream(fout);
 		out.println(str);
 		out.close();
 		fout.close();
+		log.info(str);
 	}
 }

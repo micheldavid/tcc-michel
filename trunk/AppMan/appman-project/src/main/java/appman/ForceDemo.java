@@ -16,8 +16,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import appman.GraphGenerator;
 
 import edu.berkeley.guir.prefuse.Display;
 import edu.berkeley.guir.prefuse.EdgeItem;
@@ -31,6 +30,7 @@ import edu.berkeley.guir.prefuse.activity.ActionList;
 import edu.berkeley.guir.prefuse.activity.Activity;
 import edu.berkeley.guir.prefuse.event.ControlAdapter;
 import edu.berkeley.guir.prefuse.graph.Graph;
+//import edu.berkeley.guir.prefuse.graph.io.XMLGraphReader;
 import edu.berkeley.guir.prefuse.render.DefaultEdgeRenderer;
 import edu.berkeley.guir.prefuse.render.DefaultRendererFactory;
 import edu.berkeley.guir.prefuse.render.ShapeRenderer;
@@ -57,9 +57,7 @@ import edu.berkeley.guir.prefusex.layout.ForceDirectedLayout;
  */
 public class ForceDemo extends Display
 {
-	private static final long serialVersionUID = 8910203868924508482L;
-	private static final Log log = LogFactory.getLog(ForceDemo.class);
-	private JFrame     frame;
+    private JFrame     frame;
     private ForcePanel fpanel;
     
     private ForceSimulator m_fsim;
@@ -177,13 +175,13 @@ public class ForceDemo extends Display
         try
         {
             //g = (new XMLGraphReader()).loadGraph(file);
-        } catch ( Exception e ) { log.error(e, e); return; }
+        } catch ( Exception e ) { e.printStackTrace(); return; }
                 
         //g = GraphGenerator.getRandomDirected(10, 20);
 		GraphGenerator generator = new GraphGenerator("subman1");
 		g = generator.getRandomTreeDirected(3, 3, (float)0.7);
 
-		log.debug("Visualizing Graph: "
+        System.out.println("Visualizing Graph: "
             +g.getNodeCount()+" nodes, "+g.getEdgeCount()+" edges");
         
         ForceSimulator fsim = new ForceSimulator();
