@@ -678,17 +678,16 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 					+ subId);
 
 			sub = exehdaCreateNewSubmissionManager(subId);
-		} catch (Exception e2) {
-			AppManUtil.exitApplication(null, e2);
-		} finally {
 			log.debug("DEBUG: " + sub);
 
 			if (sub == null) {
 				throw new RemoteException(
 				"Failed to instantiate new Submission Manager");
 			}
-			return sub;
+		} catch (Exception e2) {
+			AppManUtil.exitApplication(null, e2);
 		}
+		return sub;
 	}
 
 	/**
