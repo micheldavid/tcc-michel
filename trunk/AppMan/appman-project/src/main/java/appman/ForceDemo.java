@@ -180,7 +180,7 @@ public class ForceDemo extends Display
         try
         {
             //g = (new XMLGraphReader()).loadGraph(file);
-        } catch ( Exception e ) { e.printStackTrace(); return; }
+        } catch ( Exception e ) { log.error(e, e); return; }
                 
         //g = GraphGenerator.getRandomDirected(10, 20);
 		GraphGenerator generator = new GraphGenerator("subman1");

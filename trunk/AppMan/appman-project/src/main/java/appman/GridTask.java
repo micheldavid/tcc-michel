@@ -63,7 +63,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
             }
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			log.error(e, e);
 			errorbuffer.append(e.getMessage());
 		}		
 	}
@@ -158,7 +158,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 			cleanSandBoxDirectory();
 		}catch (Exception e)
 		{
-			e.printStackTrace();			
+			log.error(e, e);			
 		}
 	}
 

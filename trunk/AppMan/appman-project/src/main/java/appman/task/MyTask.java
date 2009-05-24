@@ -367,8 +367,7 @@ public class MyTask extends Task implements Serializable {
 			dir = gridfileservice.getDefaultDir()+"/"+localfile;
 			SubmissionManager.ID.setLastURLFilePath(filepath, dir);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e, e);
 		}
 		
 		log.debug("MyTask: Added "+filepath+" to DowloadImprove");
@@ -638,11 +637,6 @@ public class MyTask extends Task implements Serializable {
 		} catch (Exception e2) {
 			AppManUtil.exitApplication("Mytask Task [" + this.getTaskId()
 					+ "]  RETRY [" + this.getRetryTimes() + "] Erro:" + e2, e2);
-			// 		   Debug.debug("Mytask Task ["+this.getTaskId()+"] RETRY
-			// ["+this.getRetryTimes()+"] Erro:" + e2, true);
-			// 		   e2.printStackTrace();
-			// 		   ((Executor)
-			// Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
 		}
 
 		return null;
