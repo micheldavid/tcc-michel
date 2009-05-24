@@ -7,9 +7,15 @@
 
 package appman.parser;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class SimpleParserDumpVisitor implements SimpleParserVisitor {
+	private static final Log log = LogFactory.getLog(SimpleParserDumpVisitor.class);
    private int indent = 0;
    private ApplicationDescription appDescription;
    private SymbolTable  symbolTable;
@@ -32,7 +38,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
    }
 
    public Object visit(SimpleNode node, Object data) {
-      System.out.println(indentString() +node +
+	   log.debug(indentString() +node +
 		       ": acceptor not unimplemented in subclass?");
      ++indent;
      data = node.childrenAccept(this, data);
@@ -44,7 +50,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
     * Root Node (entry point)
     */
    public Object visit(ASTRoot node, Object data) {
-      ///System.out.println(indentString() +"<" + node+">");
+      ///log.debug(indentString() +"<" + node+">");
       ++indent;
       data = node.childrenAccept(this, data);
       --indent;
@@ -58,7 +64,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
 
       String oldTaskName = node.getTaskName();
       node.setTaskName(this.evaluateString(node.getTaskName()));
-      ///System.out.println(indentString() +"<" + node+">: "+node.getTaskName());
+      ///log.debug(indentString() +"<" + node+">: "+node.getTaskName());
       
       Vector oldInput = node.getInput();
       node.setInput(this.evaluateVectorOfString(node.getInput()));
@@ -69,7 +75,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
       ///////////////16/05/05
       String oldExec = node.getExecutable();
       String s = this.evaluateString(node.getExecutable());
-      /// System.out.println("   executable - after evaluateString= "+s);
+      /// log.debug("   executable - after evaluateString= "+s);
       node.setExecutable(s);
       //////////////
       node.addTask(appDescription);
@@ -91,11 +97,11 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
       String result = "";
       StringTokenizer st = new StringTokenizer(s,"${");
       String st_end="";
-      /// System.out.println("   < "+s+" >");
+      /// log.debug("   < "+s+" >");
       while (st.hasMoreTokens()) {
          StringTokenizer stSubString = new StringTokenizer(st.nextToken(), "}");
          String subString = stSubString.nextToken();
-         /// System.out.println("   << "+subString+" >>");
+         /// log.debug("   << "+subString+" >>");
 
          Object obj = symbolTable.getVariableValue(subString);
 
@@ -114,7 +120,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
          result = result+st_end;
       }
       
-      /// System.out.println("   <<<< "+result+" >>>>");
+      /// log.debug("   <<<< "+result+" >>>>");
       return result;
    }
 
@@ -128,7 +134,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
           while (st.hasMoreTokens()) {
              String file = st.nextToken();
              newVector.addElement(file);
-             ///System.out.println("string: "+s+"  file: "+file);
+             ///log.debug("string: "+s+"  file: "+file);
 	  }
        }
 
@@ -139,11 +145,11 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
     * Foreach Node
     */
     public Object visit(ASTForeachNode node, Object data) {
-	///System.out.println(indentString() +"\n<" + node+">");
+	///log.debug(indentString() +"\n<" + node+">");
         ++indent;
 
         for (int i=0; i<node.getNumberOfIterations(); i++) {
-	       ///System.out.println("variable="+node.getVariableName()+" value="+node.getRangeElementAt(i));
+	       ///log.debug("variable="+node.getVariableName()+" value="+node.getRangeElementAt(i));
            symbolTable.putVariable(node.getVariableName(),node.getRangeElementAt(i));
            data = node.childrenAccept(this, data);
 	}
@@ -156,7 +162,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
     * Assignment Node
     */
     public Object visit(ASTAssignment node, Object data){
-	///System.out.println(indentString() +"<" + node+">");
+	///log.debug(indentString() +"<" + node+">");
         ++indent;
         
         AssignmentBody b= node.getAssignmentBody();

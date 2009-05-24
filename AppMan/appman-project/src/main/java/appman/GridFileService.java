@@ -102,10 +102,9 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 				throw new Exception("Error on creating File: " + filepath);
 			}
 		} catch (Exception e) {
-			System.out.println("Error uploading File [" + filepath + "]: "
-					+ e.getMessage());
-			e.printStackTrace();
-			throw new RemoteException("Error uploading File: " + e.getMessage());
+			log.error("Error uploading File [" + filepath + "]: "
+					+ e.getMessage(), e);
+			throw new RemoteException("Error uploading File: " + e.getMessage(), e);
 		}
 	}
 
@@ -131,10 +130,9 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			input.read(buffer, 0, buffer.length);
 			input.close();
 		} catch (Exception e) {
-			System.out.println("Error downloading File: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Error downloading File: " + e.getMessage(), e);
 			throw new RemoteException("Error downloading File: "
-					+ e.getMessage());
+					+ e.getMessage(), e);
 		}
 
 		return buffer;
@@ -159,10 +157,9 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			else
 				throw new Exception("Error File [" + filepath + "] not exists!");
 		} catch (Exception e) {
-			System.out.println("Error downloading File: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Error downloading File: " + e.getMessage(), e);
 			throw new RemoteException("Error downloading File: "
-					+ e.getMessage());
+					+ e.getMessage(), e);
 		}
 	}
 
@@ -186,10 +183,9 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 			input.read(buffer, 0, buffer.length);
 			input.close();
 		} catch (Exception e) {
-			System.out.println("Error downloading File: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Error downloading File: " + e.getMessage(), e);
 			throw new RemoteException("Error downloading File: "
-					+ e.getMessage());
+					+ e.getMessage(), e);
 		}
 		return buffer;
 	}
@@ -282,8 +278,7 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 					srcChannel.close();
 					dstChannel.close();
 				} catch (IOException e) {
-					System.out.println("Erro na copia de arquivo: ");
-					e.printStackTrace();
+					log.error("Erro na copia de arquivo: ", e);
 				}
 			}
 
@@ -293,8 +288,8 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 
 			log.debug("GridTask Files installation completed.");
 		} catch (Exception e) {
-			System.out.println("[GridFileService]:");
-			throw new RemoteException(e.toString());
+			log.error("[GridFileService]:", e);
+			throw new RemoteException(e.toString(), e);
 		}
 	}
 

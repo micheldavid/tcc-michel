@@ -10,6 +10,8 @@ import java.io.FileWriter;
 import java.util.Vector;
 
 // import org.isam.exehda.Exehda;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ObjectId;
 import org.isam.exehda.services.ObjectSeed.Activator;
 import org.isam.exehda.services.ObjectSeed.MarshaledOX;
@@ -24,6 +26,7 @@ import org.isam.exehda.services.OXManager.OXHandle;
 
 public class GeneralObjectActivator implements Activator {
 
+	private static final Log log = LogFactory.getLog(GeneralObjectActivator.class);
 	private static final long serialVersionUID = -5564402573494806186L;
 
 	public static final String ATT_WORB_CONTACT = "object.contact:";
@@ -66,7 +69,7 @@ public class GeneralObjectActivator implements Activator {
 			adress = AppManUtil.getWorb().exportService(obj, oclass[i],
 					objectClass + oxID.toString() + i);
 			contactAddress.addElement(adress);
-			System.out.println("[VDN]Export Object:" + adress + "\n");
+			log.debug("[VDN]Export Object:" + adress + "\n");
 		}
 
 		// update the ox meta-attribute 'contact'
@@ -74,7 +77,7 @@ public class GeneralObjectActivator implements Activator {
 // 		Debug.debug("GeneralObjectActivator OXManager ObjectId: " + oxID + ": "
 // 				+ obj, true);
 		for (int i = 0; i < interfaceClass.length; i++) {
-			System.out.println("VINDN: ADRESS" + contactAddress.elementAt(i)
+			log.debug("VINDN: ADRESS" + contactAddress.elementAt(i)
 					+ "interface class:" + interfaceClass[i]);
 			oxh.setAttribute(ATT_WORB_CONTACT + interfaceClass[i],
 					contactAddress.elementAt(i));
@@ -173,7 +176,7 @@ public class GeneralObjectActivator implements Activator {
 
 // 		Debug.debug("GeneralObjectActivator getRemoteObjectReference contact: "
 // 				+ contact, true);
-		//System.out.println("Contato ?????????????????????????? "+contact);
+		//log.debug("Contato ?????????????????????????? "+contact);
 
 		//get master from worb
 		Object object = AppManUtil.getWorb().lookupService(contact, chandle);

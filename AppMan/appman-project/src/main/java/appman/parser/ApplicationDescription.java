@@ -9,6 +9,9 @@ package appman.parser;
 import java.io.Serializable;
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.clustering.*;
 
   /**
@@ -18,6 +21,7 @@ import appman.clustering.*;
    */
   public class  ApplicationDescription implements Serializable
   {
+		private static final Log log = LogFactory.getLog(ApplicationDescription.class);
 	private static final long serialVersionUID = -3554750829219220099L;
 	private static int INDEP = 0; // graph=independent
     private static int LOW   = 1; // graph=loosely-coupled
@@ -45,10 +49,10 @@ import appman.clustering.*;
        		grappaOut = new FileWriter("/tmp/grappaOut.txt");
     
        }catch( IOException e){
-       		System.out.println("[APP.DESC] :"+e);
+       		log.debug("[APP.DESC] :"+e);
        }
        */
-       System.out.println("[GRAND]\tApplicationDescription created");
+       log.debug("[GRAND]\tApplicationDescription created");
     }
     
     /**
@@ -99,7 +103,7 @@ import appman.clustering.*;
        
        if( taskName.length() == 0 ){
 			taskName = "task"+(numberOfTasks-1);
-			//System.out.println("VAZIOOOOOOOOOOO!!!!");
+			//log.debug("VAZIOOOOOOOOOOO!!!!");
        }
        
        TaskDescription t = new TaskDescription(taskName, executable);
@@ -118,7 +122,7 @@ import appman.clustering.*;
     public DAG_DSC inferDAG() {
        applicationDAG = new DAG_DSC(numberOfTasks);
        
-       System.out.println("[GRAND]\tStarting to build DAG...");
+       log.debug("[GRAND]\tStarting to build DAG...");
 
        Enumeration e = listOfTasks.elements();
        while (e.hasMoreElements()) {
@@ -144,7 +148,7 @@ import appman.clustering.*;
                 TaskDescription t_aux = (TaskDescription)aux.nextElement();
                 if (!(t_aux.equals(t))){
                    if (t_aux.hasOutputFile(outfile)) {
-                      System.out.println("[GRAND]\tedge "+t_aux.getTaskName()+"->"+t.getTaskName());
+                	   log.debug("[GRAND]\tedge "+t_aux.getTaskName()+"->"+t.getTaskName());
                       applicationDAG.insertEdges(t.getTaskName(), t_aux.getTaskName());
                       found = true;
                    }
@@ -160,7 +164,7 @@ import appman.clustering.*;
        // http://www.informatics.susx.ac.uk/courses/dats/notes/html/node133.html#7452
        // LinkedList -- ArrayList edges = new ArrayList(); -- TreeSet 
        
-       System.out.println("[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
+       log.debug("[GRAND]\tDAG done ("+applicationDAG.getNumberOfNodes()+" nodes).");
        
        //VDN: 15/07/05//////////////// estava no SimpleParser.java
   		//applicationDAG.dump();

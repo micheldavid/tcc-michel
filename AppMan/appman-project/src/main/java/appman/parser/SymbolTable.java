@@ -10,6 +10,7 @@
 
 package appman.parser;
 
+
   /**
    *
    */
@@ -32,7 +33,7 @@ package appman.parser;
        int index = getVarIndex(realVarName);
        mySymbolTable[index][1] = varValue;
 
-       ///System.out.println("[GRAND]\t(putVariable) SymbolTable at "+index+
+       ///log.debug("[GRAND]\t(putVariable) SymbolTable at "+index+
        ///                   ":  "+mySymbolTable[index][0]+
        ///                   " = "+mySymbolTable[index][1]);
     }
@@ -43,7 +44,7 @@ package appman.parser;
        int index = getVarIndex(realVarName);
        Object varValue = mySymbolTable[index][1];
 
-       ///System.out.println("[GRAND]\t(getVariable) SymbolTable at "+index+
+       ///log.debug("[GRAND]\t(getVariable) SymbolTable at "+index+
        ///                   ":  "+mySymbolTable[index][0]+
        ///                   " = "+mySymbolTable[index][1]);
        return varValue;
@@ -59,7 +60,7 @@ package appman.parser;
            Object varValue = mySymbolTable[index][1];
 
 
-           ///System.out.println("[GRAND]\t(getVariable) SymbolTable at "+index+
+           ///log.debug("[GRAND]\t(getVariable) SymbolTable at "+index+
            ///                   ":  "+mySymbolTable[index][0]+
           ///                   " = "+mySymbolTable[index][1]);
           return varValue;
@@ -72,7 +73,7 @@ package appman.parser;
 	      return varName;
 	  } else{
               String value = varName.substring(2,varName.length() -1);
-	      // System.out.println ("\t\tsubstring: "+value);
+	      // log.debug ("\t\tsubstring: "+value);
 	      return value;
 	  }
       }

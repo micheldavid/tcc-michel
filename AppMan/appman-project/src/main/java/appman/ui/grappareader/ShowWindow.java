@@ -1,12 +1,34 @@
 package appman.ui.grappareader;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
 
-import att.grappa.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+
+import att.grappa.Graph;
+import att.grappa.GrappaAdapter;
+import att.grappa.GrappaConstants;
+import att.grappa.GrappaPanel;
+import att.grappa.GrappaSupport;
+import att.grappa.Parser;
 
 /**
  * Displays the graphical user interface.
@@ -140,7 +162,7 @@ public class ShowWindow
 		long numMillisecondsToSleep = 5000; // 0.5 seconds
 		Thread.sleep(numMillisecondsToSleep);
 	} catch (InterruptedException e) {
-		System.out.println("Erro no sleep");
+		log.error("Erro no sleep", e);
 	}
 
 	Node n2 = graph.findNodeByName("C");

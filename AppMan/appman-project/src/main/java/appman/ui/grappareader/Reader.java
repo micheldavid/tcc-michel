@@ -8,8 +8,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.Exehda;
 import org.isam.exehda.services.Worb;
 import appman.ApplicationManagerRemote;
@@ -31,6 +35,7 @@ import appman.parser.ApplicationDescription;
 
 public class Reader implements Serializable {
 
+	private static final Log log = LogFactory.getLog(Reader.class);
 	private static final long serialVersionUID = -2142446295103918750L;
 
 	protected static String inputFilePath = "/home/SO/dalto/eclipse/workspace/appman-mgc/grappaOut.txt";
@@ -110,15 +115,19 @@ public class Reader implements Serializable {
 			// Get the input stream and read from it
 			// Used to sincronize command execution
 			InputStream in = child.getInputStream();
-			int c;
-			while ((c = in.read()) != -1) {
-				System.out.print((char) c);
+			InputStreamReader reader = new InputStreamReader(in);
+			char[] cbuff = new char[1024];
+			StringBuilder sb = new StringBuilder();
+			for (int read; (read = reader.read(cbuff)) != -1;) {
+				sb.append(cbuff, 0, read);
 			}
+			reader.close();
 			in.close();
+			log.debug(sb.toString());
 			/////////////////////////////////////////////////
 
 		} catch (IOException e) {
-			System.out.println("ERRRO NA EXECUCAO!!!");
+			log.error("ERRRO NA EXECUCAO!!!", e);
 		}
 
 		/**
@@ -132,10 +141,10 @@ public class Reader implements Serializable {
 			Worb worb = (Worb) Exehda.getService(Worb.SERVICE_NAME);
 			appman = (ApplicationManagerRemote) worb.lookupService(
 					contact_address, ApplicationManagerRemote.class);
-			System.out.print("[APPMAN-GRAPPAREADER]: " + appman);
+			log.debug("[APPMAN-GRAPPAREADER]: " + appman);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e, e);
 		}
 
 		//appman =
@@ -162,7 +171,7 @@ public class Reader implements Serializable {
 							.changeColorNode(dag_dsc.getNameByIndex(i),
 									colorToString((dag_dsc
 											.getNodeByIndex(i)).status));
-					//System.out.print("NODE: "+names[i]+"
+					//log.debug("NODE: "+names[i]+"
 					// COLOR:"+colorToString(colors[i])+"\n\n");
 					if ((dag_dsc.getNodeByIndex(i)).status != 2) {
 						end = false;
@@ -177,8 +186,7 @@ public class Reader implements Serializable {
 			}
 			//Thread.yield();
 		} catch (Exception e) {
-			System.out.println("\n[GRAPPAREADER]: " + e + "\n\n");
-			e.printStackTrace();
+			log.error("\n[GRAPPAREADER]: " + e + "\n\n", e);
 		}
 
 	}

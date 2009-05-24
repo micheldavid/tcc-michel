@@ -45,7 +45,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             tasksmanagerList = new Vector();
             //ID  = new ImproveDownload();
             appmanager = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(contact_address, ApplicationManagerRemote.class);
-            System.out.println("\n\n\n[CONTACT]: "+contact_address+"\n\n\n");
+            log.debug("\n\n\n[CONTACT]: "+contact_address+"\n\n\n");
             log.debug("SubmissionManager created.");	
             static_die++;
             
@@ -75,8 +75,8 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
         {	
             synchronized(graphs)
             {
-            	if (graphs == null) System.out.println("ERRO  addGraph == graphs Null :-P");//PKVM
-            	if (g == null) System.out.println("ERRO addGraph == g Null :-P");//PKVM
+            	if (graphs == null) log.error("addGraph == graphs Null :-P");//PKVM
+            	if (g == null) log.error("addGraph == g Null :-P");//PKVM
 
                 g.setState(Graph.GRAPH_READY);		
                 graphs.addElement(g);
@@ -161,7 +161,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             // se o numero de tarefas executando é menor que o máximo
             // então adiciona mais tarefas aos Task Managers
             log.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
-            System.out.print("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
             if(num_tasks_running < SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM)
             {            	
             	int n = SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM - num_tasks_running; // numero de novas tarefas a serem executadas
@@ -263,16 +262,16 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                                             //
                                         needRetry = 0;
 	                                }catch(java.rmi.ConnectException e){
-	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - connect");
-	                                	e.printStackTrace();
+	                                	log.error("Trying isTaskOutputsRemoteAvailable - connect", e);
 	                                }catch(java.net.SocketException e2) {
-	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - socket");
-	                                	e2.printStackTrace();	                                	
+	                                	log.error("Trying isTaskOutputsRemoteAvailable - socket", e2);
 	                                }
                                     finally {
                                             // avoid to overload the remote node with too many requests
                                         try { Thread.sleep(500); }
-                                        catch (InterruptedException ie) {}
+                                        catch (InterruptedException ie) {
+                                        	log.error(ie, ie);
+                                        }
                                     }
                                 }
                             }
@@ -321,11 +320,9 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 		                                        }
         	                                }catch(java.rmi.ConnectException e){
         	                                	outPutRetry--;
-        	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - connect");
-        	                                	e.printStackTrace();
+        	                                	log.error("Trying isTaskOutputsRemoteAvailable - connect", e);
         	                                }catch(java.net.SocketException e2) {
-        	                                	System.out.println("Trying isTaskOutputsRemoteAvailable - socket");
-        	                                	e2.printStackTrace();	                                	
+        	                                	log.error("Trying isTaskOutputsRemoteAvailable - socket", e2);
         	                                }
         	                                	
         	                                
@@ -401,7 +398,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
     public synchronized String getSubmissionManagerId() //VDN 2005/01/13 sync
         {
     	
-    		System.out.println("[VINDN]submissionmanagerId: "+submissionmanagerId );
+    	log.debug("[VINDN]submissionmanagerId: "+submissionmanagerId );
     	
             return submissionmanagerId;
         }
@@ -434,7 +431,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
  */
     public void setDieRemote() throws RemoteException
         {
-	    	System.out.println("[SM] SET ALL SM TO DIE: ");
 	    	log.debug("[SM] SET ALL SM TO DIE: ");
 
     		long plus = 0;
@@ -445,7 +441,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                 log.debug("[SM "+i+"] TIME DOWNLOAD: "+t.getDownloadTimeOfTasks());
                 plus += t.getDownloadTimeOfTasks(); //	VDN:27/1/2006
             }	
-			  System.out.println("[SM] Download Time: "+plus);
 			  log.debug("[SM] Download Time: "+plus);
 			  setDownloadTimeOfTasksManagers( plus );//	VDN:27/1/2006
             end = true;
@@ -488,7 +483,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                             if( g.getState() == Graph.GRAPH_READY || g.getState() == Graph.GRAPH_EXECUTING)
                             {										
                                 // executa o grafo
-                            	System.out.println("\t ***[VINDN] executeGraph() GRAPHID: "+g.getGraphId());
+                            	log.debug("\t ***[VINDN] executeGraph() GRAPHID: "+g.getGraphId());
                                 executeGraph(g.getGraphId());
                             }
                         }

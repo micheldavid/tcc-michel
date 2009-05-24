@@ -50,7 +50,7 @@ public class DAGNode implements Cloneable, Serializable{
 	 *  
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public Object clone() {
 		DAGNode copy = new DAGNode();
 		copy.nodeName = this.nodeName;
 		copy.weight = this.weight;
