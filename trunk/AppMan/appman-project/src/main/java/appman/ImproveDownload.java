@@ -1,8 +1,5 @@
 /*
  * Created on 17/01/2006
- * @author VDN 
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package appman;
 
@@ -12,23 +9,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * @author VDN 
  * @author dalto
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ImproveDownload {
 	
 	private static final Log log = LogFactory.getLog(ImproveDownload.class);
 	
 	private Hashtable hashPaths;
-	/**
-	 * 
-	 */
+
 	public ImproveDownload(int numberMaxOfTasks ) {
-		// TODO Auto-generated constructor stub
 		hashPaths = new Hashtable(numberMaxOfTasks);
-		
 	}
 	
 	/**

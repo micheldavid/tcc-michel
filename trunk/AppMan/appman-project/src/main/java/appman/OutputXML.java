@@ -141,12 +141,11 @@ public class OutputXML{
 
 			// pegar o nome sem caminho
 			int barra = appName.lastIndexOf('/')+1;
-			int space;
 			appName = appName.substring(barra);
-			space = appName.indexOf(" ");
-			// XXX: quebra galho, space pode ser -1 
+			int space = appName.indexOf(" ");
+			// se indexOf não encontrar, retorna -1
 			appName = (space > 0 ) ? appName.substring(0,space) : appName;
-			
+
 			executable = node.getExecutable();
 			argument = ""; // TODO: verificar onde foi armazenado a estrutura do parametro -a
 		
