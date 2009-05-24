@@ -93,7 +93,7 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 			if ( data[i] != null )
 			{
 				s+= "\n";
-				s+= data[i].getSensor().getSimpleName();
+				s+= data[i].getSensorName().getSimpleName();
 				s+= " \t= ";
 				s+= data[i].getString();
 				String value = data[i].getString();
@@ -102,7 +102,7 @@ public class GridResourceMonitor extends Thread implements MonitoringConsumer
 				if(average_num == average_max)
 				{
 					float avg = calcAverage(average_list);
-					s+= " \nAverage ["+data[i].getSensor().getSimpleName()+"] in " + average_max +" values: " + avg;
+					s+= " \nAverage ["+data[i].getSensorName().getSimpleName()+"] in " + average_max +" values: " + avg;
 					Debug.debugToFile("\n" + time + "\t" + avg, "subman-"+name+"-monitor.data", true);	
 				}
 				average_num = average_num % average_max;

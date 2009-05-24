@@ -112,7 +112,7 @@ public class CollectorDemo2
             System.out.println("\nTime stamp: "+timeStamp);
             for (int i=0; i<data.length; i++) {
                 if ( data[i] != null ) {
-                    System.out.print(data[i].getSensor().getSimpleName());
+                    System.out.print(data[i].getSensorName().getSimpleName());
                     System.out.print(" \t= ");
                     System.out.println(data[i].getString());
                 }
