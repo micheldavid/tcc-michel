@@ -333,14 +333,9 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 							    catch (RemoteException e)
 								{
                                     AppManUtil.exitApplication("Tolerância a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e, e);
-// 									Debug.debug("Tolerância a Falhas - ApplicationManager DEAD, Submissonmanager SUICIDE" + e);				
-// 									e.printStackTrace();
-//                                         //System.exit(0);
-// 									((Executor) Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
 								} 
 //							    catch (java.net.SocketException e2) {
-//									Debug.debug("INTRODUZIMOS UM ERRO AQUI? :-)");				
-// 									e2.printStackTrace();
+//									log.warn("INTRODUZIMOS UM ERRO AQUI? :-)", e2);				
 //								}
                             }
                         }	

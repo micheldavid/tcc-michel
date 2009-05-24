@@ -11,6 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import edu.berkeley.guir.prefuse.graph.DefaultNode;
 
 /**
@@ -19,6 +22,7 @@ import edu.berkeley.guir.prefuse.graph.DefaultNode;
  */
 public class GraphNode extends DefaultNode implements Serializable
 {
+	private static final Log log = LogFactory.getLog(GraphNode.class);
 	private static final long serialVersionUID = 5719908628990596356L;
 	private Object nodedata;
 	public GraphNode(Object data)
@@ -59,10 +63,10 @@ public class GraphNode extends DefaultNode implements Serializable
 				obj = in.readObject();
 			}
 			catch(IOException e) {
-				e.printStackTrace();
+				log.error(e, e);
 			}
 			catch(ClassNotFoundException cnfe) {
-				cnfe.printStackTrace();
+				log.error(cnfe, cnfe);
 			}
 			return obj;
 		}

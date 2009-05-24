@@ -156,8 +156,8 @@ public class GridSchedule implements SchedulingHeuristic {
         }
 
         catch (Exception e)
-        {					
-            e.printStackTrace();
+        {
+        	log.error(e, e);
             throw new NullPointerException("Error in HostId "+ e);
         }
 	}

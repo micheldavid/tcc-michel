@@ -144,7 +144,7 @@ public class GeneralObjectActivator implements Activator {
 				file.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e, e);
 			}
 		}
 
@@ -161,7 +161,7 @@ public class GeneralObjectActivator implements Activator {
 				file.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e, e);
 			}
 		}/*GridTaskID
 		  * else{ FileWriter file; String path = "hosts.txt";
@@ -170,7 +170,7 @@ public class GeneralObjectActivator implements Activator {
 		  * 
 		  * file = new FileWriter(path, true);
 		  * file.write(remote_interface+"\n"); file.close();
-		  *  } catch(Exception e){ e.printStackTrace(); }
+		  *  } catch(Exception e){ log.error(e, e); }
 		  *  }
 		  */
 

@@ -94,7 +94,7 @@ public class SandBox
             else root = null;
         }
         catch (Exception e) {
-            e.printStackTrace();
+        	log.error(e, e);
             root = null;
         }
         finally {

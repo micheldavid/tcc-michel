@@ -116,11 +116,11 @@ public class AppManConsole implements AppManConsoleRemote
 							
         }catch (Exception e)
         {
+        	log.error(e, e);
         	//VDN
             //AppManUtil.exitApplication("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO", e);
 //             Debug.debug("Tolerância a Falhas: ERRO FATAL NÃO TOLERADO!", true);
 //             Debug.debug(e, true);
-//             e.printStackTrace();
 //             System.exit(0);
             }
             return null;
