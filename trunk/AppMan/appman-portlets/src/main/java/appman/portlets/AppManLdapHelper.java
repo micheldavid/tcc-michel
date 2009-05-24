@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.SearchResult;
 
 import org.apache.commons.logging.Log;
@@ -14,7 +15,11 @@ public class AppManLdapHelper {
 	private static final Log log = LogFactory.getLog(AppManLdapHelper.class);
 
 	public static LdapSession createSession() throws NamingException {
-		LdapSession session = new LdapSession("192.168.42.140", "dc=exehda", "cn=admin,dc=exehda", "1234");
+		String server = AppManConfig.get().getString("exehda.ldap.server");
+		String rootDN = AppManConfig.get().getString("exehda.ldap.rootDN");
+		String user = AppManConfig.get().getString("exehda.ldap.user");
+		String password = AppManConfig.get().getString("exehda.ldap.password");
+		LdapSession session = new LdapSession(server, rootDN, user, password);
 		session.open();
 		return session;
 	}
@@ -64,7 +69,7 @@ public class AppManLdapHelper {
 
 		String filter = "(&(objectClass=exehdaApplication)(xAppID=" + appid + "))";
 
-		NamingEnumeration<SearchResult> e = (NamingEnumeration<SearchResult>) session.search("", filter, null);
+		NamingEnumeration<SearchResult> e = session.search("", filter, null);
 		while (e.hasMore()) {
 			SearchResult res = e.next();
 			String[] values = session.getMultiValuedNodeAttribute(res.getName(), "xAttr");
@@ -84,8 +89,8 @@ public class AppManLdapHelper {
 		ArrayList<String> appIDs = new ArrayList<String>();
 		try {
 			LdapSession session = createSession();
-			NamingEnumeration<SearchResult> e = (NamingEnumeration<SearchResult>) session.search("",
-				"objectClass=exehdaApplication", new String[] { "xAppID" });
+			NamingEnumeration<SearchResult> e = session.search("", "objectClass=exehdaApplication",
+				new String[] { "xAppID" });
 			while (e.hasMore()) {
 				SearchResult o = (SearchResult) e.next();
 				appIDs.add((String) o.getAttributes().get("xAppID").get());
@@ -101,25 +106,35 @@ public class AppManLdapHelper {
 	public static void removeAppID(String appID) {
 		try {
 			LdapSession session = createSession();
-			NamingEnumeration<SearchResult> e = (NamingEnumeration<SearchResult>) session.search("",
-				"xAppID=" + appID, new String[] { "xAttr:status" });
+			removeAppID(session, appID);
+			session.close();
+		} catch (NamingException e) {
+			log.error("erro na sessão do ldap", e);
+		}
+	}
+	
+	public static void removeAppID(LdapSession session, String appID) {
+		try {
+			NamingEnumeration<SearchResult> e = session.search("", "xAppID=" + appID, new String[] { "xAttr:status" });
 			if (e.hasMore()) {
 				SearchResult res = e.next();
-				NamingEnumeration<String> attrs = (NamingEnumeration<String>) res.getAttributes().get("xAttr").getAll();
-				while (attrs.hasMore()) {
-					String[] pair = attrs.next().split(":");
-					if ("status".equals(pair[0]) && "running".equals(pair[1])) {
-						throw new IllegalStateException(
-							"A aplicação que está sendo removida está em execução. Impossível remover.");
+				Attribute attribute = res.getAttributes().get("xAttr");
+				if (attribute != null) {
+					NamingEnumeration<String> attrs = (NamingEnumeration<String>) attribute.getAll();
+					while (attrs.hasMore()) {
+						String[] pair = attrs.next().split(":");
+						if ("status".equals(pair[0]) && "running".equals(pair[1])) {
+							throw new IllegalStateException(
+								"A aplicação que está sendo removida está em execução. Impossível remover.");
+						}
 					}
+					attrs.close();
 				}
-				attrs.close();
 				if (e.hasMore()) throw new IllegalStateException("mais de um xAppID encontrado " + appID);
 
 				session.unbindDN(res.getName());
 			}
 			e.close();
-			session.close();
 		} catch (NamingException e) {
 			log.error("erro na sessão do ldap", e);
 		}
