@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.*;
 
 public class DAGNode implements Cloneable, Serializable{
-	
+
+	private static final long serialVersionUID = 6517054966199226876L;
 	public String nodeName;
 	public int nodeIndex;
 	public double weight;

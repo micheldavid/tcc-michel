@@ -26,6 +26,7 @@ import appman.parser.SimpleParser;
 public class DAGGraphGUI extends javax.swing.JFrame
 {
 	
+	private static final long serialVersionUID = -548735690290363468L;
 	ApplicationManagerRemote appman;
 	final ApplicationId appId;
     

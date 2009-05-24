@@ -42,7 +42,8 @@ public class CollectorDemo2
     extends Frame
     implements WindowListener, MonitoringConsumer, ItemListener
 {
-    private Panel sensorsPane;
+	private static final long serialVersionUID = 2350256153062269648L;
+	private Panel sensorsPane;
     private Hashtable sensorsByBox;
     private Collector collector;
     private Sensor[] sensors;

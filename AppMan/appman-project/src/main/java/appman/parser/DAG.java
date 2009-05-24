@@ -8,12 +8,10 @@ package appman.parser;
 import java.io.Serializable;
 import java.util.*;
 
-  /**
-   *
-   */
   public class  DAG implements Serializable
   {
-    private List nodes; // taskArray 
+	private static final long serialVersionUID = -4295017125464737354L;
+	private List nodes; // taskArray 
     private List nodesName; // taskArray 
     
     public DAG(int numberOfNodes) {

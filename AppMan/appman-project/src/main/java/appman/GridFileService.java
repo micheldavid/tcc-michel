@@ -27,6 +27,7 @@ import appman.log.Debug;
  */
 public class GridFileService implements GridFileServiceRemote, Serializable {
 
+	private static final long serialVersionUID = -4639171298174076708L;
 	private String defaultdir = null;
 
 	private final static class SandBoxUtil {

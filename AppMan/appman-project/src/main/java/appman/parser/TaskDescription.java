@@ -1,25 +1,23 @@
 /*
  * GRAND - kayser@cos.ufrj.br (c) 2004
- * ApplicationDescription.java - stores info obtained during the 
- *     application parsing
- *     - it stores info about a specific task which  will represent
- *     a node in the application DAG
  * 2004/04/30
  */
-
-//package grand.parsing;
-
 package appman.parser;
 
 import java.io.Serializable;
 import java.util.*;
 
-  /**
-   *
-   */
-  public class  TaskDescription implements Serializable 
+/**
+ * stores info obtained during the 
+ *     application parsing
+ *     - it stores info about a specific task which  will represent
+ *     a node in the application DAG
+ * @author PKVM
+ */
+public class  TaskDescription implements Serializable 
   {
-    private String taskName;
+	private static final long serialVersionUID = -929117541596781442L;
+	private String taskName;
     private String executable;
     private Vector inputFiles;
     private Vector outputFiles;

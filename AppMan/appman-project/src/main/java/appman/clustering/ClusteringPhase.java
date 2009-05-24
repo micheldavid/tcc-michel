@@ -7,7 +7,8 @@ import java.io.*;
 
 
 public class ClusteringPhase implements Serializable{
-	
+
+	private static final long serialVersionUID = 499369438336117595L;
 	//protected DAG_DSC dag_dsc;
 	protected DAG_DSC nodes;
 	protected Vector cluster;

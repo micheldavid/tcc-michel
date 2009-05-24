@@ -38,6 +38,8 @@ import appman.log.Debug;
  *  
  */
 public class MyTask extends Task implements Serializable {
+	private static final long serialVersionUID = -2992989365373513990L;
+
 	/**
 	 * @param id
 	 * @param desc

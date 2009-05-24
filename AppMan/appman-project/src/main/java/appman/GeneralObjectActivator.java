@@ -24,6 +24,8 @@ import org.isam.exehda.services.OXManager.OXHandle;
 
 public class GeneralObjectActivator implements Activator {
 
+	private static final long serialVersionUID = -5564402573494806186L;
+
 	public static final String ATT_WORB_CONTACT = "object.contact:";
 
 	private String objectClass;

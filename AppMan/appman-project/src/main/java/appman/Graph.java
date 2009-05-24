@@ -10,6 +10,7 @@ import appman.task.TaskState;
 
 public class Graph implements Serializable
 {
+	private static final long serialVersionUID = -535333494608899387L;
 	private String graphId;
 	private String mysubmanId; // default submission manager
 

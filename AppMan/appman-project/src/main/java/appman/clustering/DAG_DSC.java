@@ -19,6 +19,8 @@ import java.io.*;
  * It is a version of DAG that stores nodes' weight and also edges' weight.
  */
 public class DAG_DSC extends AbstractDAG implements Serializable{
+	private static final long serialVersionUID = 3518156882519749387L;
+
 	/** to implementent iterator interface */
 	protected int iteratorIndex = 0;
 	

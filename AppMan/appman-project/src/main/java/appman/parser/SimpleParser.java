@@ -1878,7 +1878,8 @@ Vector listElements;
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends java.lang.Error { }
+  static private final class LookaheadSuccess extends java.lang.Error {
+	private static final long serialVersionUID = -273063903583494802L; }
   static final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   static final private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {

@@ -7,6 +7,7 @@ import appman.log.Debug;
 
 public class TaskFiles implements java.io.Serializable {
 
+	private static final long serialVersionUID = -1155977077422538783L;
 	private java.util.Vector inputFiles;
 	private java.util.Vector outputFiles;
 
