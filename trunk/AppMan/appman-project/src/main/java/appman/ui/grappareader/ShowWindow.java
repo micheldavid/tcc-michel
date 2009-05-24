@@ -296,7 +296,7 @@ public class ShowWindow
 		    try {
 			connector = Runtime.getRuntime().exec(ShowWindow.SCRIPT);
 		    } catch(Exception ex) {
-		    	log.error("Exception while setting up Process: " + ex.getMessage() + "\nTrying URLConnection...");
+		    	log.error("Exception while setting up Process: " + ex.getMessage() + " - Trying URLConnection...");
 			connector = null;
 		    }
 		    if(connector == null) {
@@ -308,7 +308,7 @@ public class ShowWindow
 			    urlConn.setUseCaches(false);
 			    urlConn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
 			} catch(Exception ex) {
-				log.error("Exception while setting up URLConnection: " + ex.getMessage() + "\nLayout not performed.", ex);
+				log.error("Exception while setting up URLConnection: " + ex.getMessage() + " - Layout not performed.", ex);
 			    connector = null;
 			}
 		    }

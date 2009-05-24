@@ -631,20 +631,20 @@ public class DAG_DSC extends AbstractDAG implements Serializable{
 		//writing clusters in dot format
 		if(cp != null){
 			//cluster = cp.clustering();
-			//log.debug("\n[VINDN]:PASSOU SIZE:"+cluster.size()+"\n");
+			//log.debug("[VINDN]:PASSOU SIZE:"+cluster.size());
 			for(int i=0; i < cluster.size(); i++){
-				//log.debug("\n[VINDN]:PASSOU2  node: \n");
+				//log.debug("[VINDN]:PASSOU2  node:");
 				try {
 					out.write("subgraph cluster"+i+"{"+"\n");
 				} catch(Exception e){ 
 					log.error("[GRAND]\tError writing to file "+filename, e);
 				}						
-				//log.debug("\n[VINDN]:PASSOU2  node: \n");
+				//log.debug("[VINDN]:PASSOU2  node: ");
 				for(int j=0; j < ((Vector)cluster.get(i)).size(); j++){
 											
 						try {
 							node = ((String)((Vector)cluster.get(i)).get(j));
-							//log.debug("\n[VINDN]:PASSOU  node: "+node+"\n");
+							//log.debug("[VINDN]:PASSOU  node: "+node);
 							out.write(node+" [color="+"red"+", style=filled];"+"\n");
 						} catch(Exception e){ 
 							log.error("[GRAND]\tError writing to file "+filename, e);

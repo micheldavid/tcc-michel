@@ -172,7 +172,7 @@ public class Reader implements Serializable {
 									colorToString((dag_dsc
 											.getNodeByIndex(i)).status));
 					//log.debug("NODE: "+names[i]+"
-					// COLOR:"+colorToString(colors[i])+"\n\n");
+					// COLOR:"+colorToString(colors[i]));
 					if ((dag_dsc.getNodeByIndex(i)).status != 2) {
 						end = false;
 					} else {
@@ -186,7 +186,7 @@ public class Reader implements Serializable {
 			}
 			//Thread.yield();
 		} catch (Exception e) {
-			log.error("\n[GRAPPAREADER]: " + e + "\n\n", e);
+			log.error("[GRAPPAREADER]: " + e, e);
 		}
 
 	}

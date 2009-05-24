@@ -112,7 +112,7 @@ public class CollectorDemo2
 
     public void update( long timeStamp, MonitoringData[] data )
         {
-    	log.debug("\nTime stamp: "+timeStamp);
+    	log.debug("Time stamp: "+timeStamp);
             for (int i=0; i<data.length; i++) {
                 if ( data[i] != null ) {
                     log.debug(data[i].getSensorName().getSimpleName() + " \t= " + data[i].getString());
