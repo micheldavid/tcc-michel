@@ -8,11 +8,11 @@ package appman;
 
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 import org.isam.exehda.services.Executor.SchedulingHeuristic;
-
-import appman.log.Debug;
 
 /**
  * @author lucasa
@@ -21,6 +21,7 @@ import appman.log.Debug;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class GridSchedule implements SchedulingHeuristic {
+	private static final Log log = LogFactory.getLog(GridSchedule.class);
 	private static final long serialVersionUID = 6545673083638233546L;
 
 	public static final String HINT_FINAL_RESULTS_NODE       = "grid.targetHosts.host-final-results";
@@ -89,7 +90,7 @@ public class GridSchedule implements SchedulingHeuristic {
         try
         {
             HostId hostid = null;                        
-            Debug.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts, true);
+            log.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
 
             if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
                     // O laço abaixo é necessario pois o nodo selecionado em um passo
@@ -149,7 +150,7 @@ public class GridSchedule implements SchedulingHeuristic {
                 	hostid = smGridHosts.getRoundRobinHost();
                 }
             }
-            Debug.debug("GridSchedule["+hint+"] choosed host: " + hostid, true);
+            log.debug("GridSchedule["+hint+"] choosed host: " + hostid);
 
             return hostid;
         }

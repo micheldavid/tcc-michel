@@ -3,10 +3,10 @@
 package appman;
 
 import java.awt.Window;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.Exehda;
 import org.isam.exehda.services.CellInformationBase;
@@ -15,11 +15,10 @@ import org.isam.exehda.services.Executor;
 import org.isam.exehda.services.OXManager;
 import org.isam.exehda.services.Worb;
 
-import appman.log.Debug;
-
 
 public class AppManUtil
 {
+	private static final Log log = LogFactory.getLog(AppManUtil.class);
     private static Vector frames = new Vector();
 
     public static Executor getExecutor()
@@ -65,7 +64,6 @@ public class AppManUtil
 
     public static void exitApplication()
         {
-//             (new Throwable()).printStackTrace();
             
                 // ensure all application frames are disposed 
             for (int i=0; i<frames.size(); i++) {
@@ -82,14 +80,7 @@ public class AppManUtil
 
     public static void exitApplication(String msg, Throwable t)
         {
-            if ( msg != null ) {
-                Debug.debug(msg, true);
-            }
-            
-            if ( t != null ) {
-                Debug.debug(t, true);
-                t.printStackTrace();
-            }
+    	log.error(msg, t);
 
             exitApplication();
         }

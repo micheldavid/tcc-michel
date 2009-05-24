@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ResourceName;
 import org.isam.exehda.services.CellInformationBase;
-
-import appman.log.Debug;
 
 /**
  * @author lucasa
@@ -20,6 +20,7 @@ import appman.log.Debug;
  */
 public class GridRemoteHostsProperties
 {
+	private static final Log log = LogFactory.getLog(GridRemoteHostsProperties.class);
 	private GridRemoteHostsFileProperties fileProperties;
 	private ArrayList hosts;
 	private Vector queue;
@@ -126,7 +127,7 @@ public class GridRemoteHostsProperties
 	{
       CellInformationBase cib = AppManUtil.getCellInformationBase();
       ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-      Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length, true);
+      log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
 
 		
 		HostId targetHost = null;
@@ -182,13 +183,13 @@ public class GridRemoteHostsProperties
 
     CellInformationBase cib = AppManUtil.getCellInformationBase();
     ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-    Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length, true);
+    log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
     
     for(int i=0;i<resources.length; i++)
     {
     	queueAllMachines.add(resources[i].getSimpleName());
     	//queueAllMachines.add("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
-        Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName(), true);
+        log.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
     }
 	}
 	/*

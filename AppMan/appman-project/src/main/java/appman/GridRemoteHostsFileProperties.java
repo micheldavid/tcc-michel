@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author lucasa
@@ -20,6 +21,7 @@ import appman.log.Debug;
  */
 public class GridRemoteHostsFileProperties extends Properties implements Serializable
 {
+	private static final Log log = LogFactory.getLog(GridRemoteHostsFileProperties.class);
 	private static final long serialVersionUID = -4809139501645717731L;
 	private String propertiesFileName;
 	private String propertiesFileSection;
@@ -37,12 +39,11 @@ public class GridRemoteHostsFileProperties extends Properties implements Seriali
 					this.load(fis);					
 			} catch (FileNotFoundException fnfe)
 			   {
-					Debug.debug(fnfe);
-					fnfe.printStackTrace();
+					log.error(fnfe, fnfe);
 					System.exit(0);
 				} catch (IOException ioe)
 				{
-					ioe.printStackTrace();
+					log.error(ioe, ioe);
 					System.exit(0);
 				}
 	}
@@ -51,7 +52,7 @@ public class GridRemoteHostsFileProperties extends Properties implements Seriali
 	{
 		ArrayList targetHosts = new ArrayList();
 		String hosts = this.getProperty(propertiesFileSection);
-		Debug.debug("GridRemoteHostsFileProperties hosts loaded from file: " + propertiesFileName + " - section: " + propertiesFileSection + " - ["+hosts+"]", true);
+		log.debug("GridRemoteHostsFileProperties hosts loaded from file: " + propertiesFileName + " - section: " + propertiesFileSection + " - ["+hosts+"]");
 		StringTokenizer st = new StringTokenizer(hosts, ";", true);
 		while (st.hasMoreTokens())
 		{
@@ -59,7 +60,7 @@ public class GridRemoteHostsFileProperties extends Properties implements Seriali
 			if(!str.equals(";"))
 			{
 				targetHosts.add(str);
-				Debug.debug(" " + str, false);
+				log.debug(" " + str);
 			}
 		}
 		

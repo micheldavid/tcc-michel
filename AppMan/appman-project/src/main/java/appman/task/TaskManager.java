@@ -12,10 +12,14 @@ package appman.task;
 import java.rmi.RemoteException;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.log.Debug;
 
 public class TaskManager implements TaskManagerRemote, Runnable
 {
+	private static final Log log = LogFactory.getLog(TaskManager.class);
 
 private String taskmanagerId;
 private String description;
@@ -39,7 +43,7 @@ public TaskManager(String id)
 	taskList = new Vector();
 	newtaskList = new Vector();
 	
-	Debug.debug("Taskmanager created.");
+	log.debug("Taskmanager created.");
 	
 	Thread thread = new Thread(this);
 	thread.start();
@@ -90,12 +94,12 @@ public void setToDie()
 {
   long plus = 0;	
 	
-  Debug.debug("TaskManager going to DIE!", true);
+  log.debug("TaskManager going to DIE!");
 
   for(int i=0; i<taskList.size(); i++)
   {
   		((Task)taskList.elementAt(i)).setToDie();
-  		Debug.debug("[TM "+i+"] TIME DOWNLOAD: "+((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles(), true);
+  		log.debug("[TM "+i+"] TIME DOWNLOAD: "+((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles());
   		plus += ((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles();//VDN:27/1/2006
   }
   downloadTimeOfTasks = plus;//VDN:27/1/2006
@@ -147,7 +151,7 @@ public void setDescription(String string) {
 
 public void run()
 {	
-	Debug.debug("TaskManager thread run.");	
+	log.debug("TaskManager thread run.");	
 	while(!die)
 	{
 		synchronized(newtaskList)
@@ -158,9 +162,9 @@ public void run()
 					{
 						taskList.addAll(newtaskList); // adiciona os elementos da lista de novas tarefas � lista de tarefas
 					}
-					Debug.debug("TaskManager add new tasks "+newtaskList.toString()+" to List.", true);
+					log.debug("TaskManager add new tasks "+newtaskList.toString()+" to List.");
 					newtaskList.removeAllElements(); //remove os elementos da lista de novas, apos inser��o destes na lista de tarefas
-					Debug.debug("TaskManager clean newtasks List.");
+					log.debug("TaskManager clean newtasks List.");
 			}
 			synchronized(taskList)
 			{
@@ -173,10 +177,10 @@ public void run()
 						
 						Task task = (Task)taskList.elementAt(i);			
 						if( task.getState().getCode() == TaskState.TASK_READY )
-						{	
+						{
 							task.setState(TaskState.getInstance(TaskState.TASK_EXECUTING));
-							Debug.debug("Task setting state: " + task.getState().getName());					
-							Debug.debug("TaskManager executing task ["+task.getTaskId()+"] READY.", true);							
+							log.debug("Task setting state: " + task.getState().getName());
+							log.debug("TaskManager executing task ["+task.getTaskId()+"] READY.");
 							Thread thread = new Thread(task);
 							thread.start();
 						}
@@ -188,7 +192,7 @@ public void run()
 		{		
 			Thread.sleep(500);
 		} catch (Exception e) {
-			Debug.debug(e, true);			
+			log.error(e, e);			
 		}
 		
 	}

@@ -19,7 +19,9 @@ import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
-import appman.log.Debug;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.task.Task;
 import appman.task.TaskState;
 
@@ -38,6 +40,7 @@ import appman.task.TaskState;
  */
 public class SandBox
 {
+	private static final Log log = LogFactory.getLog(SandBox.class);
     private static final String SYSPROP_TMPDIR  = "java.io.tmpdir";
     private static final String SYSPROP_USER    = "user.name";
     private static final String SLASH           = File.pathSeparator;
@@ -103,7 +106,7 @@ public class SandBox
             if ( tmp != null ) tmp.delete();
         }
 
-        __debug__("sandbox root="+root.getAbsolutePath());
+        log.debug("sandbox root="+root.getAbsolutePath());
         
         SANDBOX_ROOT=root;
     }
@@ -174,7 +177,7 @@ public class SandBox
             catch (InterruptedException ie) {
                     // this thread has been interrupted, possibly the application is
                     // exiting due to an error
-                __debug__("aborting execution due to interrupt");
+            	log.debug("aborting execution due to interrupt");
                     // so do a local clean up 
                 proc.destroy();
                     // FIX ME: should we already call cleanUp() here?
@@ -200,7 +203,7 @@ public class SandBox
 
                     // unlikely to happen, but lets check for a possible buffer overflow
                 if (in.size() >= Integer.MAX_VALUE) {
-                    __debug__("Warning: process error message has been truncated because "
+                	log.debug("Warning: process error message has been truncated because "
                               +"contents of file "+cmdOutput+" exceeded the maximum buffer size.");
                 }
                 
@@ -225,7 +228,7 @@ public class SandBox
     public void cleanUp()
         {
             if (! deltree(this.sandboxDir)) {
-                __debug__("clean up failed for dir "+sandboxDir);
+                log.debug("clean up failed for dir "+sandboxDir);
             }
         }
 
@@ -266,16 +269,6 @@ public class SandBox
             return dir.delete();
         }
 
-        /**
-         * Facility for logging of debugging messages.
-         *
-         * @param msg a <code>String</code> value
-         */
-    private static final void __debug__(String msg)
-        {
-            Debug.debug("[SANDBOX] "+ msg, true);
-        }
-    
     @Override
 	protected void finalize()
         {
@@ -384,7 +377,7 @@ public class SandBox
                             contact_address_remote,
                             SubmissionManagerRemote.class);
 
-                    __debug__("going to get remote file service from a foreign submission "
+                    log.debug("going to get remote file service from a foreign submission "
                               +"manager that owns the task ["+ remote_task.getTaskId()+ "]: "
                               + smr);
                     
@@ -403,7 +396,7 @@ public class SandBox
                 
                 createLocalFile(target, buffer);
                 
-                __debug__("remote file ["+ filename+"] installed at "+target);
+                log.debug("remote file ["+ filename+"] installed at "+target);
 
                 return target;
             }

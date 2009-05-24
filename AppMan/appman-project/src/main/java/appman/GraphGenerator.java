@@ -12,8 +12,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import appman.clustering.DAG_DSC;
-import appman.log.Debug;
 import appman.parser.ApplicationDescription;
 import appman.parser.TaskDescription;
 import appman.task.MyTask;
@@ -33,6 +35,7 @@ import edu.berkeley.guir.prefuse.graph.Node;
  */
 public class GraphGenerator extends GraphLib
 {
+	private static final Log log = LogFactory.getLog(GraphGenerator.class);
 		private int taskid = 0; // generate tasks ids
 		private int fileid = 0; // generate datafile ids
 		private Vector datafiles;
@@ -101,7 +104,7 @@ public class GraphGenerator extends GraphLib
 			Random rand = new Random();
 			int r = Math.abs(rand.nextInt()%listsubmanid.length);
 			String random_submanid = listsubmanid[r];
-			Debug.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
+			log.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
 			//Node child = new DefaultTreeNode(); // create root
 			GraphNode child = new GraphNode(createDefaultTask(String.valueOf(taskid),random_submanid,"/bin/echo ["+ String.valueOf(taskid)+"]  > ./file["+String.valueOf(taskid)+"].txt"));			
 			child.setAttribute("label",((Task)child.getNodeData()).getTaskId());
@@ -169,7 +172,7 @@ public class GraphGenerator extends GraphLib
 			// random choose the sumbmanid from the list
 			int r = Math.abs(rand.nextInt()%listsubmanid.length); 
 			String random_submanid = listsubmanid[r];
-			Debug.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
+			log.debug("GraphGenerator creating task with submisson managers Id: " + random_submanid);
 			GraphNode nn = new GraphNode(createDefaultTask(String.valueOf(taskid), random_submanid,"/bin/echo ["+ String.valueOf(taskid)+"]  > ./file["+String.valueOf(taskid)+"].txt"));				
 			nn.setAttribute("label",((Task)nn.getNodeData()).getTaskId());
 			nn.setAttribute("depth",String.valueOf(depth));
@@ -218,7 +221,7 @@ public class GraphGenerator extends GraphLib
 				List taskList = appdesc.getListOfTasks();
 				TaskDescription[] tasks = (TaskDescription[])taskList.toArray(new TaskDescription[0]);
 				
-				Debug.debug("GraphGenerator convertApplicationDescriptionToGraph: num tasks - " + n);
+				log.debug("GraphGenerator convertApplicationDescriptionToGraph: num tasks - " + n);
 				
 				Vector gnodes = new Vector();// vetor auxiliar com dados do nodo do grafo
 				Vector gnodes_names = new Vector();// vetor auxiliar com o nome da tarefa do nodo

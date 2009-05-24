@@ -14,6 +14,8 @@ import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.ObjectId;
 
@@ -27,7 +29,6 @@ import appman.GridTask;
 import appman.GridTaskRemote;
 import appman.SubmissionManager;
 import appman.SubmissionManagerRemote;
-import appman.log.Debug;
 
 //import org.isam.exehda.services.ObjectSeed.Activator;
 
@@ -38,6 +39,7 @@ import appman.log.Debug;
  *  
  */
 public class MyTask extends Task implements Serializable {
+	private static final Log log = LogFactory.getLog(MyTask.class);
 	private static final long serialVersionUID = -2992989365373513990L;
 
 	/**
@@ -73,7 +75,7 @@ public class MyTask extends Task implements Serializable {
 	public void execute() throws Exception {
 		String where = "grid.targetHosts.localscheduler";
 
-		Debug.debug("Task " + this.getName() + " (" + this.getDescription()
+		log.debug("Task " + this.getName() + " (" + this.getDescription()
 				+ ") remote  executing.");
 
 		try {
@@ -87,8 +89,8 @@ public class MyTask extends Task implements Serializable {
 			//setRemoteGridFileServiceContactAddress(contact_address); //
 			// guarda a referência do objeto remoto numa variável da classe
 
-			Debug.debug("MyTask [" + this.getTaskId()
-					+ "] remote GridTask created", true);
+			log.debug("MyTask [" + this.getTaskId()
+					+ "] remote GridTask created");
 			timeInfo.setTimeStart(new Date());
 			timeInfo.setTimeTaskStart(new Date());
 
@@ -103,10 +105,10 @@ public class MyTask extends Task implements Serializable {
 			
 			timeInfo.setDownloadTimeOfFiles( finalTime - initialTime );
 			System.out.println("[VINDN] Download Time: "+(finalTime - initialTime));
-			Debug.debug("[VINDN] Download Time: "+(finalTime - initialTime), true);
+			log.debug("[VINDN] Download Time: "+(finalTime - initialTime));
 			
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] SET GridTask to RUN:" + gridtaskremote, true);
+			log.debug("Mytask [" + this.getTaskId()
+					+ "] SET GridTask to RUN:" + gridtaskremote);
             // start remote execution
 			gridtaskremote.setRun(true); 
 
@@ -126,7 +128,7 @@ public class MyTask extends Task implements Serializable {
                         Thread.sleep(GET_END_POOLING_MILLIS);
                     }
                 } catch (Exception e) {
-                    Debug.debug("Failed to get remote task end status: "+e+". Will retry...");
+                    log.error("Failed to get remote task end status: "+e+". Will retry...", e);
                 }
             }
 			
@@ -151,7 +153,7 @@ public class MyTask extends Task implements Serializable {
 				break;
 			   } 
 			} catch (Exception esocket) {
-				Debug.debug("Tentando obter novamente o gridtaskremote.getSuccess() - java.net.SocketException", true);
+				log.error("Tentando obter novamente o gridtaskremote.getSuccess() - java.net.SocketException", esocket);
 			}
 			}
 
@@ -176,22 +178,22 @@ public class MyTask extends Task implements Serializable {
 		String where;
 		GeneralObjectActivator activator;
 		ObjectId h;
-		Debug.debug("Mytask Task [" + this.getTaskId() + "]  RETRY ["
-				+ this.getRetryTimes() + "]  - Success: OK", true);
+		log.debug("Mytask Task [" + this.getTaskId() + "]  RETRY ["
+				+ this.getRetryTimes() + "]  - Success: OK");
 		// if the task type is FINAL, then transfer the output files to
 		// the user machine, to get the results
 		if (this.getTaskType() == TaskType.TASK_TYPE_FINAL) {
 			where = "grid.targetHosts.host-final-results"; // all grid resources
-			Debug.debug("MyTask [" + this.getTaskId()
-				+ "] create remote GridFileService in Cell to transfer the results", true);
+			log.debug("MyTask [" + this.getTaskId()
+				+ "] create remote GridFileService in Cell to transfer the results");
 
 			activator = new GeneralObjectActivator("GridFileService",
 					new Class[] { GridFileServiceRemote.class },
 					new String[] { "GridFileServiceRemote" }, false);
 
-			Debug.debug("MyTask [" + this.getTaskId()
+			log.debug("MyTask [" + this.getTaskId()
 					+ "] Activator remote GridFileService: "
-					+ activator, true);
+					+ activator);
 
 			h = AppManUtil.getExecutor().createObject(
 					GridFileService.class, new Object[] {}, // a seed
@@ -202,47 +204,44 @@ public class MyTask extends Task implements Serializable {
 															// da tarefa
 					activator, where);
 
-			Debug.debug("MyTask [" + this.getTaskId()
-					+ "] remote GridFileService created: " + h, true);
+			log.debug("MyTask [" + this.getTaskId()
+					+ "] remote GridFileService created: " + h);
 
 			// if h is null, so get some error in the remote object
 			if (h == null) {
-				Debug.debug("MyTask [" + this.getTaskId()
+				log.error("MyTask [" + this.getTaskId()
 						+ "] remote GridFileService created FAILED: "
-						+ h, true);
+						+ h);
 				RemoteException e = new RemoteException(
 						"\nExehda Create remote object failed!");
 				throw e;
 			}
 
-			Debug
-					.debug(
+			log.debug(
 							"MyTask ["
 									+ this.getTaskId()
-									+ "] remote reference GridFileServiceRemote looking.",
-							true);
+									+ "] remote reference GridFileServiceRemote looking.");
 			GridFileServiceRemote result_gridfileservice = (GridFileServiceRemote) GeneralObjectActivator
 					.getRemoteObjectReference(h,
 							GridFileServiceRemote.class,
 							"GridFileServiceRemote");
 
-			Debug.debug("MyTask [" + this.getTaskId()
-					+ "] remote GridFileServiceRemote created", true);
-			Debug
+			log.debug("MyTask [" + this.getTaskId()
+					+ "] remote GridFileServiceRemote created");
+			log
 					.debug(
 							"MyTask ["
 									+ this.getTaskId()
-									+ "] results going to be transfered to user machine!",
-							true);
+									+ "] results going to be transfered to user machine!");
 			DataFile[] results_datafile = this.getFiles().getOutputFiles();
 			for (int i = 0; i < results_datafile.length; i++) {
 				String filepath = results_datafile[i].getName();
-				Debug.debug("Transfering file: " + filepath, true);
+				log.debug("Transfering file: " + filepath);
 				result_gridfileservice.uploadFile(gridfileservice
 						.downloadFile(filepath), filepath);
 			}
-			Debug.debug("MyTask [" + this.getTaskId()
-					+ "] results transfered to user machine!", true);
+			log.debug("MyTask [" + this.getTaskId()
+					+ "] results transfered to user machine!");
 		}
 	}
 
@@ -254,7 +253,7 @@ public class MyTask extends Task implements Serializable {
 	 */
 	private void downloadInputFiles() throws RemoteException, ConnectException, InterruptedException, MalformedURLException {
 
-		Debug.debug("MyTask : starting method downloadInputFiles...",true);
+		log.debug("MyTask : starting method downloadInputFiles...");
 
 		// TODO: neste metodo teria que verificar se esta em rede local, neste caso nao
 		// precisaria transferir se estiver no NFS
@@ -263,7 +262,7 @@ public class MyTask extends Task implements Serializable {
 		String lastFilePath = ""; //VDN
 		for (int i = 0; i < datafile.length; i++) {
 			String filepath = datafile[i].getName();
-			Debug.debug("File path: " + filepath);
+			log.debug("File path: " + filepath);
 
 			MyTask remote_task = (MyTask) datafile[i].getFromTask();
 			if (remote_task != null) {
@@ -271,8 +270,8 @@ public class MyTask extends Task implements Serializable {
 				//int retry = 0; VDN
 				while (true) {
 					try {
-						Debug.debug("MyTask [" + this.getTaskId()
-								+ "] try to install input files", true);
+						log.debug("MyTask [" + this.getTaskId()
+								+ "] try to install input files");
 						// se a tarefa for estrangeira (de outro grafo)
 						// então baixe o arquivo usando a referência remota
 						// do serviço de arquivos do grid task
@@ -286,14 +285,14 @@ public class MyTask extends Task implements Serializable {
 									.getRemoteObjectReference(
 											contact_address_remote,
 											SubmissionManagerRemote.class);
-							Debug
+							log
 									.debug(
 											"MyTask ["
 													+ this.getTaskId()
 													+ "] going to get remote file service from a foreign submission manager that owns the task ["
 													+ remote_task
 															.getTaskId()
-													+ "]: " + smr, true);
+													+ "]: " + smr);
 							buffer = smr.downloadFileFromGridTask(
 									remote_task.getTaskId(), filepath);
 						} else // senão baixe o arquivo de forma
@@ -302,10 +301,9 @@ public class MyTask extends Task implements Serializable {
 							buffer = remote_task.downloadFile(filepath);
 						}
 						gridfileservice.uploadFile(buffer, filepath);
-						Debug.debug("MyTask Task[" + this.getTaskId()
+						log.debug("MyTask Task[" + this.getTaskId()
 								+ "] upload remote file[" + filepath
-								+ "] upload remote file to to GridTask.",
-								true);
+								+ "] upload remote file to to GridTask.");
 						break;
 					} catch (ConnectException e) {
 						recoverConnectException(filepath, remote_task, retry, e);
@@ -325,7 +323,7 @@ public class MyTask extends Task implements Serializable {
 					if( !SubmissionManager.ID.URLFileExists(filepath) )//VDN
 	//				if(true)//VDN
 					{
-						Debug.debug("MyTask - URLFileExists retornou false - retry="+retry+" task="+this.getName(),true);
+						log.debug("MyTask - URLFileExists retornou false - retry="+retry+" task="+this.getName());
 						
 						if( (filepath.indexOf("http") != -1) || (filepath.indexOf("ftp") != -1))
 						{
@@ -336,7 +334,7 @@ public class MyTask extends Task implements Serializable {
 						}
 						else
 						{
-							Debug.debug("MyTask - URLFileExists retornou true - retry="+retry+" task="+this.getName(),true);
+							log.debug("MyTask - URLFileExists retornou true - retry="+retry+" task="+this.getName());
 
 							if( copyFileFromDir(filepath) ) {
                                 storeCurrentURL( filepath );
@@ -375,7 +373,7 @@ public class MyTask extends Task implements Serializable {
 			e.printStackTrace();
 		}
 		
-		Debug.debug("MyTask: Added "+filepath+" to DowloadImprove",true);
+		log.debug("MyTask: Added "+filepath+" to DowloadImprove");
 
 	}
 
@@ -394,8 +392,8 @@ public class MyTask extends Task implements Serializable {
 		boolean noError = false;
 		
 		try {
-			Debug.debug("MyTask  [" + this.getTaskId()
-					+ "] try to install web files", true);
+			log.debug("MyTask  [" + this.getTaskId()
+					+ "] try to install web files");
 			URL fileurl = new URL(filepath); 							
 			String localfile = filepath.substring(filepath
 					.lastIndexOf("/") + 1);
@@ -407,33 +405,30 @@ public class MyTask extends Task implements Serializable {
 			//numDowloads++;
 			//System.out.println("\t[VIND]NUMERO DE DOWNLOADS: "
 			//		+ numDowloads);
-			Debug.debug("Mytask [" + this.getTaskId()
+			log.debug("Mytask [" + this.getTaskId()
 					+ "] GridTask installURLFile Sucess OK: "
-					+ filepath + " -> " + localfile, true);
+					+ filepath + " -> " + localfile);
 			noError = true;
 		} catch (MalformedURLException eurl) {
 			gridtaskremote.setDie();
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "]  installURLFile Error:" + eurl, true);
-			Debug.debug("Mytask [" + this.getTaskId()
+			log.error("Mytask [" + this.getTaskId()
+					+ "]  installURLFile Error:" + eurl, eurl);
+			log.error("Mytask [" + this.getTaskId()
 					+ "]  installURLFile URL[" + filepath
-					+ "] Error", true);
-			eurl.printStackTrace();
+					+ "] Error", eurl);
 			throw eurl;
 		} catch (ConnectException ec) {
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec, true);
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, true);
-			ec.printStackTrace();
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile Error:" + ec, ec);
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile RETRY:" + retry, ec);
 			retry++;
 			throw ec;
 		} catch (RemoteException ec) {
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec, true);
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, true);
-			ec.printStackTrace();
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile Error:" + ec, ec);
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile RETRY:" + retry, ec);
 			retry++;
 			throw ec;
 		}
@@ -454,8 +449,8 @@ public class MyTask extends Task implements Serializable {
 		boolean sucess = false;
 		
 		try {
-			Debug.debug("MyTask  [" + this.getTaskId()
-					+ "] try to install web files", true);
+			log.debug("MyTask  [" + this.getTaskId()
+					+ "] try to install web files");
 			//URL fileurl = new URL(filepath); 							
 			String localfile = filepath.substring(filepath
 					.lastIndexOf("/") + 1);
@@ -467,24 +462,22 @@ public class MyTask extends Task implements Serializable {
 			//numDowloads++;
 			//System.out.println("\t[VIND]NUMERO DE DOWNLOADS: "
 			//		+ numDowloads);
-			Debug.debug("Mytask [" + this.getTaskId()
+			log.debug("Mytask [" + this.getTaskId()
 					+ "] GridTask installURLFile Sucess OK: "
-					+ filepath + " -> " + localfile, true);
+					+ filepath + " -> " + localfile);
 			sucess = true;
 		} catch (ConnectException ec) {
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec, true);
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, true);
-			ec.printStackTrace();
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile Error:" + ec, ec);
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile RETRY:" + retry, ec);
 			retry++;
 			throw ec;
 		} catch (RemoteException ec) {
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec, true);
-			Debug.debug("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, true);
-			ec.printStackTrace();
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile Error:" + ec, ec);
+			log.error("Mytask [" + this.getTaskId()
+					+ "] installURLFile RETRY:" + retry, ec);
 			retry++;
 			throw ec;
 		}
@@ -500,8 +493,8 @@ public class MyTask extends Task implements Serializable {
 				.getRemoteObjectReference(h, GridFileServiceRemote.class,
 						"GridFileServiceRemote");
 		setRemoteGridTaskFileService(gridfileservice);
-		Debug.debug("MyTask [" + this.getTaskId()
-				+ "] remote GridFileServiceRemote created", true);
+		log.debug("MyTask [" + this.getTaskId()
+				+ "] remote GridFileServiceRemote created");
 	}
 
 	/**
@@ -523,35 +516,32 @@ public class MyTask extends Task implements Serializable {
 			 * arquivos da tarefa que falhou como não
 			 * existentes
 			 */
-			Debug.debug("Tolerância a Falhas - " + e, true);
-			e.printStackTrace();
+			log.warn("Tolerância a Falhas - " + e, e);
 			remote_task.getFiles().setAllOutputFileAsNotExist();
 			remote_task.setState(TaskState.getInstance(TaskState.TASK_DEPENDENT));
-			Debug.debug("Task setting state: " + remote_task.getState().getName());
+			log.debug("Task setting state: " + remote_task.getState().getName());
 			//this.setTaskState(Task.TASK_DEPENDENT);
-			Debug
+			log
 					.debug(
 							"MyTask Task ["
 									+ remote_task
 											.getTaskId()
 									+ "] Error while transfering dependent files ["
 									+ filepath
-									+ "] Trying to put the task as DEPENDENT state again.",
-							true);
-			Debug
+									+ "] Trying to put the task as DEPENDENT state again.");
+			log
 					.debug(
 							"MyTask Task ["
 									+ this.getTaskId()
-									+ "] - Error, the dependent files are lost! This task is in DEPENDENTstate again.",
-							true);
+									+ "] - Error, the dependent files are lost! This task is in DEPENDENTstate again.");
 			throw e;
 		} else {
-			Debug
+			log
 					.debug(
 							"MyTask Task ["
 									+ this.getTaskId()
 									+ "] - Error, the dependent files are lost! RETRY: "
-									+ retry, true);
+									+ retry);
 			Thread.sleep(10000);
 			AppManUtil.exitApplication();
 			// 												((Executor)
@@ -568,16 +558,16 @@ public class MyTask extends Task implements Serializable {
 		AppManUtil.getExecutor().setHeuristic(sched);
 		ApplicationId aid = AppManUtil.getExecutor().currentApplication();
 
-		Debug.debug("MyTask [" + this.getTaskId()
-				+ "] create remote GridTask in Cell", true);
+		log.debug("MyTask [" + this.getTaskId()
+				+ "] create remote GridTask in Cell");
 
 		GeneralObjectActivator activator = new GeneralObjectActivator(
 				"GridTask", new Class[] { GridTaskRemote.class,
 						GridFileServiceRemote.class }, new String[] {
 						"GridTaskRemote", "GridFileServiceRemote" }, true);
 
-		Debug.debug("MyTask [" + this.getTaskId()
-				+ "] Activator remote GridTask: " + activator, true);
+		log.debug("MyTask [" + this.getTaskId()
+				+ "] Activator remote GridTask: " + activator);
 
 		return activator;
 	}
@@ -596,40 +586,39 @@ public class MyTask extends Task implements Serializable {
 										  // tarefa
 				activator, where);
 
-		Debug.debug("MyTask [" + this.getTaskId()
-				+ "] remote GridTaskRemote created: " + h, true);
+		log.debug("MyTask [" + this.getTaskId()
+				+ "] remote GridTaskRemote created: " + h);
 
 		// if h is null, so get some error in the remote object
 		if (h == null) {
-			Debug.debug("MyTask [" + this.getTaskId()
-					+ "] remote GridTaskRemote created FAILED: " + h, true);
+			log.error("MyTask [" + this.getTaskId()
+					+ "] remote GridTaskRemote created FAILED: " + h);
 			RemoteException e = new RemoteException(
 					"\nExehda Create remote object failed!");
 			throw e;
 		}
 
-		Debug.debug("MyTask [" + this.getTaskId()
-				+ "] remote reference GridTaskRemote looking.", true);
+		log.debug("MyTask [" + this.getTaskId()
+				+ "] remote reference GridTaskRemote looking.");
 		gridtaskremote = (GridTaskRemote) GeneralObjectActivator
 				.getRemoteObjectReference(h, GridTaskRemote.class,
 						"GridTaskRemote");
-		Debug.debug("MyTask [" + this.getTaskId()
+		log.debug("MyTask [" + this.getTaskId()
 				+ "] remote reference GridTaskRemote created: "
-				+ gridtaskremote, true);
+				+ gridtaskremote);
 		
 		return h;
 	}
 
 	public void setToDie() {
 		try {
-			Debug.debug("Mytask Task [" + this.getTaskId() + "]  SET TO DIE ["
-					+ this.getRetryTimes() + "]", true);
+			log.debug("Mytask Task [" + this.getTaskId() + "]  SET TO DIE ["
+					+ this.getRetryTimes() + "]");
 			if (gridtaskremote != null)
 				gridtaskremote.setDie();
 		} catch (RemoteException e) {
-			Debug.debug("Mytask Task [" + this.getTaskId() + "]  SET TO DIE ["
-					+ this.getRetryTimes() + "] FATAL Error:" + e, true);
-			e.printStackTrace();
+			log.error("Mytask Task [" + this.getTaskId() + "]  SET TO DIE ["
+					+ this.getRetryTimes() + "] FATAL Error:" + e, e);
 		}
 	}
 
