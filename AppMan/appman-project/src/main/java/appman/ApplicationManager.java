@@ -358,9 +358,8 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 		//GraphGenerator.clusteringAlgorithm(clusters, appdesc); //VDN Comentou
 		//VDN: defino o numero de clusters depois do particionamento. 
 		GraphGenerator.clusteringPhaseAlgorithm(clusterP, clusters, appdesc);//VDN Inseriu
-		log.debug("\t\t\n\nVDN: " + clusters.length + "\n");
 		nclusters = clusters.length; //VDN
-		log.debug("\t\t\n\nVDN: " + nclusters + "\n");
+		log.debug("\t\tVDN: " + nclusters);
 		String graph_name[] = new String[nclusters];
 		for (int j = 0; j < nclusters; j++) {
 			graph_name[j] = "grafo" + String.valueOf(rand.nextInt());
