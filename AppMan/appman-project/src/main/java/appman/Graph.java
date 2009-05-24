@@ -532,8 +532,7 @@ public class Graph implements Serializable
                                   + ", OUTput: " + xlist.getFiles().getOutputFiles().length
                                   + ", STATUS: " + xlist.getState().getName());
                 
-				log.debug("\n\n\n\n"
-                                   +"Name: "+xlist.getTaskId()
+				log.debug("Name: "+xlist.getTaskId()
                                    +"  Status:"+xlist.getState().getName()
                                    +" DAG_DSC "+ appDescription);
                 
@@ -546,10 +545,9 @@ public class Graph implements Serializable
 				    // no caso do xlist.getTaskId() do Lucas, retorna vazio e nao consigo
 				    // achar o indice na minha estrutura
 				indexDSC = appDescription.applicationDAG.getIndexByName(xlist.getTaskId());
-				log.debug("\n\n"+
-                                   "GET_TASK_ID: "+xlist.getTaskId()
+				log.debug("GET_TASK_ID: "+xlist.getTaskId()
                                    +"  GET_NAME: "+xlist.getName()
-                                   + "indexDSC: "+indexDSC+"\n\n");
+                                   + "indexDSC: "+indexDSC);
 				appDescription.applicationDAG.changeColor(indexDSC,xlist.getState().getColor());
 			}
 		}

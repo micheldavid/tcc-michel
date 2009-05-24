@@ -45,7 +45,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             tasksmanagerList = new Vector();
             //ID  = new ImproveDownload();
             appmanager = (ApplicationManagerRemote)GeneralObjectActivator.getRemoteObjectReference(contact_address, ApplicationManagerRemote.class);
-            log.debug("\n\n\n[CONTACT]: "+contact_address+"\n\n\n");
+            log.debug("[CONTACT]: "+contact_address);
             log.debug("SubmissionManager created.");	
             static_die++;
             
@@ -160,7 +160,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
             int num_tasks_running = computeSubmissonManagerTasksLoad();
             // se o numero de tarefas executando é menor que o máximo
             // então adiciona mais tarefas aos Task Managers
-            log.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running+"\n");
+            log.debug("\t ****NUMERO DE TAREFAS NO SM:"+num_tasks_running);
             if(num_tasks_running < SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM)
             {            	
             	int n = SubmissionManager.MAX_NUMBER_OF_TASKS_TO_SM - num_tasks_running; // numero de novas tarefas a serem executadas

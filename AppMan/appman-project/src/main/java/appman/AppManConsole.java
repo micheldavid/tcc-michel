@@ -80,7 +80,7 @@ public class AppManConsole implements AppManConsoleRemote
 			
 
 				
-				//log.debug("\tAKIII DEVERIA TERMINAR!!!!!!!!\n");
+				//log.debug("\tAKIII DEVERIA TERMINAR!!!!!!!!");
 	}	
 	private ApplicationManagerRemote createApplicationManager(String appmanId)
         {

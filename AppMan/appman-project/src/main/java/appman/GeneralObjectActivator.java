@@ -69,7 +69,7 @@ public class GeneralObjectActivator implements Activator {
 			adress = AppManUtil.getWorb().exportService(obj, oclass[i],
 					objectClass + oxID.toString() + i);
 			contactAddress.addElement(adress);
-			log.debug("[VDN]Export Object:" + adress + "\n");
+			log.debug("[VDN]Export Object:" + adress);
 		}
 
 		// update the ox meta-attribute 'contact'

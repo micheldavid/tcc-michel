@@ -145,7 +145,7 @@ public class SimpleParserDumpVisitor implements SimpleParserVisitor {
     * Foreach Node
     */
     public Object visit(ASTForeachNode node, Object data) {
-	///log.debug(indentString() +"\n<" + node+">");
+	///log.debug(indentString() +"<" + node+">");
         ++indent;
 
         for (int i=0; i<node.getNumberOfIterations(); i++) {

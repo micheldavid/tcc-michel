@@ -140,7 +140,7 @@ public class MyTask extends Task implements Serializable {
 
  			  if (gridtaskremote.getSuccess() == false) {
 				gridtaskremote.setDie();
-				throw new RemoteException("\nMyTask [" + this.getTaskId()
+				throw new RemoteException("MyTask [" + this.getTaskId()
 						+ "] RETRY [" + this.getRetryTimes()
 						+ "] - GridTask Job failed: "
 						+ gridtaskremote.getErrorMessage());
@@ -212,7 +212,7 @@ public class MyTask extends Task implements Serializable {
 						+ "] remote GridFileService created FAILED: "
 						+ h);
 				RemoteException e = new RemoteException(
-						"\nExehda Create remote object failed!");
+						"Exehda Create remote object failed!");
 				throw e;
 			}
 
@@ -591,7 +591,7 @@ public class MyTask extends Task implements Serializable {
 			log.error("MyTask [" + this.getTaskId()
 					+ "] remote GridTaskRemote created FAILED: " + h);
 			RemoteException e = new RemoteException(
-					"\nExehda Create remote object failed!");
+					"Exehda Create remote object failed!");
 			throw e;
 		}
 
