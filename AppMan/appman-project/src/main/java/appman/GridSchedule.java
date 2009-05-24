@@ -20,31 +20,31 @@ import appman.log.Debug;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class GridSchedule implements SchedulingHeuristic
-{
-    public static final String HINT_FINAL_RESULTS_NODE       = "grid.targetHosts.host-final-results";
+public class GridSchedule implements SchedulingHeuristic {
+	private static final long serialVersionUID = 6545673083638233546L;
+
+	public static final String HINT_FINAL_RESULTS_NODE       = "grid.targetHosts.host-final-results";
     public static final String HINT_DEDICATED_COMPUTE_NODE   = "grid.targetHosts.oneTaskPerCPU";
     public static final String HINT_SHARED_COMPUTE_NODE      = "grid.targetHosts.localscheduler";
     public static final String HINT_SUBMISSION_MANAGER_NODE  = "grid.targetHosts.submissionmanagers.hosts";
     
     private static GridSchedule impl = null;
-    
-	private final String CONFIG_FILE = "gridnodes.properties";
+
+	private static final String CONFIG_FILE = "gridnodes.properties";
     private GridRemoteHostsProperties smGridHosts;
     private GridRemoteHostsProperties resultsGridHosts;
 //     private GridRemoteHostsProperties dedicatedComputeGridHosts;
     private GridRemoteHostsProperties sharedComputeGridHosts;
 
-        /**
-         * Singletone design pattern 
-         */
-    public static synchronized GridSchedule getInstance()
-    {
-        if ( impl == null ) {
-            impl = new GridSchedule();
-        }
-        return impl;
-    }
+    /**
+	 * não há problema em instanciar 2x, pois não temos estado
+	 */
+    public static GridSchedule getInstance() {
+		if (impl == null) {
+			impl = new GridSchedule();
+		}
+		return impl;
+	}
 		
 	private GridSchedule()
 	{
