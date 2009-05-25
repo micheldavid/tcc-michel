@@ -34,15 +34,11 @@ public class Graph implements Serializable
 	private ApplicationDescription appDescription;
 
     private int indexDSC;
-	
-	
-	
+
 	public Graph(String graphid, String subid, ApplicationDescription appdesc)
 	{
 		graphId = graphid;
 		mysubmanId = subid;
-		datafileList = new Vector();
-		taskList = new Vector();
 		GraphGenerator generator = new GraphGenerator(subid);
 		graph = generator.convertApplicationDescriptionToGraph(appdesc);
 		datafileList = generator.getDataFileList();
@@ -54,60 +50,7 @@ public class Graph implements Serializable
 
 		log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
 	}
-	
-	public Graph(String graphid, String subid)
-	{
-		graphId = graphid;
-		mysubmanId = subid;
-		//graph = new edu.berkeley.guir.prefuse.graph.DefaultGraph(true);		
-		datafileList = new Vector();
-		taskList = new Vector();		
-		
-		createDefaultGraph(2, 2, (float) 0.9);
-		
-		updateGraphNodesInternalData();
-		
-		state = GRAPH_READY;
-		
-		log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
-	}
-	public Graph(String graphid, String subid, String subidother)
-	{
-		graphId = graphid;
-		mysubmanId = subid;
-		//graph = new edu.berkeley.guir.prefuse.graph.DefaultGraph(true);		
-		datafileList = new Vector();
-		taskList = new Vector();		
-	
-		createDefaultGraph2(2, 2, (float) 0.9, subid, subidother);
-	
-		updateGraphNodesInternalData();
-	
-		state = GRAPH_READY;
-	
-		log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
-	}
-	public Graph(String graphid, String subid, boolean empty)
-	{
-		graphId = graphid;
-		mysubmanId = subid;
-		graph = null;		
-		datafileList = new Vector();
-		taskList = new Vector();
-		
-		if(empty == false)
-		{
-			createDefaultGraph(2, 2, (float) 0.9);
-			updateGraphNodesInternalData();
-			state = GRAPH_READY;
-			log.debug("Graph new graph ["+ taskList.size() +"]nodes created: " + graphId + " - SubMan: " + mysubmanId);
-		}
-		else
-		{
-			state = GRAPH_READY;
-			log.debug("Graph new empty graph created");
-		}
-	}
+
 	public String PrintInfo()
 	{		
 		return "Graph Structure: " + taskList.toString() + " - Num: " + taskList.size() + " - Name: " + getGraphId() + " - SubMan: " + getSubmissionManagerId();
@@ -464,7 +407,7 @@ public class Graph implements Serializable
         ///////////////////////////////////////////////////////
     
         /**
-         * Updates this graph state by copying the given graph, but before that do same
+         * Updates this graph state by copying the given graph, but before that do some
          * sanity checks to see if the copy is allowed (eg. both structures must describe
          * the same graph.
          *
