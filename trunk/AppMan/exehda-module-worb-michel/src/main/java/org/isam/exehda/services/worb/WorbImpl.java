@@ -19,7 +19,7 @@ import org.isam.util.codegen.proxy.Proxy;
 
 public class WorbImpl implements Service, Worb, WorbProtocolConstants {
 
-	public static final String CLS_NAME = "WorbImplMichel";
+	public static final String CLS_NAME = "WorbImpl";
 	public final Logger log = (Logger) Exehda.getService("logger");
 	public final byte[] LOCAL_HOST_BYTES;
 
