@@ -53,13 +53,13 @@ public synchronized int getTaskState(String taskId)
 {
   for(int i=0; i<taskList.size(); i++)
   {
-  	if(((Task)taskList.elementAt(i)).getTaskId().compareTo(taskId) == 0) // se as chaves s�o iguais
+  	if(((Task)taskList.elementAt(i)).getTaskId().compareTo(taskId) == 0) // se as chaves são iguais
   	{			
 			//Debug.debug("TaskManager returning task state.");
   			return ((Task)taskList.elementAt(i)).getState().getCode();
   	}
   }
-  // chave taskId n�o encontrada
+  // chave taskId não encontrada
   return -1;
 }
 
@@ -68,12 +68,12 @@ public synchronized int getTaskCount(int state)
    int c = 0; 
   for(int i=0; i<taskList.size(); i++)
   {
-  	if(((Task)taskList.elementAt(i)).getState().getCode() == state) // se as chaves s�o iguais
+  	if(((Task)taskList.elementAt(i)).getState().getCode() == state) // se as chaves são iguais
   	{			
 			c++;
   	}
   }
-  // chave taskId n�o encontrada
+  // chave taskId não encontrada
   return c;
 }
 
@@ -160,10 +160,10 @@ public void run()
 			{
 					synchronized(taskList)
 					{
-						taskList.addAll(newtaskList); // adiciona os elementos da lista de novas tarefas � lista de tarefas
+						taskList.addAll(newtaskList); // adiciona os elementos da lista de novas tarefas à lista de tarefas
 					}
 					log.debug("TaskManager add new tasks "+newtaskList.toString()+" to List.");
-					newtaskList.removeAllElements(); //remove os elementos da lista de novas, apos inser��o destes na lista de tarefas
+					newtaskList.removeAllElements(); //remove os elementos da lista de novas, apos inserção destes na lista de tarefas
 					log.debug("TaskManager clean newtasks List.");
 			}
 			synchronized(taskList)
