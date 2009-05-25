@@ -3,6 +3,7 @@
  */
 package appman;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -84,7 +85,7 @@ public class GridSchedule implements SchedulingHeuristic {
         try
         {
             HostId hostid = null;                        
-            log.debug("GridSchedule clsName: "+ clsName +", params: "+params+", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
+            log.debug("GridSchedule clsName: "+ clsName +", params: "+ (params == null ? null : Arrays.asList(params)) +", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
 
             if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
                     // O laço abaixo é necessario pois o nodo selecionado em um passo
@@ -93,7 +94,7 @@ public class GridSchedule implements SchedulingHeuristic {
                     // evitado
                 hostid = smGridHosts.getRoundRobinHost();
 
-                    // FIX ME: o while abaixo pode bloquear para sempre se todos os nodos
+                    // FIXME: o while abaixo pode bloquear para sempre se todos os nodos
                     // foram incluidos no avoidedHosts
                 while(avoidedHosts.contains(hostid)) {
                 	hostid = smGridHosts.getRoundRobinHost();
