@@ -99,21 +99,8 @@ public class AppManConsole implements AppManConsoleRemote
 						appman = this.createApplicationManager("appman");
 						GridFileService fileservice = new GridFileService("AppManConsole");
 						appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
-						appman.startApplicationManager();
 						log.debug("Wagner Iniciando Appman");
-						while(appman.getApplicationStatePercentCompleted() < 1)
-						{
-							log.debug(appman.getInfoRemote());
-							try
-							{		
-								Thread.sleep(5000);
-							} catch (Exception e)
-							{
-								log.error(e, e);
-								//VDN
-                                //AppManUtil.exitApplication(null, e); 
-							}
-						}
+						appman.startApplicationManager();
 						log.debug("Wagner terminando Appman");
 						success = true;
 				}catch (RemoteException e1)
@@ -137,7 +124,7 @@ public class AppManConsole implements AppManConsoleRemote
                 GeneralObjectActivator activator = new GeneralObjectActivator("ApplicationManager",
                                                                               new Class[] {ApplicationManagerRemote.class},
                                                                               new String[] {"ApplicationManagerRemote"},
-                                                                              true);
+                                                                              false);
 						
                 ObjectId h = AppManUtil.getExecutor().createObject(ApplicationManager.class,
                                                                    new Object[] {appmanId},
