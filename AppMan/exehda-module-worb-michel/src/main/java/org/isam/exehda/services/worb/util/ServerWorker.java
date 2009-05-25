@@ -7,7 +7,7 @@ import org.isam.exehda.services.worb.WorbImpl;
 
 public class ServerWorker extends Thread {
 
-	private static final String CLS_NAME = "WorbImplMichel.ServerWorker";
+	private static final String CLS_NAME = "WorbImpl.ServerWorker";
 	private WorbImpl impl;
 	private ServerSocket server;
 

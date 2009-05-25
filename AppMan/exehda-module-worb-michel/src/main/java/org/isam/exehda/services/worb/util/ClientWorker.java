@@ -15,7 +15,7 @@ import org.isam.exehda.services.worb.WorbImpl;
 import org.isam.exehda.services.worb.WorbServiceRef;
 
 public class ClientWorker extends Thread {
-	private static final String CLS_NAME = "WorbImplMichel.ServerWorker";
+	private static final String CLS_NAME = "WorbImpl.ClientWorker";
 	private WorbImpl impl;
 	private Socket client;
 	private HostId remoteHost;
