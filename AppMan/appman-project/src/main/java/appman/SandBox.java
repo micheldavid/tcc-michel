@@ -161,7 +161,7 @@ public class SandBox
 
                 // sanity check: the shell must be available
             File bash = new File("/bin/bash");
-            if ( bash.exists() && bash.canRead() ) {
+            if ( !bash.exists() || !bash.canRead() ) {
                     // if it is not, abort
                 throw new java.io.FileNotFoundException("shell '/bin/bash' not found");
             }
@@ -194,9 +194,7 @@ public class SandBox
          */
     public synchronized String getErrorMessage() throws IOException
         {
-                //
                 // XXX: experimental stuff, using the NIO API
-                //
             if ( cmdOutput.exists() ) {
                 FileChannel in = new FileInputStream(cmdOutput).getChannel();
                 ByteBuffer buff = ByteBuffer.allocate((int) in.size());
@@ -410,9 +408,7 @@ public class SandBox
              */
         private final void createLocalFile(File path, byte[] contents) throws IOException
             {
-                    //
                     // XXX: experimental stuff: using the NIO API
-                    //
                 ByteBuffer buff = ByteBuffer.wrap(contents);
 
                 FileOutputStream out = new FileOutputStream(path);
@@ -436,9 +432,7 @@ public class SandBox
             throws IOException
             {
                 File dst = new File(dstDir, src.getName());
-                    //
-                    // XXX: experimental stuff: using the NIO API
-                    //
+
                 FileChannel sch = new FileInputStream(src).getChannel();
                 FileChannel dch = new FileOutputStream(dst).getChannel();
                     // Copy file contents from source to destination
