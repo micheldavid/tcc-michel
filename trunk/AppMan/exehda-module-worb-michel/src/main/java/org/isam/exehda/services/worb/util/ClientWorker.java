@@ -40,7 +40,7 @@ public class ClientWorker extends Thread {
 	}
 
 	private void doRun() throws IOException {
-		BufferedInputStream in = new BufferedInputStream(client.getInputStream());
+		BufferedInputStream in = new BufferedInputStream(client.getInputStream(), 1024);
 		OutputStream out = client.getOutputStream();
 
 		try {
