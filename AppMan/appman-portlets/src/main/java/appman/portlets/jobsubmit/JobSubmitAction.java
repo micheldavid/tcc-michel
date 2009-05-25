@@ -56,6 +56,7 @@ public class JobSubmitAction extends VelocityTooledPortlet {
 		for (String id : ids) {
 			try {
 				AppManHelper.deleteJob(Integer.parseInt(id));
+				AppManQueueServlet.wakeUp();
 			} catch (NumberFormatException ex) {
 			} catch (Exception e) {
 				log.error("erro excluindo tarefa " + id, e);
