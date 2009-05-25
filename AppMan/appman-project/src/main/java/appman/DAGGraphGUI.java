@@ -163,7 +163,7 @@ public class DAGGraphGUI extends javax.swing.JFrame
                                         appman.addApplicationDescriptionRemote(graph_name[j], clusters[j], appdesc);
                                         appman.startAppGUIRemote(graph_name[j]);					
                                     }
-                                    appman.startApplicationManager();
+                                    appman.runApplicationManager();
                                     while(appman.getApplicationState() != ApplicationManager.ApplicationManager_FINAL)
                                     {
                                         Thread.sleep(5000);						

@@ -100,7 +100,7 @@ public class AppManConsole implements AppManConsoleRemote
 						GridFileService fileservice = new GridFileService("AppManConsole");
 						appman.addApplicationDescriptionRemote(fileservice.fileToByteArray(filepath));
 						log.debug("Wagner Iniciando Appman");
-						appman.startApplicationManager();
+						appman.runApplicationManager();
 						log.debug("Wagner terminando Appman");
 						success = true;
 				}catch (RemoteException e1)

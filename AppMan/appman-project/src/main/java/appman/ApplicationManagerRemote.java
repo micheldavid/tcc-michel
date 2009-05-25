@@ -24,7 +24,7 @@ public interface ApplicationManagerRemote extends Remote
 	public Display startAppGUIRemote(String graphId) throws RemoteException;
 	public void addApplicationDescriptionRemote(String graphId, String clusterId, ApplicationDescription appdesc) throws RemoteException;
 	public void setMyObjectContactAddressRemote(String contact) throws RemoteException;
-	public void startApplicationManager() throws RemoteException;
+	public void runApplicationManager() throws RemoteException;
 	public float getApplicationStatePercentCompleted() throws RemoteException;
 	public int getApplicationState() throws RemoteException;
 	public void addApplicationDescriptionRemote(byte[] filedata) throws RemoteException;
