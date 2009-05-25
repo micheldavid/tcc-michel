@@ -183,7 +183,7 @@ public class SandBox
                     // FIX ME: should we already call cleanUp() here?
 //                cleanUp();
                     // and propagate the exception
-                throw (InterruptedException) ie.fillInStackTrace();
+                throw ie;
             }   
         }
     
