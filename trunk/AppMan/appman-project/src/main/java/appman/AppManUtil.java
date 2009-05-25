@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.isam.exehda.ApplicationId;
 import org.isam.exehda.Exehda;
+import org.isam.exehda.ResourceName;
 import org.isam.exehda.services.CellInformationBase;
 import org.isam.exehda.services.Collector;
 import org.isam.exehda.services.Executor;
@@ -73,9 +74,13 @@ public class AppManUtil
                 catch (Exception e) { /* empty */ }
             }
 
-            
-            ((Executor) Exehda.getService(Executor.SERVICE_NAME))
-                .exitApplication();
+            // exitApplication chama Thread.stop -- extremamente prejudicial
+//            ((Executor) Exehda.getService(Executor.SERVICE_NAME)).exitApplication();
+            // implementando o que é feito internamente no Executor.exitApplication
+            ResourceName apprn = getExecutor().currentApplication().toResourceName();
+            getCellInformationBase().setAttribute(apprn, "status", "done");
+            // invés de stop, interrupt: é muito mais saudável
+            Thread.currentThread().getThreadGroup().interrupt();
         }
 
     public static void exitApplication(String msg, Throwable t)
