@@ -127,7 +127,7 @@ public class AppManHelper {
 	}
 
 	private static String readStreamData(InputStream is) throws IOException {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		InputStreamReader reader = new InputStreamReader(is);
 		char[] cbuff = new char[1024];
 		for (int read; (read = reader.read(cbuff)) != -1;) {
