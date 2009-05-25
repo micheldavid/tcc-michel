@@ -4,12 +4,8 @@
 package appman;
 
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.rmi.RemoteException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,16 +13,34 @@ import org.isam.exehda.ApplicationId;
 import org.isam.exehda.HostId;
 import org.isam.exehda.ObjectId;
 
-import appman.db.DBHelper;
+import appman.event.AppManConsoleLifeCycleListener;
+import appman.event.AppManConsoleLifeCycleListening;
+import appman.event.DataSourceLifeCycleListener;
+import appman.event.LogFactoryLifeCycleListener;
+import appman.event.PortalIntegrationLifeCycleListener;
+import appman.event.ProfilerLifeCycleListener;
 
 /**
  * @author lucasa
  */
+@AppManConsoleLifeCycleListening( { LogFactoryLifeCycleListener.class, ProfilerLifeCycleListener.class,
+	DataSourceLifeCycleListener.class, PortalIntegrationLifeCycleListener.class })
 public class AppManConsole implements AppManConsoleRemote
 {
 	private static final Log log = LogFactory.getLog(AppManConsole.class);
+	private ArrayList<AppManConsoleLifeCycleListener> listeners;
 	private ApplicationManagerRemote appman = null;
-	private ApplicationId aid = null;
+	private ApplicationId appId = null;
+
+	/**
+	 * ID da aplicação. Atualmente usado pelo portal, mas pode servir de integração para outros projetos.
+	 */
+	private Integer id;
+
+	/**
+	 * Indicador de sucesso
+	 */
+	private boolean success = false;
 
 	/**
 	 *
@@ -37,13 +51,49 @@ public class AppManConsole implements AppManConsoleRemote
 	 * correto, permissões).
 	 *
 	 */
-	public AppManConsole()
+	public AppManConsole(Integer id)
         {
-            aid = AppManUtil.getExecutor().currentApplication();
-    		log.debug("AppManConsole Application: " + aid);
+		this.id = id;
+            appId = AppManUtil.getExecutor().currentApplication();
+    		log.debug("AppManConsole Application: " + appId);
+    		listeners = new ArrayList<AppManConsoleLifeCycleListener>();
+    		try {
+	    		AppManConsoleLifeCycleListening anotation = getClass().getAnnotation(
+					AppManConsoleLifeCycleListening.class);
+				for (Class<? extends AppManConsoleLifeCycleListener> clz : anotation.value()) {
+					listeners.add(clz.newInstance());
+				}
+    		} catch (Exception ex) {
+    			throw new Error("inicializando LifeCycleListeners", ex);
+    		}
         }	
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public ApplicationId getAppId() {
+		return appId;
+	}
+
+	public void setAppId(ApplicationId appId) {
+		this.appId = appId;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	public void runApplicationManagerRemote(String filepath) throws RemoteException
-	{				
+	{
 				try
 				{					
 						appman = this.createApplicationManager("appman");
@@ -63,8 +113,9 @@ public class AppManConsole implements AppManConsoleRemote
 								//VDN
                                 //AppManUtil.exitApplication(null, e); 
 							}
-						}	
+						}
 						log.debug("Wagner terminando Appman");
+						success = true;
 				}catch (RemoteException e1)
 				{
 					log.error(e1, e1);
@@ -77,10 +128,6 @@ public class AppManConsole implements AppManConsoleRemote
 					//VDN
                     //AppManUtil.exitApplication(null, e2);
 				}
-			
-
-				
-				//log.debug("\tAKIII DEVERIA TERMINAR!!!!!!!!");
 	}	
 	private ApplicationManagerRemote createApplicationManager(String appmanId)
         {
@@ -128,19 +175,14 @@ public class AppManConsole implements AppManConsoleRemote
 
 	public static void main(String[] args) throws Exception
 	{
-		long startupTime = System.currentTimeMillis();
-		debugTempoExecucao("Início da execução (" + System.currentTimeMillis()
-				+ "): " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
-
 		Integer jobId = null;
 		if (args.length >= 2) jobId = Integer.valueOf(args[1]);
+		AppManConsole console = new AppManConsole(jobId);
 
-		AppManConsole console = new AppManConsole();
-		if (jobId != null) {
-			DBHelper.registerAppId(console.aid.toResourceName().getSimpleName(), jobId);
-		}
+		// listeners de inicialização
+		for (AppManConsoleLifeCycleListener l : console.listeners)
+			l.applicationStart(console);
 
-		boolean success = true;
 		try {
 			console.runApplicationManagerRemote(args[0]);
 			boolean isFinal = console.appman.getApplicationState() == ApplicationManager.ApplicationManager_FINAL;
@@ -148,40 +190,14 @@ public class AppManConsole implements AppManConsoleRemote
 			log.info("EXECUÇÃO TERMINADA COM SUCESSO");
 
 		} catch (Exception ex) {
-			success = false;
 			log.error("EXECUÇÃO TERMINADA COM ERRO", ex);
 		}
 
-		if (jobId != null) {
-			DBHelper.registerAppEnd(jobId, success);
-		}
+		// para matar o timer que o exehda deixa rodando...
+		AppManUtil.exitApplication();
 
-		long endTime = System.currentTimeMillis();
-		debugTempoExecucao("Fim da execução (" + endTime
-				+ "): " + new SimpleDateFormat("HH:mm:ss.SSS").format(new Date(endTime)));
-		debugTempoExecucao("Tempo de execução: " + (endTime - startupTime)
-				+ " - " + formatTimeSpan(endTime - startupTime));
-
-		// tentando matar o timer que o exehda deixa rodando...
-//		AppManUtil.exitApplication();
-
-		LogFactory.releaseAll();
-	}
-
-	private static String formatTimeSpan(long timeMillis) {
-		String time = "." + (timeMillis % 1000);
-		long secs = (long) Math.floor(timeMillis / 1000);
-		long mins = secs / 60;
-		secs = secs % 60;
-		return mins + ":" + (secs < 10 ? "0" : "") + secs + time;
-	}
-
-	private static void debugTempoExecucao(String str) throws IOException {
-		FileOutputStream fout = new FileOutputStream("tempoExecucao.txt", true);
-		PrintStream out = new PrintStream(fout);
-		out.println(str);
-		out.close();
-		fout.close();
-		log.info(str);
+		// listeners de finalização
+		for (int i = console.listeners.size() - 1; i >= 0; i--)
+			console.listeners.get(i).applicationEnd(console);
 	}
 }
