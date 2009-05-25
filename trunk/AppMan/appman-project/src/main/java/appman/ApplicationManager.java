@@ -30,7 +30,7 @@ import edu.berkeley.guir.prefusex.force.SpringForce;
 /**
  * @author lucasa@gmail.com
  */
-public class ApplicationManager implements Runnable, ApplicationManagerRemote, Serializable {
+public class ApplicationManager implements ApplicationManagerRemote, Serializable {
 
 	private static final Log log = LogFactory.getLog(ApplicationManager.class);
 	private static final long serialVersionUID = 440529620112600733L;
@@ -50,9 +50,6 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 	private Vector graphs;
 	/** List of graphs yet to be scheduled tom some SM */
 	private Vector newgraphs;
-
-	/** Flags whether to start sending graphs to remotes machines(SubmissionManagers) */
-	private boolean runsystem;
 
 	static final int ApplicationManager_FINAL = 2;
 	static final int ApplicationManager_READY = 0;
@@ -100,8 +97,6 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 		graphs = new Vector();
 		newgraphs = new Vector();
 
-		runsystem = false;
-
 		state = ApplicationManager_READY;
 		
 		log.debug("ApplicationManager "+id+" created.");
@@ -142,8 +137,8 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 	public void startApplicationManager() throws RemoteException {
 		timeInfo.setTimeExecution(System.currentTimeMillis());
 		timeInfo.setTimeBegin(System.currentTimeMillis());
-		runsystem = true;
 		state = ApplicationManager_EXECUTING;
+		run();
 	}
 
 	public void addGraph(Graph g) {
@@ -267,7 +262,7 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 						log.debug(
 								"ApplicationManager need to create a new SubmissionManager: "
 								+ subId);
-						subr = createNewSubmissionManager(subId);
+						subr = exehdaCreateNewSubmissionManager(subId);
 						submissionmanagerList.add(subr);
 					} else {
 						subr = (SubmissionManagerRemote) submissionmanagerList
@@ -280,7 +275,7 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 						log.debug(
 								"ApplicationManager need to create a new SubmissionManager: "
 								+ subId);
-						subr = createNewSubmissionManager(subId);
+						subr = exehdaCreateNewSubmissionManager(subId);
 						submissionmanagerList.add(subr);
 					}
 				}
@@ -443,7 +438,6 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 		float percent_completed = 0;
 
 		do {
-			if (runsystem == true) {
 				// schedule graphs pending in the newgraphs queue
 				schedulePendingGraphs();
 				// atualiza os dados dos grafos, baixando o grafo atualizado do submission manager remoto
@@ -501,7 +495,6 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 					}
 				}
 
-			}
 
 //			float pc = getApplicationStatePercentCompleted();
 			if (percent_completed < getApplicationStatePercentCompleted()) {
@@ -662,37 +655,9 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 	}
 
 	/**
-	 * Instantiate a new SM with the given ID, returning a reference to it.
-	 *
-	 * @param subId a <code>String</code> value
-	 * @return a <code>SubmissionManagerRemote</code> value
-	 * @exception RemoteException if an error occurs
-	 */
-	private final SubmissionManagerRemote createNewSubmissionManager(
-			String subId) throws RemoteException {
-		SubmissionManagerRemote sub = null;
-		try {
-			log.debug(
-					"ApplicationManager creating new remote SubmissionManager: "
-					+ subId);
-
-			sub = exehdaCreateNewSubmissionManager(subId);
-			log.debug("DEBUG: " + sub);
-
-			if (sub == null) {
-				throw new RemoteException(
-				"Failed to instantiate new Submission Manager");
-			}
-		} catch (Exception e2) {
-			AppManUtil.exitApplication(null, e2);
-		}
-		return sub;
-	}
-
-	/**
 	 * Invokes EXEHDA to remotely instantiate a new SM.
 	 *
-	 * TO DO: move this code to GridToolkit for better encapsulation
+	 * TODO: move this code to GridToolkit for better encapsulation
 	 *
 	 * @param smId a <code>String</code> value
 	 * @return a <code>SubmissionManagerRemote</code> value
@@ -708,16 +673,15 @@ public class ApplicationManager implements Runnable, ApplicationManagerRemote, S
 
 		AppManUtil.getExecutor().setHeuristic(GridSchedule.getInstance());
 
-		ObjectId oxID;
 		try {
-			log.debug("DEBUG createNewSubmissionManagerAction TRY");
+			log.debug("criando um novo submission manager remoto");
 
 			GeneralObjectActivator gactivator = new GeneralObjectActivator(
 					"SubmissionManager",
 					new Class[] { SubmissionManagerRemote.class },
 					new String[] { "SubmissionManagerRemote" }, true);
 
-			oxID = AppManUtil.getExecutor().createObject(
+			ObjectId oxID = AppManUtil.getExecutor().createObject(
 					SubmissionManager.class,
 					new Object[] { smId, my_contact_address }, gactivator,
 					GridSchedule.HINT_SUBMISSION_MANAGER_NODE);
