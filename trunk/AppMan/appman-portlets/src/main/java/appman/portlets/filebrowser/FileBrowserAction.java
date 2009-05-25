@@ -18,7 +18,6 @@ import org.apache.velocity.context.Context;
 
 import appman.portlets.AppManConfig;
 import appman.portlets.AppManDBHelper;
-import appman.portlets.DirViewHelper;
 import appman.portlets.VelocityTooledPortlet;
 import appman.portlets.model.AppManJob;
 import appman.portlets.model.DirectoryView;
@@ -73,11 +72,6 @@ public class FileBrowserAction extends VelocityTooledPortlet {
 		return root;
 	}
 
-	public static void main(String[] args) {
-		DirectoryView dirview = new FileBrowserAction().loadDirectory(null, new File("C:\\NVIDIA"));
-		System.out.println(new DirViewHelper().getPath(dirview.getDirectories().iterator().next()));
-	}
-	
 	private DirectoryView loadDirectory(DirectoryView parent, File fld) {
 		if (fld.getName().startsWith(".")) return null;
 
