@@ -20,7 +20,7 @@ public class AppDataSource {
 
 	private static BasicDataSource ds;
 
-	private static void init() {
+	public static void initialize() {
 		URL dbconfig = AppDataSource.class.getResource("/db.properties");
 		try {
 			InputStream is = dbconfig.openStream();
@@ -40,9 +40,13 @@ public class AppDataSource {
 			throw new Error("impossível ler " + dbconfig, ex);
 		}
 	}
+	
+	public static void close() throws SQLException {
+		if (ds != null) ds.close();
+	}
 
 	public static Connection getConnection() throws SQLException {
-		if (ds == null) init();
+		if (ds == null) throw new Error("DataSource not initialized: use DataSourceLifeCycleListener");
 		return ds.getConnection();
 	}
 
