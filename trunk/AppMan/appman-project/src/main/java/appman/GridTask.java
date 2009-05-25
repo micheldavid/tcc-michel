@@ -4,7 +4,9 @@
  */
 package appman;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -200,36 +202,13 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
         log.debug("GridTask from Task ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  executing comand line application: " + cmd[3]);
 
         checkDie();
-			
-        Process proc = Runtime.getRuntime().exec(cmd);
-        StringBuilder inBuffer = new StringBuilder();
-        InputStream inStream = proc.getInputStream();
-        new InputStreamHandler( inBuffer, inStream );
 
-        errorbuffer = new StringBuilder();
-        InputStream errStream = proc.getErrorStream();
-        new InputStreamHandler( errorbuffer , errStream );
-			
-        checkDie();
-        
+        Process proc = Runtime.getRuntime().exec(cmd);
         proc.waitFor();
-			// loop until the proc finish or DIE signal
-			/*
-              boolean end = false;			
-              while(end == false)
-              {
-              if(die == true) throw new Exception("GridTask ["+mytask.getTaskId()+"] is time to DIE");
-              try
-              {				
-              proc.exitValue();
-              Thread.sleep(500);
-              end = true;
-              }catch (IllegalThreadStateException e)
-              {
-              end = false;
-              }
-              }			
-			*/
+
+        readInputStream(proc.getInputStream());
+        errorbuffer = new StringBuilder(readInputStream(proc.getErrorStream()));
+
         return proc.exitValue();
 	}
 
@@ -242,5 +221,15 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
     private final synchronized void checkDie() throws Exception
     {
         if (die) throw new Exception("GridTask going to DIE");
+    }
+    
+    private String readInputStream(InputStream is) throws IOException {
+    	StringBuilder sb = new StringBuilder();
+    	char[] cbuff = new char[1024];
+    	InputStreamReader reader = new InputStreamReader(is);
+    	for (int read; (read = reader.read(cbuff)) != -1;)
+    		sb.append(cbuff, 0, read);
+    	is.close();
+    	return sb.toString();
     }
 }
