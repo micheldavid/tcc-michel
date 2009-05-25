@@ -23,4 +23,5 @@ public interface SubmissionManagerRemote extends java.rmi.Remote
 	public void PrintInfoRemote() throws RemoteException;
 	public void setDieRemote() throws RemoteException;
 	public long getDownloadTimeOfTasksManagers( ) throws RemoteException;
+	public void runSubmissionManager() throws RemoteException;
 }

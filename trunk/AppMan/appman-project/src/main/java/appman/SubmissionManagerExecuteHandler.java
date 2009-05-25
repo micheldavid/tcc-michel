@@ -2,5 +2,5 @@ package appman;
 
 public interface SubmissionManagerExecuteHandler {
 
-	public void runSubmissionManagerFinished(SubmissionManagerExecuteThread thread, Exception ex);
+	public void submissionManagerFinished(SubmissionManagerExecuteThread thread, Exception ex);
 }

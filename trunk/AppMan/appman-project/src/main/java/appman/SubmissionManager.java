@@ -10,7 +10,7 @@ import appman.task.Task;
 import appman.task.TaskManager;
 import appman.task.TaskState;
 
-public class SubmissionManager implements SubmissionManagerRemote, Runnable
+public class SubmissionManager implements SubmissionManagerRemote
 {
 	private static final Log log = LogFactory.getLog(SubmissionManager.class);
     private String submissionmanagerId;
@@ -442,7 +442,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 //                 ((Executor) Exehda.getService("executor")).exitApplication();
         }
 
-    public void run()
+    public void runSubmissionManager() throws RemoteException
         {
             log.debug("SubmissionManager  ["+this.getSubmissionManagerId()+"] thread run.");
 

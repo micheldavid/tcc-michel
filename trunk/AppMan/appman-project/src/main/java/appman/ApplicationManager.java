@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.Vector;
+import java.util.concurrent.Semaphore;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +31,7 @@ import edu.berkeley.guir.prefusex.force.SpringForce;
 /**
  * @author lucasa@gmail.com
  */
-public class ApplicationManager implements ApplicationManagerRemote, Serializable {
+public class ApplicationManager implements ApplicationManagerRemote, SubmissionManagerExecuteHandler, Serializable {
 
 	private static final Log log = LogFactory.getLog(ApplicationManager.class);
 	private static final long serialVersionUID = 440529620112600733L;
@@ -59,6 +60,8 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	private int state = ApplicationManager_READY;
 
 	private ApplicationManagerTimer timeInfo = null;
+	
+	private Semaphore smFinalizado = new Semaphore(0);
 
 	//VDN
 	ApplicationDescription appDescription;
@@ -132,13 +135,6 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 		}
 		str += "\n-------------------------";
 		return str;
-	}
-
-	public void startApplicationManager() throws RemoteException {
-		timeInfo.setTimeExecution(System.currentTimeMillis());
-		timeInfo.setTimeBegin(System.currentTimeMillis());
-		state = ApplicationManager_EXECUTING;
-		run();
 	}
 
 	public void addGraph(Graph g) {
@@ -433,11 +429,16 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 	 *
 	 * </ol>
 	 */
-	public void run() {
+	public void runApplicationManager() throws RemoteException {
+		timeInfo.setTimeExecution(System.currentTimeMillis());
+		timeInfo.setTimeBegin(System.currentTimeMillis());
+		state = ApplicationManager_EXECUTING;
+
 		log.debug("ApplicationManager thread run.");
 		float percent_completed = 0;
 
-		do {
+		try {
+			do {
 				// schedule graphs pending in the newgraphs queue
 				schedulePendingGraphs();
 				// atualiza os dados dos grafos, baixando o grafo atualizado do submission manager remoto
@@ -496,19 +497,20 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 				}
 
 
-//			float pc = getApplicationStatePercentCompleted();
-			if (percent_completed < getApplicationStatePercentCompleted()) {
-				percent_completed = getApplicationStatePercentCompleted();
-				log.debug("ApplicationManager Application graphs completed: "
-						+ getApplicationStatePercentCompleted());
-			}
-			if (getApplicationStatePercentCompleted() != 1f) try {
-				Thread.sleep(5000);
-			} catch (Exception e) {
-				log.error(e, e);
-			}
+				float pc = getApplicationStatePercentCompleted();
+				if (percent_completed < pc) {
+					percent_completed = pc;
+					log.debug("ApplicationManager Application graphs completed: " + pc);
+				}
+				if (percent_completed != 1f) {
+					smFinalizado.acquire();
+					smFinalizado.drainPermits();
+				}
 
-		} while (percent_completed < 1f); // end while
+			} while (percent_completed < 1f); // end while
+		} catch (InterruptedException e) {
+			log.error("interrompido aguardando execução dos SMs", e);
+		}
 
 		state = ApplicationManager_FINAL;
 
@@ -621,13 +623,14 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 							+ (timeInfo.getTimeScheduleEnd() - timeInfo
 									.getTimeScheduleBegin()));
 
-					// assing the graph to the SM
+					// acessing the graph to the SM
 					try {
 						String smId = subman.getSubmissionManagerIdRemote();
 						ng.setSubmissionManagerId(smId);
 						subman.addGraphRemote(ng);
 						graphs.add(ng);
 
+						new SubmissionManagerExecuteThread(smId, subman, this).start();
 						log.debug("graph[" + ng.getGraphId()
 								+ "] scheduled to SM[" + smId + "]");
 					} catch (RemoteException re) {
@@ -679,7 +682,7 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 			GeneralObjectActivator gactivator = new GeneralObjectActivator(
 					"SubmissionManager",
 					new Class[] { SubmissionManagerRemote.class },
-					new String[] { "SubmissionManagerRemote" }, true);
+					new String[] { "SubmissionManagerRemote" }, false);
 
 			ObjectId oxID = AppManUtil.getExecutor().createObject(
 					SubmissionManager.class,
@@ -699,5 +702,12 @@ public class ApplicationManager implements ApplicationManagerRemote, Serializabl
 			log.error("exehdaCreateNewSubmissionManager failed due to" + e, e);
 		}
 		return null;
+	}
+
+	public void submissionManagerFinished(SubmissionManagerExecuteThread thread, Exception ex) {
+		smFinalizado.release();
+		if (ex != null) {
+			log.error("executando submission manager", ex);
+		}
 	}
 }
