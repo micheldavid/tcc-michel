@@ -26,7 +26,6 @@ public class GridSchedule implements SchedulingHeuristic {
     
     private static GridSchedule impl = null;
 
-	private static final String CONFIG_FILE = "gridnodes.properties";
     private GridRemoteHostsProperties smGridHosts;
     private GridRemoteHostsProperties resultsGridHosts;
 //     private GridRemoteHostsProperties dedicatedComputeGridHosts;
@@ -44,10 +43,10 @@ public class GridSchedule implements SchedulingHeuristic {
 		
 	private GridSchedule()
 	{
-        smGridHosts = new GridRemoteHostsProperties(CONFIG_FILE, HINT_SUBMISSION_MANAGER_NODE);
-        resultsGridHosts = new GridRemoteHostsProperties(CONFIG_FILE, HINT_FINAL_RESULTS_NODE);
-//         dedicatedComputeGridHosts = new GridRemoteHostsProperties(CONFIG_FILE, HINT_DEDICATED_COMPUTE_NODE);
-        sharedComputeGridHosts = new GridRemoteHostsProperties(CONFIG_FILE, HINT_SHARED_COMPUTE_NODE);
+        smGridHosts = new GridRemoteHostsProperties(HINT_SUBMISSION_MANAGER_NODE);
+        resultsGridHosts = new GridRemoteHostsProperties(HINT_FINAL_RESULTS_NODE);
+//         dedicatedComputeGridHosts = new GridRemoteHostsProperties(HINT_DEDICATED_COMPUTE_NODE);
+        sharedComputeGridHosts = new GridRemoteHostsProperties(HINT_SHARED_COMPUTE_NODE);
 	}
 	
 	/**
@@ -77,84 +76,31 @@ public class GridSchedule implements SchedulingHeuristic {
 	 *  The GridSchedule.chooseCreationHost method decides which scheduling step to use
 	 *  through the information passed by <I>Executor</I> service (<I>hint</I> parameter).
 	 */
-	public HostId chooseCreationHost(String clsName,
-									  Object[] params,
-									  Object hint,
-									  java.util.Vector avoidedHosts)
-	{
-        try
-        {
-            HostId hostid = null;                        
-            log.debug("GridSchedule clsName: "+ clsName +", params: "+ (params == null ? null : Arrays.asList(params)) +", HINT: " + hint +", avoidedHosts: "+avoidedHosts);
+	public HostId chooseCreationHost(String clsName, Object[] params, Object hint, Vector avoidedHosts) {
+		log.debug("GridSchedule clsName: " + clsName + ", params: " + (params == null ? null : Arrays.asList(params))
+			+ ", HINT: " + hint + ", avoidedHosts: " + avoidedHosts);
 
-            if ( HINT_SUBMISSION_MANAGER_NODE.equals(hint) ) {
-                    // O laço abaixo é necessario pois o nodo selecionado em um passo
-                    // anterior pode estar indisponivel/down, situacao na qual ele deve
-                    // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
-                    // evitado
-                hostid = smGridHosts.getRoundRobinHost();
+		// decidindo qual conjunto de hosts usar
+		GridRemoteHostsProperties hosts = sharedComputeGridHosts; // HINT_SHARED_COMPUTE_NODE
+		if (HINT_SUBMISSION_MANAGER_NODE.equals(hint)) {
+			hosts = smGridHosts;
+		} else if (HINT_FINAL_RESULTS_NODE.equals(hint)) {
+			hosts = resultsGridHosts;
+		} else if (HINT_DEDICATED_COMPUTE_NODE.equals(hint)) {
+			// TODO limitar a uma tarefa por máquina
+		} else {
+			hosts.loadComputingHosts();
+		}
 
-                    // FIXME: o while abaixo pode bloquear para sempre se todos os nodos
-                    // foram incluidos no avoidedHosts
-                while(avoidedHosts.contains(hostid)) {
-                	hostid = smGridHosts.getRoundRobinHost();
-                }
-            }
-            else if ( HINT_FINAL_RESULTS_NODE.equals(hint) ) {
-                    // O laço abaixo é necessario pois o nodo selecionado em um passo
-                    // anterior pode estar indisponivel/down, situacao na qual ele deve
-                    // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
-                    // evitado
-                hostid = resultsGridHosts.getRoundRobinHost();
+		// buscando um host não evitado
+		HostId hostid = hosts.getRoundRobinHost();
+		for (int i = 0; avoidedHosts.contains(hostid); i++) {
+			hostid = hosts.getRoundRobinHost();
+			if (i > hosts.getHostCount())
+				throw new IllegalStateException("todos os hosts evitados: " + hosts.getHosts());
+		}
 
-                    // FIXME: o while abaixo pode bloquear para sempre se todos os nodos
-                    // foram incluidos no avoidedHosts
-                while(avoidedHosts.contains(hostid)) {
-                	hostid = resultsGridHosts.getRoundRobinHost();
-                }
-            }
-                // PKVM - VDN - 2005/12/19 - included to limit the number of tasks per cpu
-            else if ( HINT_DEDICATED_COMPUTE_NODE.equals(hint) ) {
-                //=> limita a uma tarefa por maquina
-            }
-            else { // HINT_SHARED_COMPUTE_NODE
-                
-            	// 2006/02/03 - isso so precisa fazer uma vez?
-//                CellInformationBase cib = AppManUtil.getCellInformationBase();
-//                ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-//                Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length, true);
-//                for(int i=0;i<resources.length; i++)
-//                {
-//                    Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName(), true);
-//                }
-            	// 2006/02/03 mudou de aleatorio pra Round Robin
-//                Random rand = new Random();
-//                int i = rand.nextInt(resources.length);
-//                Debug.debug("GridSchedule target Host scheduled: " + resources[i].getSimpleName(), true);
-//                hostid = HostId.parseId("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
-            	
-                    // O laço abaixo é necessario pois o nodo selecionado em um passo
-                    // anterior pode estar indisponivel/down, situacao na qual ele deve
-                    // ter sido incluido no avoidedHosts (nodos problematicos) e deve ser
-                    // evitado
-                hostid = sharedComputeGridHosts.getRoundRobinComputeHost();
-
-                    // FIX ME: o while abaixo pode bloquear para sempre se todos os nodos
-                    // foram incluidos no avoidedHosts
-                while(avoidedHosts.contains(hostid)) {
-                	hostid = smGridHosts.getRoundRobinHost();
-                }
-            }
-            log.debug("GridSchedule["+hint+"] choosed host: " + hostid);
-
-            return hostid;
-        }
-
-        catch (Exception e)
-        {
-        	log.error(e, e);
-            throw new NullPointerException("Error in HostId "+ e);
-        }
+		return hostid;
 	}
 
 	public HostId chooseMigrationHost(ObjectId oh, Object hint, Vector avoided_hosts )
