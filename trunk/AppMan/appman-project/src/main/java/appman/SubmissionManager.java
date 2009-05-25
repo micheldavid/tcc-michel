@@ -487,8 +487,9 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
                             c = pc;
                         }
                     }
-                }			
-				try
+                }
+                if (c == 1f) continue;
+                try
 				{
 					Thread.sleep(5000);
 				} catch (Exception e) {
