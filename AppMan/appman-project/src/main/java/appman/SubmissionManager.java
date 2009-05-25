@@ -392,9 +392,6 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
         }
     public synchronized String getSubmissionManagerId() //VDN 2005/01/13 sync
         {
-    	
-    	log.debug("[VINDN]submissionmanagerId: "+submissionmanagerId );
-    	
             return submissionmanagerId;
         }
 	public void setMyObjectContactAddress(String contact)
@@ -499,7 +496,7 @@ public class SubmissionManager implements SubmissionManagerRemote, Runnable
 				}
             }// fim while
 	
-            log.info("SubmissionManager  ["+this.getSubmissionManagerId()+"] Stoped!");	
+            log.info(this.getSubmissionManagerId() + ": stoped!");	
 	
             if(monitor != null)
             {
