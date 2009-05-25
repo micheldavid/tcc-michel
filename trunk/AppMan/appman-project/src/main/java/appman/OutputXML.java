@@ -218,7 +218,7 @@ public class OutputXML{
 			for (int i = 0; i < nodesList.size(); i++) {
 				dn = (DAGNode) nodesList.get(i);
 				pred = dn.getPRED();
-				if ((pred != null) || !pred.isEmpty()) {
+				if (pred != null) {
 					
 					for(int j=0; j < pred.size(); j++){
 						//1.0 é o peso da aresta
