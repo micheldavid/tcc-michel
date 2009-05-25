@@ -1,12 +1,14 @@
 /*
  * Created on 15/09/2004
- *
  */
 package appman;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
 import java.util.Random;
-import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,206 +18,89 @@ import org.isam.exehda.services.CellInformationBase;
 
 /**
  * @author lucasa
- *
  */
 public class GridRemoteHostsProperties
 {
 	private static final Log log = LogFactory.getLog(GridRemoteHostsProperties.class);
-	private GridRemoteHostsFileProperties fileProperties;
-	private ArrayList hosts;
-	private Vector queue;
-	private Vector queueAllMachines;
-	private int roundNumber=0;
-	
-	public GridRemoteHostsProperties(String filename, String filesection)
-	{
-		fileProperties = new GridRemoteHostsFileProperties(filename, filesection);
-		hosts = fileProperties.getTargetHosts();
-		queue = new Vector();
-		
-		for (int i = 0; i < hosts.size(); i++) {
-			queue.add(hosts.get(i));
-		}
-		
-		
-		// 2006/02/03
-//        CellInformationBase cib = AppManUtil.getCellInformationBase();
-//        ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-//        Debug.debug("GridSchedule number target hosts in the Cell: " + resources.length, true);
-//        queueAllMachines = new Vector();
-//        for(int i=0;i<resources.length; i++)
-//        {
-//        	queueAllMachines.add((String)resources[i].getSimpleName());
-//            Debug.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName(), true);
-//        }
+	private static final String GRID_NODES_FILE = "gridnodes.properties";
+	private ArrayList<String> hosts;
+	private int roundNumber = 0;
+	private int loadedFromCib = 0;
 
-
+	public GridRemoteHostsProperties(String filesection) {
+		hosts = loadHosts(filesection);
 	}
-	/*
-	 *  Atualiza estado dos hosts.
-	 * Em caso de exceção, remove o host da lista de hosts disponíveis
-	 */
-/*	
-	public void updateHostsProperties()
-	{
-		//log.debug("GridRemoteHostProperties - updateHostsProperties");
-		for(int i = 0; i < hosts.size(); i++)
-		{
-			try
-			{			
-				HostId targetHost = HostId.getByName((String) hosts.get(i));
-			} catch (java.net.UnknownHostException e)
-			{
-				Debug.debug("GridRemoteHostProperties Host Error, removing [ "+ (String) hosts.get(i) +" ] from the hosts list");
-				hosts.remove(i);
-			}
+
+	private ArrayList<String> loadHosts(String fileSection) {
+		try {
+			InputStream fis = this.getClass().getClassLoader().getResourceAsStream(GRID_NODES_FILE);
+			Properties props = new Properties();
+			props.load(fis);
+			fis.close();
+			ArrayList<String> targetHosts = new ArrayList<String>();
+			String hosts = props.getProperty(fileSection).trim();
+			log.debug("hosts loaded from file (" + GRID_NODES_FILE + "): section " + fileSection + " = " + hosts);
+
+			targetHosts.addAll(Arrays.asList(hosts.split(";")));
+			return targetHosts;
+		} catch (IOException ex) {
+			throw new IllegalStateException("impossível ler " + GRID_NODES_FILE);
 		}
 	}
-*/
-	/*
+
+	public ArrayList<String> getHosts() {
+		return hosts;
+	}
+
+	/**
 	 * Retorna host randômico da lista de hosts válidos
-	 */ 
-	public HostId getRandomHost()
-	{	
+	 */
+	public HostId getRandomHost() {
 		Random rand = new Random();
 		int i = Math.abs(rand.nextInt() % hosts.size());
-		HostId targetHost = null;
-		try
-		{
-			String host =  "hostid:"+(String)hosts.get(i);
-			targetHost = HostId.parseId(host);
-		} catch (Exception e)
-		{
-			log.error(e, e);
-			System.exit(0);
-		}
-				
-		return targetHost;
+		return HostId.parseId("hostid:" + hosts.get(i));
 	}
-	
+
+	public int getHostCount() {
+		return hosts.size();
+	}
+
 	/**
-	 * 
 	 * @author dalto
-	 *
-	 * 
-	 * Window - Preferences - Java - Code Style - Code Templates
 	 */
-	
-	public synchronized HostId getRoundRobinHost()
-	{
-		HostId targetHost = null;
-		String first = (String)queue.get(0);
-		queue.remove(0);
-		queue.add(first);
-		try {
-			String host =  "hostid:"+first;
-			targetHost = HostId.parseId(host);
-		} catch (Exception e) {
-			log.error(e, e);
-			System.exit(0);
-
-		}
-		
-		return targetHost;
-		
+	public HostId getRoundRobinHost() {
+		return HostId.parseId("hostid:" + hosts.get(getRoundRobinPosition()));
 	}
 
-	// talvez nao seja necessario...apagar depois...
-	public HostId getRoundRobinComputeHostCib()
-	{
-      CellInformationBase cib = AppManUtil.getCellInformationBase();
-      ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-      log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
-
-		
-		HostId targetHost = null;
-		if (roundNumber>resources.length) {
-			roundNumber=0;
-		}
-		String first = resources[roundNumber].getSimpleName();
-		roundNumber++;
+	private synchronized int getRoundRobinPosition() {
 		try {
-			String host =  "hostid:"+first;
-			targetHost = HostId.parseId(host);
-		} catch (Exception e) {
-			log.error(e, e);
-			System.exit(0);
-
+			return roundNumber++ % hosts.size();
+		} finally {
+			if (roundNumber >= hosts.size()) roundNumber = 0;
 		}
-		
-		return targetHost;
-		
 	}
 
-	public synchronized HostId getRoundRobinComputeHost()
-	{
-            // FIX ME: periodicamente deve zerar a lista e atualizar a partir da
-            // CIB. **Importante** não deve zerar sempre ou o RR da forma como está
-            // implementado abaixo não vai funcionar!.
-		if (queueAllMachines==null) {
-			queueAllMachines = new Vector();
-			getHostFromCib();
-		}
-		HostId targetHost = null;
-		String first = (String)queueAllMachines.get(0);
-		log.debug("getRoundRobin first "+first);
-		queueAllMachines.remove(0);
-		queueAllMachines.add(first);
-
-		try {
-			//log.debug("getRoundRobin host "+host);
-			targetHost = HostId.parseId("hostid:"+first+"."+HostId.getLocalHost().getCell().getName());
-		} catch (Exception e) {
-			log.error(e, e);
-			System.exit(0);
-
-		}
-		
-		return targetHost;
-		
+	/**
+	 * Recarrega a cada N chamadas, sendo N o número de hosts encontrado.
+	 * Nota mental: tentar fazer algo mais inteligente
+	 */
+	public void loadComputingHosts() {
+		if (loadedFromCib == 0)
+			hosts = loadHostsFromCib();
+		loadedFromCib = (loadedFromCib + 1) % hosts.size();
 	}
 	
-	private void getHostFromCib() {
+	private ArrayList<String> loadHostsFromCib() {
+		CellInformationBase cib = AppManUtil.getCellInformationBase();
+		ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace) null, -1);
+		log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
 
-    CellInformationBase cib = AppManUtil.getCellInformationBase();
-    ResourceName[] resources = cib.selectByType("host", (ResourceName.NameSpace)null, -1);
-    log.debug("GridSchedule number target hosts in the Cell: " + resources.length);
-    
-    for(int i=0;i<resources.length; i++)
-    {
-    	queueAllMachines.add(resources[i].getSimpleName());
-    	//queueAllMachines.add("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
-        log.debug("GridSchedule target hosts in the Cell [" + i + "]: " + resources[i].getSimpleName());
-    }
-	}
-	/*
-	public HostId getHost(int i)
-	{	
-		HostId targetHost = null;
-		i = i % hosts.size();
-		try
-		{
-			targetHost = targetHost = HostId.getByName((String)hosts.get(i));
-		} catch (Exception e)
-		{
-			log.error(e, e);
-			System.exit(0);
+		ArrayList<String> machines = new ArrayList<String>();
+		for (ResourceName rn : resources) {
+			machines.add(rn.getCommonName().getInstance() + "." + rn.getNameSpace().getCommonName().getInstance());
+			// queueAllMachines.add("hostid:"+resources[i].getSimpleName()+"."+HostId.getLocalHost().getCell().getName());
+			log.debug("GridSchedule target hosts in the Cell: " + rn.toString());
 		}
-		return targetHost;
-	}	
-	public HostId getFirstHost()
-	{		
-		HostId targetHost = null;
-		try
-		{
-			targetHost = HostId.getByName((String) hosts.get(0));
-		} catch (Exception e)
-		{
-			log.error(e, e);
-			System.exit(0);
-		}
-			
-		return targetHost;
+		return machines;
 	}
-*/
 }
