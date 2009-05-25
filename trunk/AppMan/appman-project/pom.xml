@@ -25,6 +25,7 @@
 			<groupId>exehda</groupId>
 			<artifactId>exehda-core</artifactId>
 			<version>0.0.2006-02-09</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>att.grapa</groupId>
