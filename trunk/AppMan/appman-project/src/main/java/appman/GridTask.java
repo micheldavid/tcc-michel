@@ -4,6 +4,7 @@
  */
 package appman;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -185,25 +186,19 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 	{   
         log.debug("GridTask ["+mytask.getTaskId()+"] RUNNING");
 
-        checkDie();
-        
-        String dir = GridFileService.getTaskSandBoxPath(mytask.getName());
-			//Comentado VDN
-			//String[] cmd = {"/bin/bash", "--login", "-c", "mkdir -p " + dir + " && cd " + dir + " && " + command.substring(command.indexOf('\"')+1,command.lastIndexOf('\"'))/* + " &> /tmp/"+dir+".log"*/};
-			//novo comando: agora parser guarda sem aspas
-        String[] cmd = {"/bin/bash",
-                        "--login",
-                        "-c",
-                        "mkdir -p " + dir + " && cd " + dir + " && " + command};			
-
-			//String[] cmd = {"/bin/bash", "-i", "-c", "export > log; read"};
-
+        //Comentado VDN
+		//String[] cmd = {"/bin/bash", "--login", "-c", "mkdir -p " + dir + " && cd " + dir + " && " + command.substring(command.indexOf('\"')+1,command.lastIndexOf('\"'))/* + " &> /tmp/"+dir+".log"*/};
+		//novo comando: agora parser guarda sem aspas
+		String[] cmd = { "/bin/bash", "--login", "-c", command };			
 
         log.debug("GridTask from Task ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  executing comand line application: " + cmd[3]);
 
-        checkDie();
+        // diretório de execução / agora é controlado pelo java
+        File dir = new File(GridFileService.getTaskSandBoxPath(mytask.getName()));
+        dir.mkdirs();
 
-        Process proc = Runtime.getRuntime().exec(cmd);
+        checkDie();
+        Process proc = new ProcessBuilder(cmd).directory(dir).start();
         proc.waitFor();
 
         readInputStream(proc.getInputStream());
