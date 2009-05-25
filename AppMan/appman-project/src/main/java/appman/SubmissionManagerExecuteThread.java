@@ -1,7 +1,5 @@
 package appman;
 
-import java.rmi.RemoteException;
-
 /**
  * Executa SubmissionManagerRemote.runSubmissionManager e chama handler quando finalizar.
  */
@@ -13,6 +11,7 @@ public class SubmissionManagerExecuteThread extends Thread {
 
 	public SubmissionManagerExecuteThread(String submissionManagerId, SubmissionManagerRemote submissionManagerRemote,
 		SubmissionManagerExecuteHandler handler) {
+		setName("smExecutor:" + submissionManagerId);
 		this.submissionManagerId = submissionManagerId;
 		this.submissionManagerRemote = submissionManagerRemote;
 		this.handler = handler;
@@ -21,10 +20,10 @@ public class SubmissionManagerExecuteThread extends Thread {
 	@Override
 	public void run() {
 		try {
-//			submissionManagerRemote.runSubmissionManager();
-			handler.runSubmissionManagerFinished(this, null);
+			submissionManagerRemote.runSubmissionManager();
+			handler.submissionManagerFinished(this, null);
 		} catch (Exception e) {
-			handler.runSubmissionManagerFinished(this, e);
+			handler.submissionManagerFinished(this, e);
 		}
 	}
 
