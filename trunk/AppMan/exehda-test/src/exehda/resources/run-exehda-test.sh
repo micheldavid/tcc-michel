@@ -1,6 +1,6 @@
-APPMAN_HOME=/home/michel/share/appman
-EXEHDA_HOME=$APPMAN_HOME/exehda
+EXEHDA_HOME=/home/michel/share/appman-project/exehda
+APPMAN_BIN=$EXEHDA_HOME/appman-bin
 
-COMMAND="$EXEHDA_HOME/bin/isam-run $APPMAN_HOME/bin/exehda-test.isam"
+COMMAND="$EXEHDA_HOME/bin/isam-run $APPMAN_BIN/exehda-test.isam"
 echo $COMMAND
 $COMMAND

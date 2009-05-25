@@ -15,10 +15,10 @@
 		<javaTargetVersion>1.5</javaTargetVersion>
 
 		<!-- linux
-		<project.dist.dir>/home/michel/share/appman</project.dist.dir> -->
-		<project.dist.dir>Z:/appman</project.dist.dir>
-		<project.bin.dir>${project.dist.dir}/bin</project.bin.dir>
-		<bda.dir>${project.dist.dir}/bda</bda.dir>
+		<exehda.dist.dir>/home/michel/share/appman-project/exehda</exehda.dist.dir> -->
+		<exehda.dist.dir>Z:/appman-project/exehda</exehda.dist.dir>
+		<project.bin.dir>${exehda.dist.dir}/appman-bin</project.bin.dir>
+		<bda.dir>${exehda.dist.dir}/bda</bda.dir>
 		<exehda.resources>${project.basedir}/src/exehda/resources</exehda.resources>
 	</properties>
 
