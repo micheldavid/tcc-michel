@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
@@ -286,47 +285,6 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 		} catch (Exception e) {
 			log.error("[GridFileService]:", e);
 			throw new RemoteException(e.toString(), e);
-		}
-	}
-
-	/**
-	 * Describe class <code>InputStreamHandler</code> here.
-	 *  
-	 */
-	class InputStreamHandler extends Thread {
-		/**
-		 * Stream being read
-		 */
-		private InputStream m_stream;
-
-		/**
-		 * The StringBuilder holding the captured output
-		 */
-		private StringBuilder m_captureBuffer;
-
-		/**
-		 * Constructor.
-		 * 
-		 * @param
-		 */
-		InputStreamHandler(StringBuilder captureBuffer, InputStream stream) {
-			m_stream = stream;
-			m_captureBuffer = captureBuffer;
-			start();
-		}
-
-		/**
-		 * Stream the data.
-		 */
-		@Override
-		public void run() {
-			try {
-				int nextChar;
-				while ((nextChar = m_stream.read()) != -1) {
-					m_captureBuffer.append((char) nextChar);
-				}
-			} catch (IOException ioe) {
-			}
 		}
 	}
 }
