@@ -194,11 +194,11 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 			Task t = g.getTask(taskId);
 			//Debug.debug("ApplicationManager isDisponibleTaskOutputsRemote looking for task ["+taskId+"] in graph ["+g.getGraphId()+"]");
 			if (t != null) {
-				if (t.getState().getCode() == TaskState.TASK_FINAL) {
+				if (t.getState().equals(TaskState.TASK_FINAL)) {
 					log.debug("ApplicationManager isTaskOutputsRemoteAvailable task ["
 							+ t.getTaskId()
 							+ "] status: "
-							+ t.getState().getName());
+							+ t.getState().toString());
 					return true;
 				}
 			}

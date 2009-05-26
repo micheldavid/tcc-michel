@@ -15,8 +15,6 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import appman.log.Debug;
-
 public class TaskManager implements TaskManagerRemote, Runnable
 {
 	private static final Log log = LogFactory.getLog(TaskManager.class);
@@ -63,12 +61,12 @@ public synchronized int getTaskState(String taskId)
   return -1;
 }
 
-public synchronized int getTaskCount(int state)
+public synchronized int getTaskCount(TaskState state)
 {
    int c = 0; 
   for(int i=0; i<taskList.size(); i++)
   {
-  	if(((Task)taskList.elementAt(i)).getState().getCode() == state) // se as chaves são iguais
+  	if(((Task)taskList.elementAt(i)).getState().equals(state)) // se as chaves são iguais
   	{			
 			c++;
   	}
@@ -176,10 +174,10 @@ public void run()
 						// Percorre a lista, ate encontrar uma em execucao, ai para...
 						
 						Task task = (Task)taskList.elementAt(i);			
-						if( task.getState().getCode() == TaskState.TASK_READY )
+						if( task.getState().equals(TaskState.TASK_READY))
 						{
-							task.setState(TaskState.getInstance(TaskState.TASK_EXECUTING));
-							log.debug("Task setting state: " + task.getState().getName());
+							task.setState(TaskState.TASK_EXECUTING);
+							log.debug("Task setting state: " + task.getState().toString());
 							log.debug("TaskManager executing task ["+task.getTaskId()+"] READY.");
 							Thread thread = new Thread(task);
 							thread.start();

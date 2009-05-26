@@ -263,7 +263,7 @@ public class MyTask extends Task implements Serializable {
 						// se a tarefa for estrangeira (de outro grafo)
 						// então baixe o arquivo usando a referência remota
 						// do serviço de arquivos do grid task
-						if (remote_task.getState().getCode() == TaskState.TASK_FOREIGN_FINAL) {
+						if (remote_task.getState().equals(TaskState.TASK_FOREIGN_FINAL)) {
 							// esta referência remota foi atualizada pelo
 							// submission manager <-- application manager
 							// <-- task <-- grid task
@@ -504,8 +504,8 @@ public class MyTask extends Task implements Serializable {
 			 */
 			log.warn("Tolerância a Falhas - " + e, e);
 			remote_task.getFiles().setAllOutputFileAsNotExist();
-			remote_task.setState(TaskState.getInstance(TaskState.TASK_DEPENDENT));
-			log.debug("Task setting state: " + remote_task.getState().getName());
+			remote_task.setState(TaskState.TASK_DEPENDENT);
+			log.debug("Task setting state: " + remote_task.getState().toString());
 			//this.setTaskState(Task.TASK_DEPENDENT);
 			log
 					.debug(

@@ -146,13 +146,13 @@ public class Graph implements Serializable
 			for(int i=0;i<taskList.size();i++)
 			{
 				Task t = (Task)taskList.elementAt(i); 
-				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT )
+				if(isAllTaskInputsAvailable(t.getTaskId()) && t.getState().equals(TaskState.TASK_DEPENDENT))
 				{
-					t.setState(TaskState.getInstance(TaskState.TASK_READY));
-					log.debug("Task setting state: " + t.getState().getName());
+					t.setState(TaskState.TASK_READY);
+					log.debug("Task setting state: " + t.getState().toString());
 					readyTasks.add(t);
 				}
-                else if ( t.getState().getCode()==TaskState.TASK_READY ) {
+                else if (t.getState().equals(TaskState.TASK_READY)) {
                     readyTasks.add(t);
                 }
 			}
@@ -173,13 +173,13 @@ public class Graph implements Serializable
 			for(int i=0;i<taskList.size();i++)
 			{
 				Task t = (Task)taskList.elementAt(i); 
-				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT )
+				if( isAllTaskInputsAvailable(t.getTaskId()) && t.getState().equals(TaskState.TASK_DEPENDENT))
 				{
-					t.setState(TaskState.getInstance(TaskState.TASK_READY));
-					log.debug("Task setting state: " + t.getState().getName());
+					t.setState(TaskState.TASK_READY);
+					log.debug("Task setting state: " + t.getState().toString());
 					readyTasks.add(t);
 				}
-                else if ( t.getState().getCode()==TaskState.TASK_READY ) {
+                else if ( t.getState().equals(TaskState.TASK_READY)) {
                     readyTasks.add(t);
                 }
                 
@@ -202,7 +202,7 @@ public class Graph implements Serializable
 			for(int i=0;i<all.size();i++)
 			{
 				Task t = (Task)all.elementAt(i); 
-				if( ! isAllTaskInputsAvailable(t.getTaskId()) && t.getState().getCode()==TaskState.TASK_DEPENDENT)
+				if( ! isAllTaskInputsAvailable(t.getTaskId()) && t.getState().equals(TaskState.TASK_DEPENDENT))
 				{					
 					notreadyTasks.add(t);
 				}
@@ -227,9 +227,8 @@ public class Graph implements Serializable
 								if(d.getFromTask() != null)
 								{
 									// se o arquivo est? dispon?vel em uma tarefa de outro grafo
-									if(d.getFromTask().getState().getCode() == TaskState.TASK_FOREIGN_FINAL)
+									if(d.getFromTask().getState().equals(TaskState.TASK_FOREIGN_FINAL))
 										return true;
-									else
 									return false;
 								}
 								else
@@ -328,7 +327,7 @@ public class Graph implements Serializable
 		float n = 0;
 		for(int i=0; i<taskList.size(); i++)
 		{
-			if( ((Task)taskList.elementAt(i)).getState().getCode() == TaskState.TASK_FINAL )
+			if( ((Task)taskList.elementAt(i)).getState().equals(TaskState.TASK_FINAL))
 			{
 				n+= 1;
 			}		
@@ -467,16 +466,16 @@ public class Graph implements Serializable
                     // atualiza a tarefa do node [i] do grafo, usando os dados da lista de tarefas 
 				n[i].setNodeData(xlist);
                     // atualiza os atributos do n?, o status
-				n[i].setAttribute("status", xlist.getState().getName()); 
+				n[i].setAttribute("status", xlist.getState().toString()); 
 				n[i].setAttribute("label",
                                   "Name: " + xlist.getTaskId()
                                   + ", SubMan: " +xlist.getSubmissionManagerId()
                                   +" , INput: " + xlist.getFiles().getInputFiles().length
                                   + ", OUTput: " + xlist.getFiles().getOutputFiles().length
-                                  + ", STATUS: " + xlist.getState().getName());
+                                  + ", STATUS: " + xlist.getState().toString());
                 
 				log.debug("Name: "+xlist.getTaskId()
-                                   +"  Status:"+xlist.getState().getName()
+                                   +"  Status:"+xlist.getState().toString()
                                    +" DAG_DSC "+ appDescription);
                 
                     // inserir aqui chamadas para atualizacao dos
