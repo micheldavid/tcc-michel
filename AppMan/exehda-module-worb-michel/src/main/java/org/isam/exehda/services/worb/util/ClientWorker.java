@@ -40,7 +40,7 @@ public class ClientWorker extends Thread {
 	}
 
 	private void doRun() throws IOException {
-		BufferedInputStream in = new BufferedInputStream(client.getInputStream(), 1024);
+		BufferedInputStream in = new BufferedInputStream(client.getInputStream());
 		OutputStream out = client.getOutputStream();
 
 		try {
@@ -68,20 +68,24 @@ public class ClientWorker extends Thread {
 
 	private HashMap<String, String> readHeaders(InputStream in, OutputStream out) throws IOException {
 		HashMap<String, String> headers = new HashMap<String, String>();
-		InputStreamReader reader = new InputStreamReader(in);
-		StringBuilder strBuff = new StringBuilder();
-		int lastSize, endPos = -1;
-		do {
-			lastSize = strBuff.length();
-			in.mark(1024);
-			char[] cbuf = new char[1024];
-			int read = reader.read(cbuf);
-			if (read == -1) throw new IOException("impossível reconhecer cabeçalho: " + strBuff.toString());
-
-			strBuff.append(cbuf, 0, read);
-		} while ((endPos = strBuff.indexOf("\r\n\r\n")) == -1);
-		in.reset();
-		in.skip(endPos + 4 - lastSize);
+		StringBuilder strBuff = new StringBuilder(2048);
+		// evitando InputStream.mark
+		int c;
+		while ((c = in.read()) != -1) {
+			if (c == '\r') {
+				strBuff.append((char) c);
+				strBuff.append((char) (c = in.read()));
+				if (c != '\n') continue;
+				strBuff.append((char) (c = in.read()));
+				if (c != '\r') continue;
+				strBuff.append((char) (c = in.read()));
+				if (c != '\n') continue;
+				break;
+			} else {
+				strBuff.append((char) c);
+			}
+		}
+		if (c == -1) throw new IOException("end of stream");
 
 		for (String line : strBuff.toString().split("\r\n")) {
 			if (line.length() == 0) break;
