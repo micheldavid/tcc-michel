@@ -71,8 +71,8 @@ public abstract class Task implements Runnable, Serializable {
 								+ "]   Error! Trying to put the task as dependent state again RETRY ["
 								+ retryTimes + "] TIMES", e);
 		retryTimes++;
-		state = TaskState.getInstance(TaskState.TASK_DEPENDENT);
-		log.debug("Task setting state: " + state.getName());
+		state = TaskState.TASK_DEPENDENT;
+		log.debug("Task setting state: " + state.toString());
 		this.remoteFileService = null;
 		if (retryTimes > Task.MAX_RETRY_TIMES) {
 			AppManUtil.exitApplication("Fatal Error: Task [" + taskId
@@ -137,9 +137,9 @@ public abstract class Task implements Runnable, Serializable {
 		commandLine = cmd;
 
 		files = new TaskFiles(input, output);
-		state = TaskState.getInstance(TaskState.TASK_DEPENDENT);
+		state = TaskState.TASK_DEPENDENT;
 		
-		log.debug("Task setting state: " + state.getName());
+		log.debug("Task setting state: " + state.toString());
 		type = TaskType.TASK_TYPE_INTERMEDIATE;
 		timeInfo.setTimeTaskCreated(new Date());// VDN:26/08
 
@@ -147,8 +147,8 @@ public abstract class Task implements Runnable, Serializable {
 	}
 
 	public void run() {
-		state = TaskState.getInstance(TaskState.TASK_EXECUTING);
-		log.debug("Task setting state: " + state.getName());
+		state = TaskState.TASK_EXECUTING;
+		log.debug("Task setting state: " + state.toString());
 		timeInfo.setTimeSubmited(new Date());
 
 		log.debug("Task [" + taskId + "] retry[" + retryTimes
@@ -165,8 +165,8 @@ public abstract class Task implements Runnable, Serializable {
 
 		log.debug(
 				"Task FINAL retry[" + retryTimes + "]: " + taskId);
-		state = TaskState.getInstance(TaskState.TASK_FINAL);
-		log.debug("Task setting state: " + state.getName());
+		state = TaskState.TASK_FINAL;
+		log.debug("Task setting state: " + state.toString());
 	}
 
 	public synchronized void setCommandLine(String string) {

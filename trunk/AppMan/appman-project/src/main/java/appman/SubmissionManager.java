@@ -113,7 +113,7 @@ public class SubmissionManager implements SubmissionManagerRemote
             Task t = g.getTask(taskId);
             if(t != null)
             {
-                if(t.getState().getCode() == TaskState.TASK_FINAL)
+                if(t.getState().equals(TaskState.TASK_FINAL))
                 {                    
                     GridFileServiceRemote rfs = t.getRemoteGridTaskFileService();
                     log.debug("SubmissionManager ["+this.getSubmissionManagerId()+"] downloading a file ["+filepath+"] from GridTask: " + taskId);
@@ -235,12 +235,12 @@ public class SubmissionManager implements SubmissionManagerRemote
                             //Debug.debug("SubmissionManager graph ["+g.getGraphId()+"] ["+this.getSubmissionManagerId()+"] updating not ready task["+t.getTaskId()+"] " + t.getTaskStateString());			
                         try
                         {				
-                            if(t.getState().getCode() == TaskState.TASK_DEPENDENT)
+                            if(t.getState().equals(TaskState.TASK_DEPENDENT))
                             {
-                                t.setState(TaskState.getInstance(TaskState.TASK_FOREIGN));
-								log.debug("Task setting state: " + t.getState().getName());
+                                t.setState(TaskState.TASK_FOREIGN);
+								log.debug("Task setting state: " + t.getState().toString());
                             }
-                            if(t.getState().getCode() == TaskState.TASK_FOREIGN)
+                            if(t.getState().equals(TaskState.TASK_FOREIGN))
                             {
                                 log.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  looking for task["+t.getTaskId()+"] outputs files from another SubmissionManager.");
 
@@ -252,8 +252,8 @@ public class SubmissionManager implements SubmissionManagerRemote
 		                                    log.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  found foreign task["+t.getTaskId()+"] FINAL state from another SubmissionManager.");
 		                                    String gfsr = appmanager.getTaskGridFileServiceContactAddressRemote(t.getTaskId()); // atualiza a referencia ao serviço de arquivo das task remota
 		                                    t.setSubmissionManagerContactAddress(gfsr);
-		                                    t.setState(TaskState.getInstance(TaskState.TASK_FOREIGN_FINAL));
-											log.debug("Task setting state: " + t.getState().getName());
+		                                    t.setState(TaskState.TASK_FOREIGN_FINAL);
+											log.debug("Task setting state: " + t.getState().toString());
 		                                }
                                             //
                                             // XXX: abort! need not to retry since there were
@@ -294,13 +294,13 @@ public class SubmissionManager implements SubmissionManagerRemote
                             {
                                 try
                                 {
-                                    if(t.getState().getCode() == TaskState.TASK_DEPENDENT)
+                                    if(t.getState().equals(TaskState.TASK_DEPENDENT))
                                     {									
-                                        t.setState(TaskState.getInstance(TaskState.TASK_FOREIGN));
-										log.debug("Task setting state: " + t.getState().getName());									
+                                        t.setState(TaskState.TASK_FOREIGN);
+										log.debug("Task setting state: " + t.getState().toString());									
                                             //Debug.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  updating foreign task["+t.getTaskId()+"] status from another graph within this SubmissionManager.");
                                     }
-                                    if(t.getState().getCode() == TaskState.TASK_FOREIGN)
+                                    if(t.getState().equals(TaskState.TASK_FOREIGN))
                                     {
                                             //Debug.debug("SubmissionManager graph ["+g.getGraphId()+"]  ["+this.getSubmissionManagerId()+"]  looking for task["+t.getTaskId()+"] outputs files from another SubmissionManager.");
                                             //appmanager.PrintInfoRemote();
@@ -314,8 +314,8 @@ public class SubmissionManager implements SubmissionManagerRemote
 		                                            //String gfsr = this.getTaskGridFileServiceContactAddressRemote(t.getTaskId());
 		                                            String gfsr = this.getMyObjectRemoteContactAddress();
 		                                            t.setSubmissionManagerContactAddress(gfsr);
-		                                            t.setState(TaskState.getInstance(TaskState.TASK_FOREIGN_FINAL));
-													log.debug("Task setting state: " + t.getState().getName());
+		                                            t.setState(TaskState.TASK_FOREIGN_FINAL);
+													log.debug("Task setting state: " + t.getState().toString());
 		                                            sucess = true;
 		                                        }
         	                                }catch(java.rmi.ConnectException e){

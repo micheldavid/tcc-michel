@@ -363,7 +363,7 @@ public class SandBox
                 
                     // se a tarefa for estrangeira (de outro grafo) então baixe o arquivo
                     // usando a referência remota do serviço de arquivos do grid task
-                if (remote_task.getState().getCode() == TaskState.TASK_FOREIGN_FINAL) {
+                if (remote_task.getState().equals(TaskState.TASK_FOREIGN_FINAL)) {
                         // esta referência remota foi atualizada pelo
                         // submission manager <-- application manager
                         // <-- task <-- grid task
