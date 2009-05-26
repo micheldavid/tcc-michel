@@ -6,7 +6,7 @@
 	<groupId>exehda</groupId>
 	<artifactId>exehda-module-worb-michel</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<name>ISAM util project</name>
+	<name>Exehda worb module project</name>
 
 	<properties>
 		<resourceEncoding>UTF-8</resourceEncoding>
