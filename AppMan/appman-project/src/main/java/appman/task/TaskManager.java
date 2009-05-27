@@ -11,6 +11,8 @@ package appman.task;
 
 import java.rmi.RemoteException;
 import java.util.Vector;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,10 +103,8 @@ public void setToDie()
   		plus += ((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles();//VDN:27/1/2006
   }
   downloadTimeOfTasks = plus;//VDN:27/1/2006
-  synchronized (waitForDie) {
   die = true;
-  waitForDie.notify();
-  }
+  waitForDie.release();
 }
 
 
@@ -188,19 +188,17 @@ public void run()
 					}
 			}
 		}
-		
-		synchronized (waitForDie) {
+
 		try
 		{
-			waitForDie.wait(500);
+			waitForDie.tryAcquire(500, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			log.error(e, e);			
-		}
 		}
 		
 	}
 }
 
-private Object waitForDie = new Object();
+private Semaphore waitForDie = new Semaphore(0);
 
 }
