@@ -3,7 +3,6 @@
  */
 package appman;
 
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -17,6 +16,7 @@ import appman.event.AppManConsoleLifeCycleListener;
 import appman.event.AppManConsoleLifeCycleListening;
 import appman.event.DataSourceLifeCycleListener;
 import appman.event.LogFactoryLifeCycleListener;
+import appman.event.MemoryLifeCycleListener;
 import appman.event.PortalIntegrationLifeCycleListener;
 import appman.event.ProfilerLifeCycleListener;
 
@@ -24,7 +24,7 @@ import appman.event.ProfilerLifeCycleListener;
  * @author lucasa
  */
 @AppManConsoleLifeCycleListening( { LogFactoryLifeCycleListener.class, ProfilerLifeCycleListener.class,
-	DataSourceLifeCycleListener.class, PortalIntegrationLifeCycleListener.class })
+	MemoryLifeCycleListener.class, DataSourceLifeCycleListener.class, PortalIntegrationLifeCycleListener.class })
 public class AppManConsole implements AppManConsoleRemote
 {
 	private static final Log log = LogFactory.getLog(AppManConsole.class);
