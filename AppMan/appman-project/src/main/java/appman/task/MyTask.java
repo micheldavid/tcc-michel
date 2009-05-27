@@ -98,29 +98,11 @@ public class MyTask extends Task implements Serializable {
 			log.debug("Mytask [" + this.getTaskId()
 					+ "] SET GridTask to RUN:" + gridtaskremote);
             // start remote execution
-			gridtaskremote.setRun(true); 
+			gridtaskremote.setRun(true);
+			// wait for remote execution
+            gridtaskremote.getEnd(0);
 
-
-                //
-                // XXX: trying to reduce remote pooling by using a blocking primitive
-                // with timeout
-                //
-            final int GET_END_POOLING_MILLIS = 5000;
-            final int GET_END_TIMEOUT_SECONDS = 30;
-            while (true) {
-                try {
-                    if ( gridtaskremote.getEnd(GET_END_TIMEOUT_SECONDS) == true ) {
-                        break;
-                    }
-                    else {
-                        Thread.sleep(GET_END_POOLING_MILLIS);
-                    }
-                } catch (Exception e) {
-                    log.error("Failed to get remote task end status: "+e+". Will retry...", e);
-                }
-            }
-			
-			// remote execution finished, check if there were any errors
+            // remote execution finished, check if there were any errors
 
 			// TODO o codigo abaixo ficou horrivel... dar uma ajeitada - 
 			// incluido para pegar o java.net.SocketException lancado pelo gridtaskremote.getSuccess()
