@@ -266,13 +266,6 @@ public class SubmissionManager implements SubmissionManagerRemote
 	                                }catch(java.net.SocketException e2) {
 	                                	log.error("Trying isTaskOutputsRemoteAvailable - socket", e2);
 	                                }
-                                    finally {
-                                            // avoid to overload the remote node with too many requests
-                                        try { Thread.sleep(500); }
-                                        catch (InterruptedException ie) {
-                                        	log.error(ie, ie);
-                                        }
-                                    }
                                 }
                             }
 								
