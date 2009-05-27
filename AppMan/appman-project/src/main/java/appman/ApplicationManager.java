@@ -39,7 +39,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 	private String appmanId; // id
 
 	/** List of available SMs */
-	private Vector submissionmanagerList;
+	private Vector<SubmissionManagerInfo> submissionmanagerList;
 	/** Seed for creating new unique IDs for instantiated SMs */
 	private int submanId = 0;
 	/** helper counter used to implement round-robin scheduling over available SMs */
@@ -91,7 +91,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 
 	private void initialize(String id, ApplicationId appid) {
 		appmanId = id;
-		submissionmanagerList = new Vector();
+		submissionmanagerList = new Vector<SubmissionManagerInfo>();
 		timeInfo = new ApplicationManagerTimer();
 		if (appid!=null) {
 			applicationId = appid;
@@ -120,10 +120,8 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 		str += "\nApplication Manager execution status: "
 			+ getApplicationStatePercentCompleted() * 100 + " %";
 		for (int i = 0; i < submissionmanagerList.size(); i++) {
-			SubmissionManagerRemote smr = (SubmissionManagerRemote) submissionmanagerList
-			.elementAt(i);
-			str += "\nApplicationManager manage Submission Manager: "
-				+ smr.getSubmissionManagerIdRemote();
+			SubmissionManagerInfo smi = submissionmanagerList.elementAt(i);
+			str += "\nApplicationManager manage Submission Manager: " + smi.getId();
 		}
 		for (int j = 0; j < graphs.size(); j++) {
 			Graph g = (Graph) graphs.elementAt(j);
@@ -229,59 +227,51 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 		return null;
 	}
 
-	public SubmissionManagerRemote getSubmissionManagerRemote(String subId)
-	throws RemoteException {
+	public SubmissionManagerRemote getSubmissionManagerRemote(String subId) throws RemoteException {
+		SubmissionManagerInfo smi = getSubmissionManagerInfo(subId);
+		return smi == null ? null : smi.getRemote();
+	}
+
+	public SubmissionManagerInfo getSubmissionManagerInfo(String subId) throws RemoteException {
 		synchronized (submissionmanagerList) {
-			for (int i = 0; i < submissionmanagerList.size(); i++) {
-				SubmissionManagerRemote candidate = (SubmissionManagerRemote) submissionmanagerList
-				.elementAt(i);
-				if (candidate.getSubmissionManagerIdRemote().equals(subId)) {
-					return candidate;
-				}
+			for (SubmissionManagerInfo smi : submissionmanagerList) {
+				if (smi.getId().equals(subId)) return smi;
 			}
 		}
 		return null;
 	}
 
-	private SubmissionManagerRemote scheduleSubmissionManager(String subId) {
+	private SubmissionManagerInfo scheduleSubmissionManager(String subId) {
 
-		SubmissionManagerRemote subr = null;
+		SubmissionManagerInfo subr = null;
 
 		synchronized (submissionmanagerList) {
-
 			try {
 				// either return the specific SM requested or do a round-robin selection
 				// among the SMs available
 				if (SCHED_ANY_SM.equals(subId)) { // round-robin
 					if (submissionmanagerList.isEmpty()) {
 						subId = String.valueOf(submanId++);
-						log.debug(
-								"ApplicationManager need to create a new SubmissionManager: "
-								+ subId);
-						subr = exehdaCreateNewSubmissionManager(subId);
+						log.debug("ApplicationManager need to create a new SubmissionManager: " + subId);
+						subr = new SubmissionManagerInfo(subId, exehdaCreateNewSubmissionManager(subId));
 						submissionmanagerList.add(subr);
 					} else {
-						subr = (SubmissionManagerRemote) submissionmanagerList
-						.elementAt(schedule_loop++
-								% submissionmanagerList.size());
+						subr = submissionmanagerList.elementAt(schedule_loop++ % submissionmanagerList.size());
 					}
 				} else { // a specific SM instance has been requested
-					subr = getSubmissionManagerRemote(subId);
+					subr = getSubmissionManagerInfo(subId);
 					if (subr == null) {
 						log.debug(
 								"ApplicationManager need to create a new SubmissionManager: "
 								+ subId);
-						subr = exehdaCreateNewSubmissionManager(subId);
+						subr = new SubmissionManagerInfo(subId, exehdaCreateNewSubmissionManager(subId));
 						submissionmanagerList.add(subr);
 					}
 				}
 
-				log.debug(
-						"ApplicationManager scheduling a SubmissionManager");
-				subr.getIsAliveRemote();
-				log.debug(
-						"ApplicationManager scheduled the SubmissionManager ["
-						+ subr.getSubmissionManagerIdRemote() + "]");
+				log.debug("ApplicationManager scheduling a SubmissionManager");
+				subr.getRemote().getIsAliveRemote();
+				log.debug("ApplicationManager scheduled the SubmissionManager [" + subr.getId() + "]");
 
 			} catch (RemoteException e) {
 				// Tolerancia a Falhas
@@ -447,21 +437,14 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 					while (i < graphs.size()) {
 						Graph local = (Graph) graphs.elementAt(i);
 						i++;
-						SubmissionManagerRemote subman = null;
+						SubmissionManagerInfo subman = null;
 						Graph remote = null;
 						if (local.getStatePercentCompleted() < 1) {
 							try {
-								subman = this.getSubmissionManagerRemote(local
-										.getSubmissionManagerId());
-								log
-								.debug(
-										"ApplicationManager contacting SubmissionManager ["
-										+ subman
-										.getSubmissionManagerIdRemote()
-										+ "] to update remote graph: "
-										+ local.getGraphId());
-								remote = subman.getGraphRemote(local
-										.getGraphId());
+								subman = this.getSubmissionManagerInfo(local.getSubmissionManagerId());
+								log.debug("ApplicationManager contacting SubmissionManager [" + subman.getId()
+									+ "] to update remote graph: " + local.getGraphId());
+								remote = subman.getRemote().getGraphRemote(local.getGraphId());
 							} catch (RemoteException e) {
 								// Tolerância a Falhas
 								// Se o Submission Manager não responder então
@@ -472,8 +455,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 								try {
 									subman = scheduleSubmissionManager();
 
-									local.setSubmissionManagerId(subman
-											.getSubmissionManagerIdRemote());
+									local.setSubmissionManagerId(subman.getId());
 									graphs.remove(local);
 									this.addGraph(local);
 								} catch (Exception e2) {
@@ -608,7 +590,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 
 		// while there are graphs to be scheduled
 		while (!newgraphs.isEmpty()) {
-			SubmissionManagerRemote subman = null;
+			SubmissionManagerInfo subman = null;
 			// schedule the next pending graph
 			synchronized (graphs) {
 				Graph ng = (Graph) newgraphs.remove(0);
@@ -625,14 +607,12 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 
 					// acessing the graph to the SM
 					try {
-						String smId = subman.getSubmissionManagerIdRemote();
-						ng.setSubmissionManagerId(smId);
-						subman.addGraphRemote(ng);
+						ng.setSubmissionManagerId(subman.getId());
+						subman.getRemote().addGraphRemote(ng);
 						graphs.add(ng);
 
-						new SubmissionManagerExecuteThread(smId, subman, this).start();
-						log.debug("graph[" + ng.getGraphId()
-								+ "] scheduled to SM[" + smId + "]");
+						new SubmissionManagerExecuteThread(subman, this).start();
+						log.debug("graph[" + ng.getGraphId() + "] scheduled to SM[" + subman.getId() + "]");
 					} catch (RemoteException re) {
 						log.error("Failed to assign graph to SM=" + subman
 								+ ". Graph will be re-scheduled", re);
@@ -653,7 +633,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 	 *
 	 * @return a <code>SubmissionManagerRemote</code> value
 	 */
-	private final SubmissionManagerRemote scheduleSubmissionManager() {
+	private final SubmissionManagerInfo scheduleSubmissionManager() {
 		return scheduleSubmissionManager(SCHED_ANY_SM);
 	}
 
