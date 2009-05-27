@@ -84,7 +84,9 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
         try {
             if ( !end ) wait(timeoutSeconds*1000);
         }
-        catch (InterruptedException ie) { /* empty */}
+        catch (InterruptedException e) {
+        	log.error(e, e);
+        }
         return end;
     }
 
