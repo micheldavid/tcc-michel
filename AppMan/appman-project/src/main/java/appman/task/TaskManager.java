@@ -101,7 +101,10 @@ public void setToDie()
   		plus += ((Task)taskList.elementAt(i)).getTimeInfo().getDownloadTimeOfFiles();//VDN:27/1/2006
   }
   downloadTimeOfTasks = plus;//VDN:27/1/2006
+  synchronized (waitForDie) {
   die = true;
+  waitForDie.notify();
+  }
 }
 
 
@@ -186,16 +189,18 @@ public void run()
 			}
 		}
 		
+		synchronized (waitForDie) {
 		try
-		{		
-			Thread.sleep(500);
+		{
+			waitForDie.wait(500);
 		} catch (Exception e) {
 			log.error(e, e);			
+		}
 		}
 		
 	}
 }
 
-
+private Object waitForDie = new Object();
 
 }
