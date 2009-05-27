@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +44,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 
 	/** List of available SMs */
 	private LinkedHashMap<String, SubmissionManagerRemote> submissionmanagerList;
+	private AtomicInteger submissionManagersExecutando;
 	/** Seed for creating new unique IDs for instantiated SMs */
 	private int submanId = 0;
 	/** helper counter used to implement round-robin scheduling over available SMs */
@@ -95,6 +97,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 	private void initialize(String id, ApplicationId appid) {
 		appmanId = id;
 		submissionmanagerList = new LinkedHashMap<String, SubmissionManagerRemote>();
+		submissionManagersExecutando = new AtomicInteger(0);
 		timeInfo = new ApplicationManagerTimer();
 		if (appid!=null) {
 			applicationId = appid;
@@ -285,6 +288,7 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 				log
 					.debug("ApplicationManager Scheduling SubmissionManager ERROR, removing fault SubmissionManager from the list");
 				submissionmanagerList.remove(subId);
+				submissionManagersExecutando.decrementAndGet();
 				subr = scheduleSubmissionManager();
 			}
 
@@ -487,6 +491,16 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 				}
 
 			} while (percent_completed < 1f); // end while
+
+			// aguardando a finalização de todos os submission managers
+			// só finaliza depois de enviar os resultados para o nó de resultados,
+			// enquanto que os grafos finalizam antes.
+			// quem sabe isso só é necessário porque não temos certeza de quando terminou a tarefa
+			// isso também pode afetar tarefas dependentes
+			for (;;) {
+				if (submissionManagersExecutando.get() == 0) break;
+				smFinalizado.acquire();
+			}
 		} catch (InterruptedException e) {
 			log.error("interrompido aguardando execução dos SMs", e);
 		}
@@ -609,7 +623,8 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 						subman.addGraphRemote(ng);
 						graphs.add(ng);
 
-						new SubmissionManagerExecuteThread(smId, subman, this).start();
+						submissionManagersExecutando.incrementAndGet();
+						new SubmissionManagerExecuteThread(smId + ":graph:" + ng.getGraphId(), subman, this).start();
 						log.debug("graph[" + smId + "] scheduled to SM[" + smId + "]");
 					} catch (RemoteException re) {
 						log.error("Failed to assign graph to SM=" + subman
@@ -683,9 +698,10 @@ public class ApplicationManager implements ApplicationManagerRemote, SubmissionM
 	}
 
 	public void submissionManagerFinished(SubmissionManagerExecuteThread thread, Exception ex) {
-		smFinalizado.release();
+		submissionManagersExecutando.decrementAndGet();
 		if (ex != null) {
 			log.error("executando submission manager", ex);
 		}
+		smFinalizado.release();
 	}
 }
