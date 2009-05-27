@@ -180,7 +180,7 @@ public class AppManConsole implements AppManConsoleRemote
 			log.error("EXECUÇÃO TERMINADA COM ERRO", ex);
 		}
 
-		// para matar o timer que o exehda deixa rodando...
+		// para finalizar qualquer thread/monitor trancado
 		AppManUtil.exitApplication();
 
 		// listeners de finalização

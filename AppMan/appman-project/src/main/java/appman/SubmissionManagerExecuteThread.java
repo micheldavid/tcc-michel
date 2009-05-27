@@ -5,31 +5,41 @@ package appman;
  */
 public class SubmissionManagerExecuteThread extends Thread {
 
-	private SubmissionManagerInfo submissionManagerInfo;
+	private String submissionManagerId;
+	private SubmissionManagerRemote submissionManagerRemote;
 	private SubmissionManagerExecuteHandler handler;
 
-	public SubmissionManagerExecuteThread(SubmissionManagerInfo submissionManagerInfo,
+	public SubmissionManagerExecuteThread(String submissionManagerId, SubmissionManagerRemote submissionManagerRemote,
 		SubmissionManagerExecuteHandler handler) {
-		setName("smExecutor:" + submissionManagerInfo.getId());
-		this.submissionManagerInfo = submissionManagerInfo;
+		setName("smExecutor:" + submissionManagerId);
+		this.submissionManagerId = submissionManagerId;
+		this.submissionManagerRemote = submissionManagerRemote;
 		this.handler = handler;
 	}
 
 	@Override
 	public void run() {
 		try {
-			submissionManagerInfo.getRemote().runSubmissionManager();
+			submissionManagerRemote.runSubmissionManager();
 			handler.submissionManagerFinished(this, null);
 		} catch (Exception e) {
 			handler.submissionManagerFinished(this, e);
 		}
 	}
 
-	public SubmissionManagerInfo getSubmissionManagerInfo() {
-		return submissionManagerInfo;
+	public String getSubmissionManagerId() {
+		return submissionManagerId;
 	}
 
-	public void setSubmissionManagerInfo(SubmissionManagerInfo submissionManagerInfo) {
-		this.submissionManagerInfo = submissionManagerInfo;
+	public void setSubmissionManagerId(String submissionManagerId) {
+		this.submissionManagerId = submissionManagerId;
+	}
+
+	public SubmissionManagerRemote getSubmissionManagerRemote() {
+		return submissionManagerRemote;
+	}
+
+	public void setSubmissionManagerRemote(SubmissionManagerRemote submissionManagerRemote) {
+		this.submissionManagerRemote = submissionManagerRemote;
 	}
 }
