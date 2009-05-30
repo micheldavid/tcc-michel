@@ -1,11 +1,11 @@
 graph independent
-task 0 -e "sleep 1 > t.out.0" -i file:/var/log/messages -o t.out.0
-task 1 -e "sleep 1 > t.out.1" -i file:/var/log/messages -o t.out.1
-task 2 -e "sleep 1 > t.out.2" -i file:/var/log/messages -o t.out.2
-task 3 -e "sleep 1 > t.out.3" -i file:/var/log/messages -o t.out.3
-task 4 -e "sleep 1 > t.out.4" -i file:/var/log/messages -o t.out.4
-task 5 -e "sleep 1 > t.out.5" -i file:/var/log/messages -o t.out.5
-task 6 -e "sleep 1 > t.out.6" -i file:/var/log/messages -o t.out.6
-task 7 -e "sleep 1 > t.out.7" -i file:/var/log/messages -o t.out.7
-task 8 -e "sleep 1 > t.out.8" -i file:/var/log/messages -o t.out.8
-task 9 -e "sleep 1 > t.out.9" -i file:/var/log/messages -o t.out.9
+task 0 -e "tail -10 messages > t.out.0" -i "/var/log/messages" -o t.out.0
+task 1 -e "tail -10 messages > t.out.1" -i "/var/log/messages" -o t.out.1
+task 2 -e "tail -10 messages > t.out.2" -i "/var/log/messages" -o t.out.2
+task 3 -e "tail -10 messages > t.out.3" -i "/var/log/messages" -o t.out.3
+task 4 -e "tail -10 messages > t.out.4" -i "/var/log/messages" -o t.out.4
+task 5 -e "tail -10 messages > t.out.5" -i "/var/log/messages" -o t.out.5
+task 6 -e "tail -10 messages > t.out.6" -i "/var/log/messages" -o t.out.6
+task 7 -e "tail -10 messages > t.out.7" -i "/var/log/messages" -o t.out.7
+task 8 -e "tail -10 messages > t.out.8" -i "/var/log/messages" -o t.out.8
+task 9 -e "tail -10 messages > t.out.9" -i "/var/log/messages" -o t.out.9
