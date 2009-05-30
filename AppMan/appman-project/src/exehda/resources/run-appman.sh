@@ -1,4 +1,4 @@
-EXEHDA_HOME=/home/aluno/Desktop/TCC/AppMan/appman-project/exehda
+EXEHDA_HOME=/home/aluno/AppMan/appman-project/exehda
 APPMAN_BIN=$EXEHDA_HOME/appman-bin
 
 DAG_FILE=`pwd`/$1
