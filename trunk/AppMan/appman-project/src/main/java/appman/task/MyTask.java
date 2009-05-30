@@ -5,7 +5,6 @@ package appman.task;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Date;
@@ -357,41 +356,25 @@ public class MyTask extends Task implements Serializable {
 	 */
 	
 	private boolean downloadFileFromURL(String filepath) throws RemoteException, MalformedURLException{
-		boolean noError = false;
+		boolean success = false;
 		
 		try {
 			log.debug("MyTask  [" + this.getTaskId()
 					+ "] try to install web files");
-			URL fileurl = new URL(filepath); 							
+//			URL fileurl = new URL(filepath); 							
 			String localfile = filepath.substring(filepath
 					.lastIndexOf("/") + 1);
 			// TODO: Alterar aqui - fazer os downloads passarem
 			// pela maquina de submissao
 			// com otimização de arquivos já baixados
-			gridfileservice.installURLFile(filepath, localfile,
-					false);
+			gridfileservice.installURLFile(filepath, localfile);
 			//numDowloads++;
 			//log.debug("\t[VIND]NUMERO DE DOWNLOADS: "
 			//		+ numDowloads);
 			log.debug("Mytask [" + this.getTaskId()
 					+ "] GridTask installURLFile Sucess OK: "
 					+ filepath + " -> " + localfile);
-			noError = true;
-		} catch (MalformedURLException eurl) {
-			gridtaskremote.setDie();
-			log.error("Mytask [" + this.getTaskId()
-					+ "]  installURLFile Error:" + eurl, eurl);
-			log.error("Mytask [" + this.getTaskId()
-					+ "]  installURLFile URL[" + filepath
-					+ "] Error", eurl);
-			throw eurl;
-		} catch (ConnectException ec) {
-			log.error("Mytask [" + this.getTaskId()
-					+ "] installURLFile Error:" + ec, ec);
-			log.error("Mytask [" + this.getTaskId()
-					+ "] installURLFile RETRY:" + retry, ec);
-			retry++;
-			throw ec;
+			success = true;
 		} catch (RemoteException ec) {
 			log.error("Mytask [" + this.getTaskId()
 					+ "] installURLFile Error:" + ec, ec);
@@ -400,8 +383,8 @@ public class MyTask extends Task implements Serializable {
 			retry++;
 			throw ec;
 		}
-		
-		return noError;
+
+		return success;
 		
 	}
 	
@@ -425,8 +408,7 @@ public class MyTask extends Task implements Serializable {
 			// TODO: Alterar aqui - fazer os downloads passarem
 			// pela maquina de submissao
 			// com otimização de arquivos já baixados
-			gridfileservice.installURLFile(filepath, localfile,
-					false);
+			gridfileservice.installURLFile(filepath, localfile);
 			//numDowloads++;
 			//log.debug("\t[VIND]NUMERO DE DOWNLOADS: "
 			//		+ numDowloads);

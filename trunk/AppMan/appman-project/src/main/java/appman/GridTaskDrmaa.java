@@ -132,15 +132,6 @@ public class GridTaskDrmaa extends GridFileService implements Runnable, GridTask
 		}
 	}
 
-	public void finalize() {
-		try {
-			log.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "]  - Objeto sendo recolhido pelo garbage collection");
-			cleanSandBoxDirectory();
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-	}
-
 	private void cleanSandBoxDirectory() throws Exception {
 		String dir = GridFileService.getTaskSandBoxPath(mytask.getName());
 		log.debug("GridTaskDrmaa [" + mytask.getTaskId() + "]  RETRY [" + mytask.getRetryTimes() + "]  cleaning application sandbox directory: " + dir);
