@@ -14,9 +14,7 @@
 		<javaSourceVersion>1.5</javaSourceVersion>
 		<javaTargetVersion>1.5</javaTargetVersion>
 
-		<!-- linux
-		<exehda.dist.dir>/home/michel/share/appman-project/exehda</exehda.dist.dir> -->
-		<exehda.dist.dir>Z:/appman-project/exehda</exehda.dist.dir>
+		<exehda.dist.dir>${env.EXEHDA_HOME}</exehda.dist.dir>
 		<project.bin.dir>${exehda.dist.dir}/appman-bin</project.bin.dir>
 		<bda.dir>${exehda.dist.dir}/bda</bda.dir>
 		<exehda.resources>${project.basedir}/src/exehda/resources</exehda.resources>
