@@ -5,14 +5,12 @@
 package appman;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import appman.task.Task;
+import appman.util.IOHelper;
 
 /**
  * @author lucasa@gmail.com
@@ -31,7 +29,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 	private boolean end = false;
 	private boolean sucess = true;
 	
-	private StringBuilder errorbuffer = null;
+	private String errorbuffer = null;
 
 	
 	public GridTask(Task task, String cmd, String filepath_seed)
@@ -42,7 +40,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		
 		log.debug("\tGRIDTASK ["+mytask.getTaskId()+"] cmd: "+ cmd);
 		
-		errorbuffer = new StringBuilder();
+		errorbuffer = "";
 	}
 	
 	public synchronized void setRun(boolean b) 
@@ -67,7 +65,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		} catch (Exception e)
 		{
 			log.error(e, e);
-			errorbuffer.append(e.getMessage());
+			errorbuffer += e.getMessage();
 		}		
 	}
     
@@ -118,7 +116,7 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		} catch (Exception e)
 		{
 			log.error("[AppMan]\tError in run of GridTask thread, while waiting to run task", e); //VDN 2006/01/13
-			errorbuffer.append(e.getMessage());			
+			errorbuffer += e.getMessage();			
 			sucess = false;
 			setDie();			
 			return;
@@ -147,23 +145,10 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
 		} catch (Exception e)
 		{
 			log.debug("[AppMan]\tError in run of GridTask thread, while executing task.", e); //VDN 2006/01/13
-			errorbuffer.append(e.getMessage());			
+			errorbuffer += e.getMessage();			
 			sucess = false;
 			setDie();			
 			return;
-		}
-	}
-	
-	@Override
-	public void finalize()
-	{
-		try
-		{
-			log.debug("GridTask ["+mytask.getTaskId()+"]  RETRY ["+mytask.getRetryTimes()+"]  - Objeto sendo recolhido pelo garbage collection");
-			cleanSandBoxDirectory();
-		}catch (Exception e)
-		{
-			log.error(e, e);			
 		}
 	}
 
@@ -203,8 +188,8 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
         Process proc = new ProcessBuilder(cmd).directory(dir).start();
         proc.waitFor();
 
-        readInputStream(proc.getInputStream());
-        errorbuffer = new StringBuilder(readInputStream(proc.getErrorStream()));
+        IOHelper.readCharInputStream(proc.getInputStream());
+        errorbuffer += IOHelper.readCharInputStream(proc.getErrorStream());
 
         return proc.exitValue();
 	}
@@ -218,15 +203,5 @@ public class GridTask extends GridFileService implements Runnable, GridTaskRemot
     private final synchronized void checkDie() throws Exception
     {
         if (die) throw new Exception("GridTask going to DIE");
-    }
-    
-    private String readInputStream(InputStream is) throws IOException {
-    	StringBuilder sb = new StringBuilder();
-    	char[] cbuff = new char[1024];
-    	InputStreamReader reader = new InputStreamReader(is);
-    	for (int read; (read = reader.read(cbuff)) != -1;)
-    		sb.append(cbuff, 0, read);
-    	is.close();
-    	return sb.toString();
     }
 }

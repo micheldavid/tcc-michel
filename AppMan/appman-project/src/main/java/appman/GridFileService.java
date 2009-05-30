@@ -8,15 +8,16 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.FileChannel;
 import java.rmi.RemoteException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import appman.util.IOHelper;
 
 /**
  * @author lucasa
@@ -54,21 +55,12 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 		defaultdir = SandBoxUtil.calculateResultsSandBoxDirPath();
 	}
 
-	public static boolean removeDir(String filepath) throws Exception {
+	public static void removeDir(String filepath) throws Exception {
 		File file = new File(filepath);
 		log.debug("GridFileService removeDir [" + filepath + "]: "
 				+ file.getAbsolutePath());
-		if (file.isDirectory()) {
-			String[] cmd = { "/bin/bash", "--login", "-c",
-					"rm -r " + file.getAbsolutePath() };
-			Process proc = Runtime.getRuntime().exec(cmd);
-			proc.waitFor();
-			if (!file.exists())
-				return true;
-			else
-				return false;
-		}
-		return false;
+
+		IOHelper.removeDir(file);
 	}
 
 	/*
@@ -77,28 +69,20 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 	public synchronized void uploadFile(byte[] filedata, String filepath)
 			throws RemoteException {
 		try {
-			String dir = defaultdir;
-			String[] cmd = { "/bin/bash", "--login", "-c", "mkdir -p " + dir };
-			Runtime.getRuntime().exec(cmd).waitFor();
-			filepath = dir + "/" + filepath;
-			log.debug("GridFileService uploadFile upload to [" + filepath
-					+ "]");
-			File file = new File(filepath);
-			if (file.exists()) {
-				return;
-			}
-			BufferedOutputStream output = new BufferedOutputStream(
-					new FileOutputStream(file.getCanonicalPath()));
+			File dir = new File(defaultdir);
+			dir.mkdirs();
+			File file = new File(dir, filepath);
+			log.debug("GridFileService uploadFile upload to [" + file.getCanonicalPath() + "]");
+			if (file.exists()) return;
+
+			BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getCanonicalPath()));
 			output.write(filedata, 0, filedata.length);
-			output.flush();
 			output.close();
-			file = new File(filepath);
 			if (!file.exists()) {
-				throw new Exception("Error on creating File: " + filepath);
+				throw new Exception("Error on creating File: " + file.getCanonicalPath());
 			}
 		} catch (Exception e) {
-			log.error("Error uploading File [" + filepath + "]: "
-					+ e.getMessage(), e);
+			log.error("Error uploading File [" + filepath + "]: " + e.getMessage(), e);
 			throw new RemoteException("Error uploading File: " + e.getMessage(), e);
 		}
 	}
@@ -144,13 +128,11 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 	 */
 	public synchronized File getFile(String filepath) throws RemoteException {
 		try {
-			String dir = defaultdir;
-			filepath = dir + "/" + filepath;
+			filepath = defaultdir + "/" + filepath;
 			File file = new File(filepath);
 			if (file.exists())
 				return file;
-			else
-				throw new Exception("Error File [" + filepath + "] not exists!");
+			throw new Exception("Error File [" + filepath + "] not exists!");
 		} catch (Exception e) {
 			log.error("Error downloading File: " + e.getMessage(), e);
 			throw new RemoteException("Error downloading File: "
@@ -169,24 +151,21 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 	 */
 	public synchronized byte[] fileToByteArray(String filepath)
 			throws RemoteException {
-		byte buffer[] = null;
 		try {
 			File file = new File(filepath);
-			buffer = new byte[(int) file.length()];
-			BufferedInputStream input = new BufferedInputStream(
-					new FileInputStream(filepath));
+			byte[] buffer = new byte[(int) file.length()];
+			BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
 			input.read(buffer, 0, buffer.length);
 			input.close();
+			return buffer;
 		} catch (Exception e) {
 			log.error("Error downloading File: " + e.getMessage(), e);
 			throw new RemoteException("Error downloading File: "
 					+ e.getMessage(), e);
 		}
-		return buffer;
 	}
 
 	public String getDefaultDir() throws RemoteException {
-
 		return defaultdir;
 	}
 
@@ -202,84 +181,37 @@ public class GridFileService implements GridFileServiceRemote, Serializable {
 	 * @exception RemoteException
 	 *                if an error occurs
 	 */
-	public synchronized void installURLFile(String url, String localFile,
-			boolean chmod) throws RemoteException {
+	public void installURLFile(String url, String localFile) throws RemoteException {
 		try {
-			log
-					.debug(
-							"GridFileService installURLFile calculating default directory");
+			log.debug("GridFileService installURLFile calculating default directory");
 			String dir = defaultdir;
-			log.debug("GridFileService installURLFile default directory["
-					+ dir + "]");
-			String[] cmd = { "/bin/bash", "--login", "-c", "mkdir -p " + dir };
-			Runtime.getRuntime().exec(cmd).waitFor();
-			String localpath = dir + "/" + localFile;
-			File f = new File(localpath);
-			if (f.exists()) {
-				log.debug("GridFileService File already installed.");
-				if (chmod) {
-					Runtime.getRuntime().exec("chmod u+x " + localpath)
-							.waitFor();
-				}
-				return;
-			}
+			log.debug("GridFileService installURLFile default directory[" + dir + "]");
+
+			File installDir = new File(dir);
+			installDir.mkdirs();
+			File file = new File(installDir, localFile);
 
 			//VDN: 17/01/06
 
 			if ((url.indexOf("http") != -1) || (url.indexOf("ftp") != -1)) {
 				//Baixa da URL
-				log.debug("GridTask Installing file " + url + " to "
-						+ localpath);
-				BufferedOutputStream out = new BufferedOutputStream(
-						new FileOutputStream(new File(localpath)));
+				log.debug("GridTask Installing file " + url + " to " + file.getCanonicalPath());
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
 
-				BufferedInputStream in;
-
-				URLConnection conn = (new URL(url)).openConnection();
-				//conn.setRequestProperty("Cache-Control:","max-age=0,
-				// no-cache");
+				URLConnection conn = new URL(url).openConnection();
+				//conn.setRequestProperty("Cache-Control:","max-age=0,no-cache");
 				//conn.setRequestProperty("Pragma:","no-cache");
 				conn.connect();
-				in = new BufferedInputStream(conn.getInputStream());
-
-				//Transfere arquivo
-				int c;
-				while ((c = in.read()) != -1) {
-					out.write(c);
-				}
-
+				InputStream in = conn.getInputStream();
+				IOHelper.transferInputStreamData(in, out);
 				in.close();
 				out.close();
 
 			} else {
 				//Copia do disco
-
-				log.debug("GridTask Installing file " + url + " to "
-						+ localpath);
-
-				try {
-					// Create channel on the source
-					FileChannel srcChannel = new FileInputStream(url)
-							.getChannel();
-
-					// Create channel on the destination
-					FileChannel dstChannel = new FileOutputStream(localpath)
-							.getChannel();
-
-					// Copy file contents from source to destination
-					dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
-
-					// Close the channels
-					srcChannel.close();
-					dstChannel.close();
-				} catch (IOException e) {
-					log.error("Erro na copia de arquivo: ", e);
-				}
+				log.debug("GridTask Installing file " + url + " to " + file.getCanonicalPath());
+				IOHelper.copyFile(new File(url), file);
 			}
-
-			//					if ( chmod ) {
-			//						Runtime.getRuntime().exec("chmod u+x "+localpath).waitFor();
-			//					}
 
 			log.debug("GridTask Files installation completed.");
 		} catch (Exception e) {

@@ -15,6 +15,6 @@ public interface GridFileServiceRemote extends Remote
 {
 	public void uploadFile(byte[] filedata, String filepath) throws RemoteException;
 	public byte[] downloadFile(String filepath) throws RemoteException;
-	public void installURLFile(String url, String localFile, boolean chmod) throws RemoteException;
+	public void installURLFile(String url, String localFile) throws RemoteException;
 	public String getDefaultDir() throws RemoteException;
 }
