@@ -74,7 +74,7 @@
 		<servlet-class>appman.portlets.jobsubmit.AppManQueueServlet</servlet-class>
 		<init-param>
 			<param-name>polling.time</param-name>
-			<param-value>10000</param-value>
+			<param-value>2000</param-value>
 			<description>Tempo em milissegundos para realizar a pesquisa no LDAP e verificar se existem tarefas em execução</description>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
