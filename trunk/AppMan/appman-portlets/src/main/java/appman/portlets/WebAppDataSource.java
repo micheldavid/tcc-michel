@@ -59,15 +59,15 @@ public class WebAppDataSource extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
 		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName(config.getInitParameter("driverClassName"));
-		ds.setUrl(config.getInitParameter("url"));
-		ds.setUsername(config.getInitParameter("username"));
-		ds.setPassword(config.getInitParameter("password"));
-		Integer val = getIntOpt(config.getInitParameter("minIdle"));
+		ds.setDriverClassName(AppManConfig.get().getString("db.driverClassName"));
+		ds.setUrl(AppManConfig.get().getString("db.url"));
+		ds.setUsername(AppManConfig.get().getString("db.username"));
+		ds.setPassword(AppManConfig.get().getString("db.password"));
+		Integer val = getIntOpt(AppManConfig.get().getString("db.minIdle"));
 		if (val != null) ds.setMinIdle(val.intValue());
-		val = getIntOpt(config.getInitParameter("maxIdle"));
+		val = getIntOpt(AppManConfig.get().getString("db.maxIdle"));
 		if (val != null) ds.setMaxIdle(val.intValue());
-		val = getIntOpt(config.getInitParameter("maxActive"));
+		val = getIntOpt(AppManConfig.get().getString("db.maxActive"));
 		if (val != null) ds.setMaxActive(val.intValue());
 
 		WebAppDataSource.ds = ds;
