@@ -41,9 +41,11 @@ public class AppManQueueServlet extends HttpServlet implements Runnable {
 		waitTime = Long.parseLong(config.getInitParameter("polling.time"));
 
 		try {
+			// teste de DB
+			AppManDBHelper.hasRunningJobs();
 			session = AppManLdapHelper.createSession();
-		} catch (NamingException e) {
-			log.error("abrindo sessão do ldap", e);
+		} catch (Exception e) {
+			throw new ServletException("inicializando planejador", e);
 		}
 		verifier = new Thread(this);
 		verifier.start();
