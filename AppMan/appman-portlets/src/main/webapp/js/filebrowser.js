@@ -88,8 +88,6 @@ function appmanFileBrowserShowJobs() {
 	document.getElementById("actAppmanFileBrowserShowJobs").style.display = "none";
 }
 
-// código da árvore
-USETEXTLINKS = 1;
-STARTALLOPEN = 0;
-USEFRAMES = 0;
-PRESERVESTATE = 1;
+function executeActionFileBrowser(action) {
+	executeAction(action, document.getElementById("appman-filebrowser-action-form"));
+}

@@ -4,3 +4,5 @@ fieldset.appman {
 	border: 2px groove rgb(212, 208, 200);
 }
 fieldset.appman legend { padding:0px 2px; font-weight: bold }
+
+.appman table, .appman * td, .appman * th { border: 1px solid black }

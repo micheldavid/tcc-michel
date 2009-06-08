@@ -1,7 +1,8 @@
+#set($actionURL = "$actionURL")
 <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
 <script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
 <script type="text/javascript" src="${request.contextPath}/js/jobsubmit.js"></script>
-<form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
+<form id="appman-jobsubmit-action-form" action="" method="post" style="display:none"></form>
 
 <div class="portlet-font">
 #if($error)
@@ -44,16 +45,16 @@ Error: $error
 	<legend class="portlet-form-label">Ações</legend>
 	<ul style="margin-bottom: 0px; margin-top: 0px">
 		<li>
-			<a href="#" onclick="executeAction('NewJob');return false">Nova tarefa</a>
+			<a href="#" onclick="executeActionJobSubmit('NewJob');return false">Nova tarefa</a>
 		</li>
 		<li>
-			<a href="#" onclick="executeAction('ShowView');return false">Atualizar status</a>
+			<a href="#" onclick="executeActionJobSubmit('ShowView');return false">Atualizar status</a>
 		</li>
 		<li>
 			<a href="#" onclick="appmanJobSubmitViewRemoveCheckedJobs();return false">Remover tarefas marcadas</a>
 		</li>
 		<li>
-			<a href="#" onclick="executeAction('ShowHelp');return false">Informações</a>
+			<a href="#" onclick="executeActionJobSubmit('ShowHelp');return false">Informações</a>
 		</li>
 	</ul>
 </fieldset>
