@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
 <script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
 <script type="text/javascript" src="${request.contextPath}/js/jobsubmit.js"></script>
-<form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
+<form id="appman-jobsubmit-action-form" action="$actionURL" method="post" style="display:none"></form>
 
 <div class="portlet-font">
 #if($error)
@@ -24,7 +24,7 @@ Error: $error
 	<legend class="portlet-form-label">Ações</legend>
 	<ul style="margin-bottom: 0px; margin-top: 0px">
 		<li>
-			<a href="#" onclick="executeAction('ShowView');return false">Voltar</a>
+			<a href="#" onclick="executeActionJobSubmit('ShowView');return false">Voltar</a>
 		</li>
 	</ul>
 </fieldset>

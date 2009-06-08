@@ -49,3 +49,7 @@ function appmanJobSubmitViewRemoveCheckedJobs() {
 	}
 	executeAction("DeleteJobs", frm);
 }
+
+function executeActionJobSubmit(action) {
+	executeAction(action, document.getElementById("appman-jobsubmit-action-form"));
+}

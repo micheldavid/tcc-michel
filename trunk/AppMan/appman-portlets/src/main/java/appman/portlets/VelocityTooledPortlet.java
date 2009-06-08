@@ -1,5 +1,9 @@
 package appman.portlets;
 
+import java.io.IOException;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
@@ -43,5 +47,14 @@ public class VelocityTooledPortlet extends VelocityPortlet {
 		}
 
 		return super.getContext(request, response);
+	}
+
+	@Override
+	public void processAction(ActionRequest actionrequest, ActionResponse actionresponse) throws PortletException,
+		IOException {
+		// workaround pro gridsphere não esculhambar os parametros do request...
+		actionrequest.setAttribute("org.gridsphere.portlet.impl.IGNORE_PARSING", "");
+
+		super.processAction(actionrequest, actionresponse);
 	}
 }

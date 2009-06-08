@@ -1,45 +1,70 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!DOCTYPE web-app
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
+ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-    <display-name>AppMan Portlets</display-name>
-
-    <description>
-        Provides AppMan Portlets
-    </description>
-
-    <!-- uncomment only if using in non-GridSphere container
-    <listener>
-        <listener-class>org.gridsphere.provider.portlet.jsr.PortletServlet</listener-class>
-    </listener>
-     -->
-
+	<display-name>AppMan Portlets</display-name>
+	<description>AppMan Portlets</description>
+	<servlet>
+		<servlet-name>AppManConfig</servlet-name>
+		<servlet-class>appman.portlets.AppManConfig</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>WebAppDataSource</servlet-name>
+		<servlet-class>appman.portlets.WebAppDataSource</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>AppManQueue</servlet-name>
+		<servlet-class>appman.portlets.jobsubmit.AppManQueueServlet</servlet-class>
+		<init-param>
+			<param-name>polling.time</param-name>
+			<param-value>2000</param-value>
+			<description>Tempo em milissegundos para realizar a pesquisa no LDAP e verificar se existem tarefas em execução</description>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>UploadDagFileServlet</servlet-name>
+		<servlet-class>appman.portlets.jobsubmit.UploadDagFileServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>DownloadFileServlet</servlet-name>
+		<servlet-class>appman.portlets.filebrowser.DownloadFileServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>dwr-invoker</servlet-name>
+		<display-name>DWR Servlet</display-name>
+		<servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
     <servlet>
         <servlet-name>PortletServlet</servlet-name>
         <servlet-class>org.gridsphere.provider.portlet.jsr.PortletServlet</servlet-class>
     </servlet>
-
+	<servlet-mapping>
+		<servlet-name>UploadDagFileServlet</servlet-name>
+		<url-pattern>/SubmitDAG</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DownloadFileServlet</servlet-name>
+		<url-pattern>/download</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>dwr-invoker</servlet-name>
+		<url-pattern>/dwr/*</url-pattern>
+	</servlet-mapping>
     <servlet-mapping>
        <servlet-name>PortletServlet</servlet-name>
        <url-pattern>/jsr/appman-portlets</url-pattern>
     </servlet-mapping>
-
-    <mime-mapping>
-      <extension>wbmp</extension>
-      <mime-type>image/vnd.wap.wbmp</mime-type>
-    </mime-mapping>
-
-    <mime-mapping>
-      <extension>wml</extension>
-      <mime-type>text/vnd.wap.wml</mime-type>
-    </mime-mapping>
-
-    <mime-mapping>
-      <extension>wmls</extension>
-      <mime-type>text/vnd.wap.wmlscript</mime-type>
-    </mime-mapping>
-
 </web-app>

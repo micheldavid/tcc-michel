@@ -1,11 +1,11 @@
 <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
 <script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
 <script type="text/javascript" src="${request.contextPath}/js/jobsubmit.js"></script>
-<form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
+<form id="appman-jobsubmit-action-form" action="$actionURL" method="post" style="display:none"></form>
 <div class="portlet-font">
 	<fieldset class="appman">
 		<legend class="portlet-form-label">Informações</legend>
-		<table class="portlet-section-body">
+		<div class="portlet-section-body">
 			<tr>
 				<td>
 					<div class="portlet-msg-info">
@@ -15,18 +15,18 @@
 					Configurações em uso (arquivo <i>~/.appman-portlets/env.properties</i>):
 					<table>
 						#foreach($key in ${config.keys})
-							<tr><td><b>$key</b></td><td>$config.getString($key)</td></tr>
+							<tr><td><b>$key</b></td><td>#if ($key.contains("password"))****#else$config.getString($key)#end</td></tr>
 						#end
 					</table>
 				</td>
 			</tr>
-		</table>
+		</div>
 	</fieldset>
     <fieldset class="appman">
     	<legend class="portlet-form-label">Ações</legend>
     	<ul style="margin-bottom: 0px; margin-top: 0px">
     		<li>
-    			<a href="#" onclick="executeAction('ShowView');return false">Voltar</a>
+    			<a href="#" onclick="executeActionJobSubmit('ShowView');return false">Voltar</a>
     		</li>
     	</ul>
     </fieldset>

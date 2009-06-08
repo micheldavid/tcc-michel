@@ -26,7 +26,7 @@ YAHOO.util.Event.onDOMReady(function () {
 	appmanFileBrowserSortTrees();
 });
 </script>
-<form id="appman-action-form" action="$actionURL" method="post" style="display:none"></form>
+<form id="appman-filebrowser-action-form" action="$actionURL" method="post" style="display:none"></form>
 
 <div class="portlet-font">
 #if($error)
@@ -75,7 +75,7 @@ Error: $error
 			<a href="#" onclick="appmanFileBrowserShowJobs();return false">Voltar</a>
 		</li>
 		<li>
-			<a href="#" onclick="executeAction('ShowView');return false">Atualizar lista</a>
+			<a href="#" onclick="executeActionFileBrowser('ShowView');return false">Atualizar lista</a>
 		</li>
 	</ul>
 </fieldset>
