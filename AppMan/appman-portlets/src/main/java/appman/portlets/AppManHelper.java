@@ -62,10 +62,15 @@ public class AppManHelper {
 	}
 
 	public static void moveFile(File srcFile, File destFile) throws IOException {
+		copyFile(srcFile, destFile);
+		deleteFile(srcFile);
+	}
+
+	public static void copyFile(File srcFile, File destFile) throws IOException {
 		if (srcFile.isDirectory()) {
 			destFile.mkdirs();
 			for (File child : srcFile.listFiles())
-				moveFile(child, new File(destFile, child.getName()));
+				copyFile(child, new File(destFile, child.getName()));
 		} else {
 			if (!destFile.exists()) {
 				destFile.createNewFile();
@@ -76,7 +81,6 @@ public class AppManHelper {
 			src.close();
 			dest.close();
 		}
-		srcFile.delete();
 	}
 
 	public static void startJob(AppManJob job) throws IOException, InterruptedException, SQLException {
@@ -98,9 +102,10 @@ public class AppManHelper {
 		commandParams.add("--");
 
 		File jobDir = new File(AppManConfig.get().getString("appman.portlets.job.dir"), String.valueOf(job.getId()));
-		jobDir.mkdirs();
 		File dagFile = new File(jobDir, job.getFile());
-		commandParams.add(dagFile.getCanonicalPath());
+		File toDagFile = new File(logs, dagFile.getName());
+		copyFile(dagFile, toDagFile);
+		commandParams.add(toDagFile.getCanonicalPath());
 		commandParams.add(String.valueOf(job.getId()));
 
 		ProcessBuilder builder = new ProcessBuilder(commandParams.toArray(new String[commandParams.size()]));
@@ -151,10 +156,6 @@ public class AppManHelper {
 	}
 
 	public static boolean isExehdaRunning() throws BusinessException {
-		return isExehdaRunning(AppManConfig.get().getString("exehda.gatekeeper"));
-	}
-
-	public static boolean isExehdaRunning(String machine) throws BusinessException {
 		if (true) return true;
 
 		Properties props = new Properties();
@@ -173,12 +174,6 @@ public class AppManHelper {
 		}
 		String host = props.getProperty("isam.gatekeeper.host");
 		int port = Integer.parseInt(props.getProperty("isam.gatekeeper.port"));
-		if (machine != null) {
-			String[] parts = machine.split(":");
-			host = parts[0];
-			if (parts.length == 2) port = Integer.parseInt(parts[1]);
-		}
-
 		try {
 			new Socket(host, port).close();
 		} catch (UnknownHostException e) {
