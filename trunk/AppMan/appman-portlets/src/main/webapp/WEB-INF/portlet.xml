@@ -76,27 +76,6 @@
 		</portlet-info>
 	</portlet>
 
-	<portlet>
-		<description xml:lang="en">
-			The classic Hello World example
-		</description>
-		<portlet-name>HelloPortlet</portlet-name>
-		<display-name xml:lang="en">Hello World</display-name>
-		<portlet-class>org.gridsphere.gsexamples.portlets.HelloWorld</portlet-class>
-		<expiration-cache>60</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>edit</portlet-mode>
-			<portlet-mode>help</portlet-mode>
-		</supports>
-		<supported-locale>en</supported-locale>
-		<portlet-info>
-			<title>Hello World</title>
-			<short-title>Hello World</short-title>
-			<keywords>hello</keywords>
-		</portlet-info>
-	</portlet>
-
 	<user-attribute>
 		<description xml:lang="en">User Name</description>
 		<name>user.name</name>
