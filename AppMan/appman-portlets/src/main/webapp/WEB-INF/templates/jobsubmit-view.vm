@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
 <script type="text/javascript" src="${request.contextPath}/js/main.js"></script>
 <script type="text/javascript" src="${request.contextPath}/js/jobsubmit.js"></script>
-<form id="appman-jobsubmit-action-form" action="" method="post" style="display:none"></form>
+<form id="appman-jobsubmit-action-form" action="$actionURL" method="post" style="display:none"></form>
 
 <div class="portlet-font">
 #if($error)
