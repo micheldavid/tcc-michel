@@ -1,8 +1,0 @@
-GRid anathomy (FOSTER, 2001)
-
-(“the services needed to support a common set of applications in a distributed network
-environment” [3])
-
-Aiken, R., Carey, M., Carpenter, B., Foster, I., Lynch, C., Mambretti, J., Moore, R.,
-Strasnner, J. and Teitelbaum, B. Network Policy and Services: A Report of a Workshop
-on Middleware, IETF, RFC 2768, 2000. http://www.ietf.org/rfc/rfc2768.txt.
